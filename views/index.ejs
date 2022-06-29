@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="<%= language %>">
+
+<head>
+    <title>CIMA</title>
+    <link rel="icon" type="image/png" href="/images/allure_logo.png">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/css/bootstrap-select.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.css"
+        rel="stylesheet" />
+
+
+
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<!-- https://jsfiddle.net/x93oLad8/4/ -->
+
+<body>
+    <header>
+        <div class="container-fluid " style="display: flex; margin-top: 2px;" id="title-div">
+            <div><img class="logo" src="./images/allure_logo.png" /></div>
+            <div>
+                <h4 class="page_title">CIMA - Cultural Information Made Accessible</h4>
+            </div>
+            <div style="text-align: right;margin-left: auto;"><b>
+                    <%= version %>
+                </b></div>
+        </div>
+
+    </header>
+    <main>
+        <nav>
+            <div id="modal_download" class="modal" style="display: none;">
+                <div class="modal-content" style="width: 950px;">
+                    <span id="modal_close" class="close">&times;</span>
+                    <h3 translation="sure_download">¿Seguro que quiere desacargar el PDF, todavía le quedan algunos
+                        campos por cubrir?</h3>
+                    <div style="text-align:center;">
+                        <button id="button_yes" class="btn btn-primary" translation="yes">Si</button>
+                        <button id="button_no" class="btn btn-danger" translation="no">No</button>
+                    </div>
+                </div>
+            </div>
+            <!--Buttom's' row-->
+            <div class="row" id="upper_button_section">
+                <!--Left-side buttons-->
+                <div class="col">
+
+                    <button type="button" id="clear_form_button" class="btn btn-primary" onclick=""
+                        translation="reset_form">Reiniciar Formulario</button>
+                   <!--- <button type="button" id="sample_fill_form" class="btn btn-primary" onclick=""
+                        translation="fill_form">Fill sample form</button>-->
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="language_button"
+                        data-bs-toggle="dropdown" aria-expanded="false" translation="language">Idioma</button>
+                    <ul class="country dropdown-menu" id="languageSelector" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="english" translation="english">Inglés</a>
+                                <img class="country_flag" src="./images/english_flag.png">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="spanish" translation="spanish">Español</a>
+                                <img class="country_flag" src="./images/spanish_flag.png">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="galician" translation="galician">Gallego</a>
+                                <img class="country_flag" src="./images/galician_flag.png">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="icelandic" translation="icelandic">Islandeś</a>
+                                <img class="country_flag" src="./images/icelandic_flag.png">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="polish" translation="polish">Polaco</a>
+                                <img class="country_flag" src="./images/polish_flag.png">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="portuguese"
+                                    translation="portuguese">Portugués</a>
+                                <img class="country_flag" src="./images/portuguese_flag.png">
+                            </div>
+                        </li>
+                    </ul>
+
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="font_button"
+                        data-bs-toggle="dropdown" aria-expanded="false" translation="font">Fuente</button>
+                    <ul class="country dropdown-menu" id="fontSelector" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="LexieReadable" href="#"
+                                    value="LexieReadable">LexieReadable</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="Arial" href="#" value="Arial">Arial</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="Helvetica" href="#" value="Helvetica">Helvetica</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="Tahoma" href="#" value="Tahoma">Tahoma</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="Verdana" href="#" value="Verdana">Verdana</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="XuntaSans" href="#" value="XuntaSans">XuntaSans</a>
+                            </div>
+                        </li>
+
+
+                    </ul>
+
+
+                    <select class="selectpicker" id="fieldSelector" data-style="btn btn-primary" multiple>
+
+
+
+                        <option selected value='banner'
+                            data-content="<span value='banner' translation='banner'></span>">
+
+                        </option>
+
+                        <option selected value='activity_type'
+                            data-content="<span value='activity_type' translation='activity_type'>activity_type</span>">
+
+                        </option>
+
+                        <option selected value='information_hours'
+                            data-content="<span translation='information_hours'>Información sobre los horarios</span>">
+
+
+                        </option>
+
+                        <option selected value='location'
+                            data-content="<span translation='location'>Información sobre la localización</span>">
+
+                        </option>
+
+                        <option selected value='information_buy_tickets'
+                            data-content="<span translation='information_buy_tickets'>Información sobre la compra de entradas</span>">
+
+                        </option>
+
+                        <option selected value='information_facilities'
+                            data-content="<span translation='information_facilities'>Información sobre las instalaciones</span>">
+
+                        </option>
+
+                        <option selected value='information_guides'
+                            data-content="<span translation='information_guides'>Información sobre las guías</span>">
+
+                        </option>
+
+                        <option selected value='information_allowed_actions'
+                            data-content="<span translation='information_allowed_actions'>Información sobre acciones permitidas</span>">
+
+                        </option>
+
+                        <option selected value='covid_19_restrictions'
+                            data-content="<span translation='covid_19_restrictions'> Restricciones COVID-19</span>">
+
+                        </option>
+
+                        <option selected value='extra_information'
+                            data-content="<span translation='extra_information'>Más información</span>">
+                        </option>
+
+                        <option selected value='logos' data-content="<span translation='logos'>Logos</span>">
+
+                        </option>
+
+
+                    </select>
+                </div>
+
+
+
+
+
+
+                <div class="col">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="autoreload_pdf" checked>
+                        <label class="form-check-label" for="autoreload_pdf" translation="autoreload">Actualizar PDF
+                            automáticamente</label>
+                    </div>
+                </div>
+                <!--Right-side buttons-->
+                <div class="col">
+
+                    <button type="button" id="reload_pdf_button" class="btn btn-primary"
+                        translation="reload_pdf">Recargar PDF</button>
+                    <button type="button" id="download_pdf_button" class="btn btn-primary"
+                        translation="download_pdf">Descargar PDF</button>
+
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid" id="continer-fluid-main">
+            <!--Form and PDF layouts-->
+            <div class="splitter">
+                <!--Form layout-->
+                <div id="col-form-layout-first">
+                    <form class="row needs-validation" id="mainForm" novalidate>
+                        <div style="margin-top: 5px;"></div>
+
+
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/sponsor.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;">
+                                        Banner</h3>
+                                </div>
+                                <label for="validationInformacionPrevia" class="form-label" translation="banner">Adjunte
+                                    banner para el evento</label>
+
+
+                                <div class="drag-area-banner">
+                                    <h2 id="drag-text-banner" translation="drop_files">Drop files here... </h2>
+                                    <span translation="or">or</span>
+                                    <button type="button" class="btn-primary" translation="select_files">Select your
+                                        files</button>
+                                    <input type="file" name="file" id="input-files" hidden />
+                                </div>
+                                <div id="preview-banner"></div>
+
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/X.png" class="image_title">
+                                    <h3 for="validationTipoActividadCultural" class="text_title text-primary"
+                                        translation="activity_type" style="font-size: 20px;">Tipo de actividad
+                                        cultural</h3>
+                                </div>
+                                <select class="form-select" id="validationTipoActividadCultural" name="activity_type"
+                                    required>
+                                    <option selected disabled value="" translation="choose">Elige...</option>
+                                    <option translation="museum">Museo</option>
+                                    <option translation="exhibition">Exhibición</option>
+                                    <option translation="concert">Concierto</option>
+                                    <option translation="festival">Festival</option>
+
+                                    <option translation="workshop">Workshop</option>
+                                    <option translation="movie_screening">Movie Screening</option>
+                                    <option translation="literary_meeting">Literary Meeting</option>
+                                    <option translation="theatre_performance">Theatre Performance</option>
+                                    <option translation="dance_performance">Dance Performance</option>
+
+                                    <option translation="cultural_tour">Tour Cultural</option>
+                                    <option translation="performance">Actuación</option>
+                                    <option translation="fair">Feria</option>
+                                    <option translation="attraction">Atracción</option>
+                                    <option translation="religous_place">Lugar Religioso</option>
+                                    <option translation="online_event">Online Event</option>
+                                    <option translation="others">Otro</option>
+
+
+                                    <!--workshops, movie screening, literary meetings, theatre performance, dance performance-->
+                                </select>
+                                <textarea class="form-control" id="validationTipoActividadCulturalTextArea"
+                                    name="activity_type_textarea" placeholder="Especifique" translation="ph_specify"
+                                    hidden></textarea>
+                                <div class="invalid-feedback" translation="error_cultural_activity">
+                                    Por favor, seleccione una actividad cultural válida
+                                </div>
+                                <label for="validationActivityName" class="form-label" translation="activity_name"
+                                    style="font-size: 20px;">Nombre de la actividad</label>
+                                <textarea class="form-control" id="validationActivityName" maxlength='60'
+                                    placeholder="Indique el nombre de la actividad" name="activity_name"
+                                    translation="ph_activity_name" required></textarea>
+
+                                <div class="count-chars" id="count-chars-activity_name">
+                                    <span id="current-activity_name-chars">0</span>
+                                    <span id="maximum">/ 60</span>
+                                </div>
+                                <div class="invalid-feedback" id="error_fill_field" translation="error_fill_field">
+                                    Por favor, introduzca una descripción corta.
+                                </div>
+                                <label for="validationTextarea" class="form-label" translation="short_description"
+                                    style="font-size: 20px;">Descripción corta</label>
+                                <textarea class="form-control" id="validationShortDescription" maxlength='180'
+                                    placeholder="Describa brevemente la actividad cultural" name="short_description"
+                                    translation="ph_description_activity" required></textarea>
+                                <div class="count-chars" id="count-chars-short_description">
+                                    <span id="current-short_description-chars">0</span>
+                                    <span id="maximum">/ 180</span>
+                                </div>
+                                <div class="invalid-feedback" translation="error_short_description">
+                                    Por favor, introduzca una descripción corta.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/time_information.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;"
+                                        translation="information_hours">Información sobre los horarios</h3>
+                                </div>
+
+                                <div class="col-md-12">
+                                     <div class="row">
+                                        <div class="col" translation="specific_date">¿Tiene lugar en fechas o períodos específicos?</div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="validationFechaEspecifica"
+                                                    translation="yes">Si</label>
+                                                <input type="radio" class="form-check-input"
+                                                    id="validationFechaEspecifica" name="specific_date" value="Yes"
+                                                    required>
+
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input"
+                                                    id="validationFechaEspecifica" name="specific_date" value="No"
+                                                    required checked>
+                                                <label class="form-check-label" for="validationFechaEspecifica"
+                                                    translation="no">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="validationFechaEspecificaHidden" hidden>
+                                            <label for="validationFechaDatePicker" class="form-label"
+                                                translation="beginning_date">Fecha inicio</label>
+                                            <input type="date" id="validationFechaInicioDatePicker"
+                                                name="start_date" max="2030-12-31">
+
+
+                                            <label for="validationFechaDatePicker" class="form-label"
+                                                translation="ending_date">Fecha fin</label>
+
+                                            <input type="date" id="validationFechaFinDatePicker" name="end_date"
+                                                max="2030-12-31">
+
+
+                                        </div>
+                                    </div>
+                                    <label for="ValidationOpenDays" class="form-label" name="OpenDay"
+                                        translation="opening_days">¿Qué días está
+                                        abierto?</label>
+                                    <div class="row">
+                                        
+                                        <ul class="list-group" required>
+                                            <li class="list-group-item">
+                                                <input class="form-check-input me-1" type="checkbox" name="OpenDay"
+                                                    value="Monday" id="monday_checkbox" aria-label="Lunes">
+                                                <label translation="monday">Lunes</label>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input class="form-check-input me-1" type="checkbox" name="OpenDay"
+                                                    value="Tuesday" id="tuesday_checkbox" aria-label="Martes">
+                                                <label translation="tuesday">Martes</label>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input class="form-check-input me-1" type="checkbox" name="OpenDay"
+                                                    value="Wednesday" id="wednesday_checkbox" aria-label="Miércoles"
+                                                    >
+                                                <label translation="wednesday">Miércoles</label>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input class="form-check-input me-1" type="checkbox" name="OpenDay"
+                                                    value="Thursday" id="thursday_checkbox" aria-label="Jueves"
+                                                   >
+                                                <label translation="thursday">Jueves</label>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input class="form-check-input me-1" type="checkbox" name="OpenDay"
+                                                    value="Friday" id="friday_checkbox" aria-label="Viernes"
+                                                    >
+                                                <label translation="friday">Viernes</label>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input class="form-check-input me-1" type="checkbox" name="OpenDay"
+                                                    value="Saturday" id="saturday_checkbox" aria-label="Sábado"
+                                                    >
+                                                <label translation="saturday">Sábado</label>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <input class="form-check-input me-1" type="checkbox" name="OpenDay"
+                                                    value="Sunday" id="sunday_checkbox" aria-label="Domingo"
+                                                    >
+                                                <label translation="sunday">Domingo</label>
+                                            </li>
+                                        </ul>
+                                        
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" style="border-right: solid 1px black;">
+                                    <label translation="morning_schedule">Horario de mañana</label>
+                                    <div class="time_schedule">
+                                        <label for="validationHoraAbreMañana" translation="opening_hours">Hora de
+                                            apertura</label>
+                                        <div class="div_hours">
+
+                                            <select name="opening_hour_morning" id="opening_hour_morning">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8"
+                                                    , "9" , "10" , "11" , "12" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+
+                                            <select name="opening_minute_morning" id="opening_minute_morning">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "00" , "15" , "30" , "45" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+
+                                            <select name="opening_period_morning" id="opening_period_morning">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "am" , "pm" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="time_schedule">
+                                        <label for="validationHoraCierreAbreMañana" translation="closing_hour">Hora de
+                                            cierre</label>
+                                        <div class="div_hours">
+                                            <select name="closing_hour_morning" id="closing_hour_morning">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8"
+                                                    , "9" , "10" , "11" , "12" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                            <select name="closing_minute_morning" id="closing_minute_morning">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "00" , "15" , "30" , "45" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                            <select name="closing_period_morning" id="closing_period_morning">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "am" , "pm" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label translation="afternoon_schedule">Horario de tarde</label>
+                                    <div class="time_schedule">
+                                        <label for="validationHoraAbreTarde" translation="opening_hours">Hora de
+                                            apertura</label>
+                                        <div class="div_hours">
+                                            <select name="opening_hour_afternoon" id="opening_hour_afternoon">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8"
+                                                    , "9" , "10" , "11" , "12" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                            <select name="opening_minute_afternoon" id="opening_minute_afternoon">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "00" , "15" , "30" , "45" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                            <select name="opening_period_afternoon" id="opening_period_afternoon">
+                                                10
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "am" , "pm" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="time_schedule">
+                                        <label for="validationHoraCierreAbreTarde" translation="closing_hour">Hora de
+                                            cierre</label>
+
+                                        <div class="div_hours">
+                                            <select name="closing_hour_afternoon" id="closing_hour_afternoon">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "1" , "2" , "3" , "4" , "5" , "6" , "7" , "8"
+                                                    , "9" , "10" , "11" , "12" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+
+                                            <select name="closing_minute_afternoon" id="closing_minute_afternoon">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "00" , "15" , "30" , "45" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+
+                                            <select name="closing_period_afternoon" id="closing_period_afternoon">
+                                                <!-- name="opening_hours_afternoon" id="validationHoraAbreTarde"-->
+                                                <% for (let i of ["", "am" , "pm" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <!--<div class="col-md-12"></div>-->
+                        <div class="panel panel-primary">
+                            <!-- -->
+
+                            <div class="panel-body">
+
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/where.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;" translation="location">
+                                        Información sobre la localización</h3>
+                                </div>
+
+
+                                <div class="col-md-7 online-location" style="display:none;">
+                                    <label for="validationCalle" class="form-label" translation="url_online_event">URL
+                                        for the Online Event</label>
+                                    <input type="text" class="form-control" id="validationURL" name="url_online_event"
+                                        required>
+                                    <div class="invalid-feedback" translation="error_fill_field">
+                                        Por favor, complete este campo.
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-7 physical-location">
+                                    <label for="validationCalle" class="form-label" translation="street">Calle</label>
+                                    <input type="text" class="form-control" id="validationCalle" name="street" required>
+                                    <div class="invalid-feedback" translation="error_fill_field">
+                                        Por favor, complete este campo.
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 physical-location">
+                                    <label for="validationNumero" class="form-label" translation="number">Número</label>
+                                    <input type="number" class="form-control" name="number" id="validationNumero"
+                                        min="0">
+
+
+                                </div>
+
+                                <div class="col-md-3 physical-location">
+                                    <label for="validationCP" class="form-label" translation="zip">CP</label>
+                                    <input type="number" class="form-control" name="zip" id="validationCP" required>
+                                    <div class="invalid-feedback" translation="error_fill_field">
+                                        Por favor, complete este campo.
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="col-md-6 physical-location">
+                                    <label for="validationCiudad" class="form-label" translation="city">Ciudad</label>
+                                    <input type="text" class="form-control" name="city" id="validationCiudad" required>
+                                    <div class="invalid-feedback" translation="error_fill_field">
+                                        Por favor, complete este campo.
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 physical-location">
+                                    <label for="validationPais" class="form-label" translation="country">Pais</label>
+                                    <input type="text" class="form-control" name="country" id="validationPais" required>
+                                    <div class="invalid-feedback" translation="error_fill_field">
+                                        Por favor, complete este campo.
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7 physical-location">
+                                    <label for="validationCalle" class="form-label"
+                                        translation="additional_location_information">Información adicional sobre la
+                                        localización</label>
+
+                                    <textarea class="form-control" id="validationTextareaAdditionalInfo"
+                                        placeholder="Habitación, sala, zona, puerta, entrada..."
+                                        name="additional_location_information"
+                                        translation="ph_location_information_detail" required></textarea>
+                                    <div class="invalid-feedback" translation="error_fill_field">
+                                        Por favor, complete este campo.
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 physical-location">
+                                    <label class="form-label" translation="how_to_get_there">¿Cómo se podría llegar
+                                        hasta allí?</label>
+                                    <ul>
+                                        <li>
+                                            <label for="validationTaxi" translation="taxi">Taxi:&nbsp;&nbsp;</label>
+                                            <div class="form-check form-check-inline">
+
+                                                <input type="checkbox" class="form-check-input" id="validationTaxi"
+                                                    name="taxi" value="Yes" required>
+
+                                            </div>
+                                            <!--<div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="validationTaxi"
+                                                    translation="yes">Si</label>
+                                                <input type="radio" class="form-check-input" id="validationTaxi"
+                                                    name="taxi" value="Yes" required>
+                                            </div>
+
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input" id="validationTaxiNo"
+                                                    name="taxi" value="No" required>
+                                                <label class="form-check-label" for="validationTaxiNo"
+                                                    translation="no">No</label>
+                                            </div>-->
+
+                                        </li>
+
+                                        <li>
+                                            <label for="validationCoche" translation="car">Coche:&nbsp;&nbsp;</label>
+
+                                            <div class="form-check form-check-inline">
+
+                                                <input type="checkbox" class="form-check-input" id="validationCoche"
+                                                    name="car" value="Yes" required>
+
+                                            </div>
+
+                                            <!--<div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="validationCoche"
+                                                    translation="yes">Si</label>
+                                                <input type="radio" class="form-check-input" id="validationCoche"
+                                                    name="car" value="Yes" required>
+                                            </div>
+
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input" id="validationCocheNo"
+                                                    name="car" value="No" required>
+                                                <label class="form-check-label" for="validationCocheNo"
+                                                    translation="no">No</label>
+                                            </div>-->
+
+                                        </li>
+                                        <li>
+                                            <label for="validationAutobus"
+                                                translation="bus">Autobús:&nbsp;&nbsp;</label>
+
+                                            <div class="form-check form-check-inline">
+
+                                                <input type="checkbox" class="form-check-input" id="validationAutobus"
+                                                    name="bus" value="Yes" required>
+
+                                            </div>
+                                            <!--<div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="validationAutobus"
+                                                    translation="yes">Si</label>
+                                                <input type="radio" class="form-check-input" id="validationAutobus"
+                                                    name="bus" value="Yes" required>
+
+                                            </div>
+
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input" id="validationAutobusNo"
+                                                    name="bus" value="No" required>
+                                                <label class="form-check-label" for="validationAutobusNo"
+                                                    translation="no">No</label>
+                                            </div>-->
+
+
+                                            <div id="extraBusInformation" hidden>
+                                                <input type="text" class="form-control" id="validationBusLines"
+                                                    name="bus_lines" placeholder="Líneas de bus"
+                                                    translation="ph_bus_lines"></input>
+
+                                                <div class="invalid-feedback" translation="error_fill_field">
+                                                    Por favor, complete este campo.
+                                                </div>
+
+                                                <input type="text" class="form-control" id="validationBusTimetable"
+                                                    name="bus_timetables" placeholder="Horarios del bus"
+                                                    translation="ph_bus_timetables"></input>
+
+                                                <div class="invalid-feedback" translation="error_fill_field">
+                                                    Por favor, complete este campo.
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <label for="validationMetro" translation="metro">Metro:&nbsp;&nbsp;</label>
+                                            <div class="form-check form-check-inline">
+                                                    
+                                                <input type="checkbox" class="form-check-input"
+                                                    id="validationMetro" name="metro"
+                                                    value="Yes" required>
+
+                                            </div>
+
+                                            <!--<div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="validationMetro"
+                                                    translation="yes">Si</label>
+                                                <input type="radio" class="form-check-input" id="validationMetro"
+                                                    name="metro" value="Yes" required>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input" id="validationMetroNo"
+                                                    name="metro" value="No" required>
+                                                <label class="form-check-label" for="validationMetroNo"
+                                                    translation="no">No</label>
+                                            </div>-->
+                                            <div id="extraMetroInformation" hidden>
+                                                <input type="text" class="form-control" id="validationMetroLines"
+                                                    name="metro_lines" placeholder="Líneas de metro"
+                                                    translation="ph_metro_lines"></input>
+                                                <div class="invalid-feedback" translation="error_fill_field">
+                                                    Por favor, complete este campo.
+                                                </div>
+                                                <input type="text" class="form-control" id="validationMetroTimetable"
+                                                    name="metro_timetables" placeholder="Horarios del metro"
+                                                    translation="ph_metro_timetables"></input>
+                                                <div class="invalid-feedback" translation="error_fill_field">
+                                                    Por favor, complete este campo.
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <li>
+                                            <label for="validationAparcamiento"
+                                                translation="parking">Aparcamiento:&nbsp;&nbsp;</label>
+
+                                                <div class="form-check form-check-inline">
+                                                    
+                                                    <input type="checkbox" class="form-check-input"
+                                                        id="validationAparcamiento" name="parking"
+                                                        value="Yes" required>
+    
+                                                </div>
+
+                                                
+                                            <!--<div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="validationAparcamiento"
+                                                    translation="yes">Si</label>
+                                                <input type="radio" class="form-check-input" id="validationAparcamiento"
+                                                    name="parking" value="Yes" required>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input" id="validationAparcamiento"
+                                                    name="parking" value="No" required>
+                                                <label class="form-check-label" for="validationAparcamiento"
+                                                    translation="no">No</label>
+                                            </div>-->
+                                            <div id="extraparkingInformation" hidden>
+                                                <input type="number" class="form-control" id="validationNumPlazas"
+                                                    name="parking_slots" placeholder="Número de plazas"
+                                                    translation="ph_parking_slot"></input>
+                                                <div class="invalid-feedback" translation="error_fill_field">
+                                                    Por favor, complete este campo.
+                                                </div>
+
+                                                <div class="col col-coin">
+
+                                                    <input type="number" class="form-control"
+                                                        id="validationPrecioPlazas" name="parking_price"
+                                                        placeholder="Precio de las plazas"
+                                                        translation="ph_slot_price"></input>
+
+                                                    <select name="parking_price_coin" id="validationPrecioPlazasCoin"
+                                                        required>
+                                                        <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                                        <option value="<%= i %>">
+                                                            <%= i %>
+                                                        </option>
+                                                        <% } %>
+                                                    </select>
+                                                    <div class="invalid-feedback" translation="error_fill_field">
+                                                        Por favor, complete este campo.
+                                                    </div>
+                                                </div>
+
+
+
+                                                <input type="number" class="form-control"
+                                                    id="validationPlazasMinusvalidos" name="disabled_num_slots"
+                                                    placeholder="Número de plazas para minusválidos"
+                                                    translation="ph_disabled_parking_slot"></input>
+
+                                                <div class="invalid-feedback" translation="error_fill_field">
+                                                    Por favor, complete este campo.
+                                                </div>
+
+
+                                                <div class="col col-coin">
+
+                                                    <input type="number" class="form-control"
+                                                        id="validationPrecioPlazasMinusvalidos"
+                                                        name="disabled_price_slots"
+                                                        placeholder="Precio de las plazas para minusválidos"
+                                                        translation="ph_disabled_price_parking_slot"></input>
+
+                                                    <select name="disabled_parking_price_coin"
+                                                        id="validationPrecioPlazasMinusvalidosCoin" required>
+                                                        <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                                        <option value="<%= i %>">
+                                                            <%= i %>
+                                                        </option>
+                                                        <% } %>
+                                                    </select>
+
+                                                    <div class="invalid-feedback" translation="error_fill_field">
+                                                        Por favor, complete este campo.
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/ticket_generic.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;"
+                                        translation="information_buy_tickets"> Información sobre la compra de entradas
+                                    </h3>
+                                </div>
+
+                                <label for="validationTextarea" class="form-label" translation="buy_tickets">Compra de
+                                    billetes</label>
+
+                                <div class="row">
+                                    <!--Left-side buttons-->
+                                    <div class="col" translation="online">On line</div>
+                                    <div class="col">
+
+                                        <div class="form-check form-check-inline">
+
+                                            <input type="checkbox" class="form-check-input" id="validationOnline"
+                                                name="online" value="Yes" required>
+
+                                        </div>
+
+                                        <!--<div class="form-check form-check-inline">
+                                            <label class="form-check-label" for="validationOnline"
+                                                translation="yes">Si</label>
+                                            <input type="radio" class="form-check-input" id="validationOnline"
+                                                name="online" value="Yes" required>
+
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" class="form-check-input" id="validationOnline"
+                                                name="online" value="No" required>
+                                            <label class="form-check-label" for="validationOnline"
+                                                translation="no">No</label>
+                                        </div>-->
+                                    </div>
+                                </div>
+                                <div class="row" id="validationOnlineTextareahidden" hidden>
+                                    <label for="validationOnlineTextarea" class="form-label"
+                                        translation="where_buy_tickets_online">¿En qué web se pueden comprar las
+                                        entradas?</label>
+                                    <textarea class="form-control" id="validationOnlineTextarea" name="ph_link"
+                                        placeholder="Enlace" translation="ph_link"></textarea>
+                                </div>
+                                <div class="row">
+                                    <!--Left-side buttons-->
+                                    <div class="col" translation="onsite">En el sitio</div>
+                                    <div class="col">
+                                        <input type="checkbox" class="form-check-input" id="validationOnsite"
+                                            name="onsite" value="Yes" required>
+
+                                    </div>
+                                </div>
+                                <div class="row" id="validationOnsiteTextareahidden" hidden>
+                                    <label for="validationOnsiteTextarea" class="form-label"
+                                        translation="where_buy_tickets">¿Dónde se pueden comprar las entradas
+                                        presencialmente?</label>
+                                    <textarea class="form-control" id="validationOnsiteTextarea" name="where"
+                                        placeholder="¿Dónde?" translation="where"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col" for="validationPrecio" class="form-label"
+                                        translation="normal_price">Precio normal
+                                    </div>
+                                    <div class="col col-coin">
+                                        <input type="number" class="form-control number_coin" name="normal_price"
+                                            id="validationPrecio" required>
+                                        <!--  <input type="text" class="form-control coin" name="normal_price_coin"
+                                            id="validationPrecioCoin" minlength="1" , maxlength="1" placeholder="€"
+                                            required>-->
+
+
+                                        <select name="normal_price_coin" id="validationPrecioCoin" required>
+                                            <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                            <option value="<%= i %>">
+                                                <%= i %>
+                                            </option>
+                                            <% } %>
+                                        </select>
+                                        <div class="invalid-feedback" translation="error_fill_field">
+                                            Por favor, complete este campo.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col" translation="reduced_price">Precio reducido</div>
+                                    <div class="col">
+                                        <div class="col">
+                                            <input type="checkbox" class="form-check-input"
+                                                id="validationPrecioReducido" name="reduced_price"
+                                                value="Yes" required>
+
+                                        </div>
+                                        <!--<div class="form-check form-check-inline">
+                                            <label class="form-check-label" for="validationPrecioReducido"
+                                                translation="yes">Si</label>
+                                            <input type="radio" class="form-check-input" id="validationPrecioReducido"
+                                                name="reduced_price" value="Yes" required>
+
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" class="form-check-input" id="validationPrecioReducido"
+                                                name="reduced_price" value="No" required>
+                                            <label class="form-check-label" for="validationPrecioReducido"
+                                                translation="no">No</label>
+                                        </div>-->
+                                    </div>
+
+                                </div>
+                                <div class="row" id="validationPrecioReducidoHidden" hidden>
+                                    <div class="col col-coin">
+                                        <input type="number" class="form-control number_coin"
+                                            id="validationPrecioReducidoTextarea" name="reduced_price_when"
+                                            placeholder="¿Cuándo?" translation="ph_when"></input>
+
+                                        <select name="reduced_price_when_coin" id="validationPrecioReducidoCoin"
+                                            required>
+                                            <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                            <option value="<%= i %>">
+                                                <%= i %>
+                                            </option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col" translation="family_price">Precio especial por familia</div>
+                                    <div class="col">
+                                        <div class="col">
+                                            <input type="checkbox" class="form-check-input" id="validationPrecioFamilia"
+                                                name="family_price" value="Yes" required>
+
+                                        </div>
+                                        <!--<div class="form-check form-check-inline">
+                                            <label class="form-check-label" for="validationPrecioFamilia"
+                                                translation="yes">Si</label>
+                                            <input type="radio" class="form-check-input" id="validationPrecioFamilia"
+                                                name="family_price" value="Yes" required>
+
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" class="form-check-input" id="validationPrecioFamilia"
+                                                name="family_price" value="No" required>
+                                            <label class="form-check-label" for="validationPrecioFamilia"
+                                                translation="no">No</label>
+                                        </div>-->
+                                    </div>
+                                </div>
+                                <div class="row" id="precioFamiliaExtraInformation" hidden>
+                                    <div class="col-md-6">
+                                        <label for="validationPrecioFamiliaExtra" class="form-label"
+                                            translation="member_price">Precio por miembro
+                                            (€)</label>
+                                        <div class="col-coin">
+                                            <input type="number" class="form-control number_coin" name="member_price"
+                                                id="validationPrecioFamiliaExtra">
+                                            <!--<input type="text" class="form-control coin" name="member_price_coin"
+                                                id="validationPrecioFamiliaExtraCoin" minlength="1" , maxlength="1"
+                                                placeholder="€" required>-->
+                                            <select name="member_price_coin" id="validationPrecioFamiliaExtraCoin">
+                                                <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                                <option value="<%= i %>">
+                                                    <%= i %>
+                                                </option>
+                                                <% } %>
+                                            </select>
+                                        </div>
+                                        <div class="invalid-feedback" translation="error_fill_field">
+                                            Por favor, complete este campo.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="validationMaxNumNinhos" class="form-label"
+                                            translation="max_num_children">Maximo número de niños</label>
+                                        <input type="number" class="form-control" name="max_num_children"
+                                            id="validationMaxNumNinhos">
+                                        <div class="invalid-feedback" translation="error_fill_field">
+                                            Por favor, complete este campo.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="validationMaxEdadNinhos" class="form-label"
+                                            translation="max_age_children">Edad máxima de los niños</label>
+                                        <input type="number" class="form-control" name="max_age_children"
+                                            id="validationMaxEdadNinhos">
+                                        <div class="invalid-feedback" translation="error_fill_field">
+                                            Por favor, complete este campo.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col" translation="free_interpreter">Gratis para intérprete o facilitador
+                                    </div>
+                                    <div class="col">
+                                        <div class="col">
+                                            <input type="checkbox" class="form-check-input"
+                                                id="validationPrecioInterprete" name="free_interpreter"
+                                                value="Yes" required>
+
+                                        </div>
+                                        <!--<div class="form-check form-check-inline">
+                                            <label class="form-check-label" for="validationPrecioInterprete"
+                                                translation="yes">Si</label>
+                                            <input type="radio" class="form-check-input" id="validationPrecioInterprete"
+                                                name="free_interpreter" value="Yes" required>
+
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" class="form-check-input" id="validationPrecioInterprete"
+                                                name="free_interpreter" value="No" required>
+                                            <label class="form-check-label" for="validationPrecioInterprete"
+                                                translation="no">No</label>
+                                        </div>-->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" translation="other_discounts">Otro tipo de descuentos</div>
+                                    <div class="col">
+                                        <div class="col">
+                                            <input type="checkbox" class="form-check-input"
+                                                id="validationOtroTipoDescuento" name="other_discounts"
+                                                value="Yes" required>
+
+                                        </div>
+                                        <!--<div class="form-check form-check-inline">
+                                            <label class="form-check-label" for="validationOtroTipoDescuento"
+                                                translation="yes">Si</label>
+                                            <input type="radio" class="form-check-input"
+                                                id="validationOtroTipoDescuento" name="other_discounts" value="Yes"
+                                                required>
+
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" class="form-check-input"
+                                                id="validationOtroTipoDescuentoNo" name="other_discounts" value="No"
+                                                required>
+                                            <label class="form-check-label" for="validationOtroTipoDescuento"
+                                                translation="no">No</label>
+                                        </div>-->
+                                    </div>
+                                </div>
+                                <div class="row" id="otroTipoDescuentohidden" hidden>
+                                    <label for="validationTipoDescuentoTextarea" class="form-label"
+                                        translation="terms_condition">Términos y
+                                        condiciones</label>
+                                    <textarea class="form-control" id="validationTipoDescuentoTextarea"
+                                        name="terms_condition"
+                                        placeholder="Describa brevemente los términos y condiciones"
+                                        translation="ph_descrive_terms"></textarea>
+                                    <div class="invalid-feedback" translation="error_short_description">
+                                        Por favor, introduzca una descripción corta.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/features_information.png" class="image_title"
+                                        style="width: 88px;height: 64px;">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;"
+                                        translation="information_facilities">Información sobre las instalaciones</h3>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <% for ([key_facilitie, facilitie] of Object.entries(facilities)) { %>
+                                    <div class="row">
+                                        <!--Left-side buttons-->
+                                        <div class="col" translation="<%= key_facilitie %>">
+                                            <%= facilitie %>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+
+                                                <input type="checkbox" class="form-check-input"
+                                                    id="validation_<%= key_facilitie %>" name="<%= key_facilitie %>"
+                                                    value="Yes" required>
+
+                                            </div>
+                                            <!--<div class="form-check form-check-inline">
+                                                    <label class="form-check-label"
+                                                        for="validation_<%= key_facilitie %>"
+                                                        translation="yes">Si</label>
+                                                    <input type="radio" class="form-check-input"
+                                                        id="validation_<%= key_facilitie %>" name="<%= key_facilitie %>"
+                                                        value="Yes" required>
+
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input type="radio" class="form-check-input"
+                                                        id="validation_<%= key_facilitie %>No"
+                                                        name="<%= key_facilitie %>" value="No" required>
+                                                    <label class="form-check-label"
+                                                        for="validation_<%= key_facilitie %>No"
+                                                        translation="no">No</label>
+                                                </div> -->
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div class="col-md-12"></div>-->
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/guide_generic.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;"
+                                        translation="information_guides">Información sobre las guías</h3>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <% for ([key_guide, guide] of Object.entries(guides)) { %>
+                                    <div class="row">
+                                        <!--Left-side buttons-->
+                                        <div class="col" translation="<%= key_guide %>">
+                                            <%= guide %>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+
+                                                <input type="checkbox" class="form-check-input"
+                                                    id="validation_<%= key_guide %>" name="<%= key_guide %>" value="Yes"
+                                                    required>
+
+                                            </div>
+                                            <!--<div class="form-check form-check-inline">
+                                                    <label class="form-check-label" for="validation_<%= key_guide %>"
+                                                        translation="yes">Si</label>
+                                                    <input type="radio" class="form-check-input"
+                                                        id="validation_<%= key_guide %>" name="<%= key_guide %>"
+                                                        value="Yes" required>
+
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input type="radio" class="form-check-input"
+                                                        id="validation_<%= key_guide %>No" name="<%= key_guide %>"
+                                                        value="No" required>
+                                                    <label class="form-check-label" for="validation_<%= key_guide %>No"
+                                                        translation="no">No</label>
+                                                </div>-->
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                    <div class="row">
+                                        <!--Left-side buttons-->
+                                        <div class="col" translation="private_tours">Visitas privadas</div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+
+                                                <input type="checkbox" class="form-check-input"
+                                                    id="validation_private_tours" name="private_tours" value="Yes" required>
+
+                                            </div>
+                                            <!--<div class="form-check form-check-inline">
+                                                        <label class="form-check-label" for="validationVisitasPrivadas"
+                                                            translation="yes"> Si</label>
+                                                        <input type="radio" class="form-check-input"
+                                                            id="validationVisitasPrivadas" name="private_tours"
+                                                            value="Yes" required>
+
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" class="form-check-input"
+                                                            id="validationVisitasPrivadas" name="private_tours"
+                                                            value="No" required>
+                                                        <label class="form-check-label" for="validationVisitasPrivadas"
+                                                            translation="no">No</label>
+                                                    </div>-->
+                                        </div>
+                                    </div>
+                                    <div class="row" id="privateguideExtraInformation" hidden>
+                                        <div class="col-md-7">
+                                            <label for="validationDuracionVisitaPrivadaCiudad" class="form-label"
+                                                translation="duration_private_tour">Duración
+                                                de la visita privada (minutos)</label>
+                                            <input type="number" class="form-control" name="duration_private_tour"
+                                                id="validationDuracionVisitaPrivadaCiudad">
+                                            <div class="invalid-feedback" translation="error_fill_field">
+                                                Por favor, complete este campo.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label for="validationPrecioVisitaPrivada" class="form-label"
+                                                translation="price_private_tour">Precio de la
+                                                visita privada</label>
+                                            <div class="col-coin">
+                                                <input type="number" class="form-control number_coin"
+                                                    name="price_private_tour" id="validationPrecioVisitaPrivada">
+                                                <!--<input type="text" class="form-control coin"
+                                                            name="price_private_tour_coin"
+                                                            id="validationPrecioVisitaPrivadaCoin" minlength="1" ,
+                                                            maxlength="1" placeholder="€" required>-->
+
+                                                <select name="price_private_tour_coin"
+                                                    id="validationPrecioVisitaPrivadaCoin">
+                                                    <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                                    <option value="<%= i %>">
+                                                        <%= i %>
+                                                    </option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                            <div class="invalid-feedback" translation="error_fill_field">
+                                                Por favor, complete este campo.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!--<div class="col-md-12"></div>-->
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/allowed_actions.png" class="image_title"
+                                        style="width: 88px;height: 64px;">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;"
+                                        translation="information_allowed_actions">Información sobre acciones permitidas
+                                    </h3>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <% for ([key_allowed_action, allowed_action] of Object.entries(allowed_actions)) { %>
+                                    <div class="row">
+                                        <!--Left-side buttons-->
+                                        <div class="col" translation="<%= key_allowed_action %>">
+                                            <%= allowed_action %>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label"
+                                                    for="validation_<%= key_allowed_action %>" translation="allowed">
+                                                    Permitido</label>
+                                                <input type="radio" class="form-check-input"
+                                                    id="validation_<%= key_allowed_action %>"
+                                                    name="<%= key_allowed_action %>" value="Yes" required>
+
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input"
+                                                    id="validation_<%= key_allowed_action %>No"
+                                                    name="<%= key_allowed_action %>" value="No" required>
+                                                <label class="form-check-label"
+                                                    for="validation<%= key_allowed_action %>No"
+                                                    translation="not_allowed"> permitido</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/covid-19.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;"
+                                        translation="covid_19_restrictions">Restricciones COVID-19</h3>
+                                </div>
+                                <div class="col-md-12">
+                                    <% for ([key_restriction, restriction] of Object.entries(covid_19_restrictions)) {
+                                        %>
+                                    <div class="row">
+                                        <!--Left-side buttons-->
+                                        <div class="col" translation="<%= key_restriction %>">
+                                            <%= restriction %>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+
+                                                <input type="checkbox" class="form-check-input"
+                                                    id="validation_<%= key_restriction %>" name="<%= key_restriction %>"
+                                                    value="Yes" required>
+
+                                            </div>
+                                            <!--<div class="form-check form-check-inline">
+                                                    <label class="form-check-label"
+                                                        for="validation_<%= key_restriction %>"
+                                                        translation="yes">Si</label>
+                                                    <input type="radio" class="form-check-input"
+                                                        id="validation_<%= key_restriction %>"
+                                                        name="<%= key_restriction %>" value="Yes" required>
+
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input type="radio" class="form-check-input"
+                                                        id="validation_<%= key_restriction %>No"
+                                                        name="<%= key_restriction %>" value="No" required>
+                                                    <label class="form-check-label"
+                                                        for="validation<%= key_restriction %>No"
+                                                        translation="no">No</label>
+                                                </div>-->
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <!--<div class="col-md-12"></div>-->
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/more_information.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;"
+                                        translation="extra_information">Más información</h3>
+                                </div>
+
+                                <div class="mb-12">
+                                    <label for="validationInformacionPrevia" class="form-label"
+                                        translation="before_going_info">Información previa al viaje</label>
+                                    <textarea class="form-control" id="validationInformacionPrevia" maxlength="105"
+                                        name="before_going_info"
+                                        placeholder="¿Necesita el usuario saber algo más antes de ir?"
+                                        translation="ph_extra_info"></textarea>
+
+                                    <div class="count-chars" id="count-chars-before_going_info">
+                                        <span id="current-before_going_info-chars">0</span>
+                                        <span id="maximum">/ 105</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-12">
+                                    <label for="validationInformacionExtra" class="form-label"
+                                        translation="give_extra_info"> Información extra que se desee
+                                        detallar</label>
+                                    <textarea class="form-control" id="validationInformacionExtra" maxlength="105"
+                                        name="give_extra_info" placeholder="¿Desea contar algo más sobre este evento?"
+                                        translation="ph_event_extra_info"></textarea>
+
+                                    <div class="count-chars" id="count-chars-give_extra_info">
+                                        <span id="current-give_extra_info-chars">0</span>
+                                        <span id="maximum">/ 105</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <!--Left-side buttons-->
+                                        <div class="col" translation="virtual_tours">¿Sería posible hacer visitas
+                                            virtuales?</div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label" for="validationVisitasVirtuales"
+                                                    translation="yes">Si</label>
+                                                <input type="radio" class="form-check-input"
+                                                    id="validationVisitasVirtuales" name="virtual_tours" value="Yes"
+                                                    required>
+
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input"
+                                                    id="validationVisitasVirtualesNo" name="virtual_tours" value="No"
+                                                    required>
+                                                <label class="form-check-label" for="validationVisitasVirtuales"
+                                                    translation="no">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <textarea class="form-control" id="validationVisitasVirtualesTextArea"
+                                            name="link_virtual_tour" placeholder="Enlace"
+                                            translation="ph_link_virtual_tour" hidden></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <div class="text-on-pannel text-primary">
+                                    <img src="./images/sponsor.png" class="image_title">
+                                    <h3 class="text_title text-primary" style="font-size: 20px;">
+                                        Logos</h3>
+                                </div>
+                                <label for="validationInformacionPrevia" class="form-label" translation="logo">Adjunte
+                                    logo(s) para el evento</label>
+
+                                <div class="drag-area">
+                                    <h2 id="drag-text" translation="drop_files">Drop files here... </h2>
+                                    <span translation="or">or</span>
+                                    <button type="button" class="btn-primary" translation="select_files">Select your
+                                        files</button>
+                                    <input type="file" name="file" id="input-files" multiple hidden />
+                                </div>
+                                <div id="preview"></div>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div id="separator"></div>
+                <!--PDF view layout-->
+                <div id="col-form-layout-second" style="display: flex; flex: 1;">
+                    <a id="zoom_in" class="float">
+                        <i class="fa fa-plus my-float_plus"></i>
+                    </a>
+                    <a id="zoom_out" class="float">
+                        <i class="fa fa-minus my-float_minus"></i>
+                    </a>
+                    <!--<div id="overlay"></div>-->
+                    <div class='row' id='pdf-viewer'>
+                        <div id="canvas_container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+        <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+        <script type="module" src="js/index.js"></script>
+        <!--<script src="js/language.js"></script>-->
+
+        <!-- MDB -->
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
+        </script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+
+        <script src="//cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/js/bootstrap-select.js"></script>
+        <script
+            src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js">
+        </script>
+
+
+    </footer>
+
+</body>
+
+</html>
