@@ -70,8 +70,10 @@
 
                     <button type="button" id="clear_form_button" class="btn btn-primary" onclick=""
                         translation="reset_form">Reiniciar Formulario</button>
+
                    <!--- <button type="button" id="sample_fill_form" class="btn btn-primary" onclick=""
                         translation="fill_form">Fill sample form</button>-->
+
                     <button class="btn btn-primary dropdown-toggle" type="button" id="language_button"
                         data-bs-toggle="dropdown" aria-expanded="false" translation="language">Idioma</button>
                     <ul class="country dropdown-menu" id="languageSelector" aria-labelledby="dropdownMenuButton1">
@@ -148,9 +150,31 @@
                                 <a class="dropdown-item" id="XuntaSans" href="#" value="XuntaSans">XuntaSans</a>
                             </div>
                         </li>
-
-
                     </ul>
+
+
+
+
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="bgcolor_button"
+                        data-bs-toggle="dropdown" aria-expanded="false" translation="bgcolor">Color de fondo</button>
+                    <ul class="country dropdown-menu" id="bgcolorSelector" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="#f9f8ec" translation="ochercolor">Ocre</a>
+                                <img class="country_flag" src="./images/color_ocher.png">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="#ffffff" translation="whitecolor">Blanco</a>
+                                <img class="country_flag" src="./images/color_white.png">
+                            </div>
+                        </li>
+                    </ul>
+
+
+
+
 
 
                     <select class="selectpicker" id="fieldSelector" data-style="btn btn-primary" multiple>

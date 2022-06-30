@@ -2,6 +2,7 @@ import "./language.js";
 
 var UUID = null;
 var font = "LexieReadable";
+var bgcolor = "#f9f8ec"
 var previous_blob_uri = null;
 var pdf = {
   pdf_document: null,
@@ -15,7 +16,7 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.1";
+var version = "1.2.01";
 const dictionary = getDictionary();
 
 Object.defineProperty(pdf, "isReady", {
@@ -288,13 +289,25 @@ window.onload = function () {
     });
 
   // Font selection button event
-
   document
     .querySelector("#fontSelector")
     .addEventListener("click", function (e) {
       font = e.target.attributes["value"].value;
       reloadPDF(); //reload automatically on font changes
     });
+
+
+
+  // Background color selection button event
+  document
+    .querySelector("#bgcolorSelector")
+    .addEventListener("click", function (e) {
+      bgcolor = e.target.attributes["value"].value;
+      reloadPDF(); //reload automatically on font changes
+    });
+
+
+
 
   // Functionality of reload pdf button
   document
@@ -1053,6 +1066,7 @@ async function reloadPDF(download = false) {
       } else {
         data["font"] = font;
       }
+      data["bgcolor"] = bgcolor;
       data["version"] = version;
       data["enabled_fields"] = Array.from(
         $("#fieldSelector").find(":selected")

@@ -92,6 +92,10 @@ html, body {
     display: inline!important;
 }
 
+#bgcolor_button.show{
+    display: inline!important;
+}
+
 
 
 /*CSS for the form*/

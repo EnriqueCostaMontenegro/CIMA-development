@@ -228,6 +228,20 @@ module.exports.loadBanner = (req, res) => {
 
 //All the logic for the form processing and PDF generation
 module.exports.validateForm = async function (req, res, next) {
+  let global_background_color = "#f9f8ec"
+  //let global_background_color = "#ffffff"
+
+  //console.log("[DEBUG] received bgcolor ---%s---", req.body["bgcolor"])
+
+  if (req.body["bgcolor"] == undefined) {
+    global_background_color = "#f9f8ec";
+  } else {
+    global_background_color = req.body["bgcolor"];
+  }
+
+  //console.log("[DEBUG] selected global_background_color ---%s---", global_background_color)
+
+
   var new_pdf_document = createPDFDocument();
   var doc = new_pdf_document.document;
   var structure = new_pdf_document.structure;
@@ -716,9 +730,10 @@ module.exports.validateForm = async function (req, res, next) {
    */
 
   function createPDFDocument(
-    background_color = "#f9f8ec",
-    title = "Allure Document",
-    author = "Technology Information Group (Vigo)"
+    //background_color = "#f9f8ec",
+    //background_color = "#ffffff", //blanco
+    title = "Cultural Information Made Accessible Document",
+    author = "ALLURE Project"
   ) {
     /**
      * Following British Dyslexia Association style guide
@@ -751,7 +766,7 @@ module.exports.validateForm = async function (req, res, next) {
       size: "A4",
     });
 
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill(background_color);
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
 
     // Initilizate document meta-data
     doc.info["Title"] = title;
@@ -1803,7 +1818,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
 
@@ -1872,9 +1887,7 @@ module.exports.validateForm = async function (req, res, next) {
           try {
             if ((req.body["bus_lines"].trim().match(/\s/g) || []).length >= 1)
               s_line = "s";
-            if (
-              (req.body["bus_timetables"].trim().match(/\s/g) || []).length >= 1
-            )
+            if ((req.body["bus_timetables"].trim().match(/\s/g) || []).length >= 1)
               s_timetable = "s";
           } catch (e) { }
 
@@ -1883,7 +1896,7 @@ module.exports.validateForm = async function (req, res, next) {
             .replace("{timetable}", bustimetable)
             .replace("{s1}", s_line)
             .replace("{s2}", s_timetable);
-        } else if (element === "metro") {
+          } else if (element === "metro") {
           let [metrolines, metrotimetable, s_line, s_timetable] = [
             req.body["metro_lines"],
             req.body["metro_timetables"],
@@ -1893,10 +1906,7 @@ module.exports.validateForm = async function (req, res, next) {
           try {
             if ((req.body["metro_lines"].trim().match(/\s/g) || []).length >= 1)
               s_line = "s";
-            if (
-              (req.body["metro_timetables"].trim().match(/\s/g) || []).length >=
-              1
-            )
+            if ((req.body["metro_timetables"].trim().match(/\s/g) || []).length >=1)
               s_timetable = "s";
           } catch (e) { }
 
@@ -1905,7 +1915,7 @@ module.exports.validateForm = async function (req, res, next) {
             .replace("{timetable}", metrotimetable)
             .replace("{s1}", s_line)
             .replace("{s2}", s_timetable);
-        }
+          }
 
         if (extra_text && (element === "bus" || element === "metro")) {
           add += 1;
@@ -2169,7 +2179,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
       add_new_page = true;
     }
@@ -2377,7 +2387,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     } else {
       global_pos_y += 50 + constants.SPACE_BETWEEN_ELEMENTS + space * 31;
@@ -2402,7 +2412,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     } else if (global_pos_y + 50 + 90 * 2 > doc.page.height - 20) {
       doc.addPage({
@@ -2414,7 +2424,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
 
@@ -2537,7 +2547,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
   }
@@ -2725,7 +2735,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
 
@@ -2813,7 +2823,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
 
@@ -2870,7 +2880,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
 
@@ -2956,7 +2966,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
   }
@@ -3117,7 +3127,7 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     } else {
       global_pos_y += 90;
@@ -3164,6 +3174,8 @@ module.exports.validateForm = async function (req, res, next) {
   }
 
   function print_disclaimer_info() {
+    //debug_print_global_pos_y("print_disclaimer_info - in", global_pos_y, doc.page.height)
+
     const logos = [];
     var extra_space = 0;
     if (!fs.existsSync("./user_images/logos/" + cookie + "/")) {
@@ -3188,7 +3200,9 @@ module.exports.validateForm = async function (req, res, next) {
     //console.log(global_pos_y + 31*5,"vs ", doc.page.height)
     //console.log("[DEBUG]:", global_pos_y + 14 * 5)
     //console.log("[DEBUG]:", doc.page.height)
-    if (global_pos_y + 14 * 6 > doc.page.height) {
+
+    // this section has a fixed height of 155
+    if (global_pos_y + 155 > doc.page.height) {
       doc.addPage({
         margins: {
           top: 10,
@@ -3198,10 +3212,12 @@ module.exports.validateForm = async function (req, res, next) {
         },
         size: "A4",
       });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#f9f8ec");
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
       add_new_page = true;
     }
+
+    //debug_print_global_pos_y("print_disclaimer_info - before printing", global_pos_y, doc.page.height)
 
     print_text({
       characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
@@ -3222,10 +3238,72 @@ module.exports.validateForm = async function (req, res, next) {
       false
     );
 
-    doc.image("./images/cofinanciadoEN.png", 450, global_pos_y + 110, {
-      fit: [120, 120],
+    global_pos_y+=65;
+
+    print_text({
+      characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
+      wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
+      lineGap: constants.FONTS[selected_text_type]["line_spacing"],
+      align: "justify",
+      width: 550,
+      wordSpacing: 0.5,
+      lineGap: 1.4,
+    },
+      global_pos_y,
+      constants.FINAL_TEXT2,
+      normal_font_size * 0.5,
+      20,
+      extra_space,
+      lang,
+      false,
+      false
+    );
+
+    global_pos_y+=35;
+
+    print_text({
+      characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
+      wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
+      lineGap: constants.FONTS[selected_text_type]["line_spacing"],
+      align: "justify",
+      width: 550,
+      wordSpacing: 0.5,
+      lineGap: 1.4,
+    },
+      global_pos_y,
+      constants.FINAL_TEXT3,
+      normal_font_size * 0.5,
+      20,
+      extra_space,
+      lang,
+      false,
+      false
+    );
+
+    global_pos_y+=25;
+
+    doc.image("./images/cofinanciadoEN.png", 450, global_pos_y, {
+        fit: [120, 120],
     });
+
+    //debug_print_global_pos_y("print_disclaimer_info - out", global_pos_y, doc.page.height)
   }
+
+  /**
+  * Debug function to print positions of elements in the page
+  *
+  * @param {String} a_text text to print gibing information about position
+  * @param {Integer} a_global_pos_y current global_pos_y
+  * @param {IntersectionObserverInit} a_doc_page_height current doc.page.height
+  *
+  */
+  function debug_print_global_pos_y(a_text, a_global_pos_y, a_doc_page_height) {
+    console.log("[DEBUG]", a_text)
+    console.log("[DEBUG] global_pos_y:", a_global_pos_y )
+    console.log("[DEBUG] doc.page.height:", a_doc_page_height)
+    console.log("")
+  }
+
 };
 
 /**

@@ -69,7 +69,7 @@ Update packages in Node (maybe need to correct vulnerabilities): ```npm install`
 
 Install nodemon: ```npm install -g nodemon```
 
-Execution in hot-reload mode: ```nodemon```
+Execution in hot-reload mode: ```nodemon app8081.js```
 
 ### Execution in production
 
@@ -105,19 +105,21 @@ Enrique Costa Montenegro
 
 ### Versions
 
-**v1.2.000**
+**v1.2.01 (30/06/2022)**
+
+-Separate final text in paragraphs
+
+-Fix “\n” after bus line
+
+-Option to select pdf background color between ocher and white
+
+**v1.2.00**
 
 -Initial version
 
 ### Bug fixing / Development report (01/07/2022)
 
-[ ] Separate final text in paragraphs
-
-[ ] “\n” after bus line
-
 [ ] Copying text from pdf to text editor includes spaces inside words
 
-[ ] Check final logos over final text
-
-[ ] Option to select pdf background color also in white
+[ ] Problems with parking out of its place when the other 4 are not selected: "taxi", "bus", "car" and "metro"
 

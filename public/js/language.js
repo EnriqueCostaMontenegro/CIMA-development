@@ -1281,12 +1281,12 @@ const dictionary = {
     "pt": "Cron\u00f4metro"
   },
   "lines_timetable": {
-    "en": "Line{s1}: {line}\\nSchedule{s2}: {timetable}",
-    "es": "L\u00ednea{s1}: {line}\\nHorario{s2}: {timetable}",
-    "gl": "Li\u00f1a{s1}: {line}\\nHorario{s2}: {timetable}",
-    "is": "L\u00edna{s1}: {line}\\nStundaskr\u00e1{s2}: {timetable}",
-    "pl": "Linia{s1}: {line}\\nRozk\u0142ad{s2}: {timetable}",
-    "pt": "Linha{s1}: {line}\\nHor\u00e1rio{s2}: {timetable}"
+    "en": "Line{s1}: {line}\nSchedule{s2}: {timetable}",
+    "es": "L\u00ednea{s1}: {line}\nHorario{s2}: {timetable}",
+    "gl": "Li\u00f1a{s1}: {line}\nHorario{s2}: {timetable}",
+    "is": "L\u00edna{s1}: {line}\nStundaskr\u00e1{s2}: {timetable}",
+    "pl": "Linia{s1}: {line}\nRozk\u0142ad{s2}: {timetable}",
+    "pt": "Linha{s1}: {line}\nHor\u00e1rio{s2}: {timetable}"
   },
   "without_number": {
     "en": "S/N",
@@ -1503,7 +1503,32 @@ const dictionary = {
     "is": "Texti \u00ed hlj\u00f3\u00f0",
     "pl": "Tekst na d\u017awi\u0119k",
     "pt": "Texto para \u00e1udio"
+  },
+  "bgcolor": {
+    "en":	"Background color",
+    "es": "Color de fondo",
+    "gl":	"Cor de fondo",
+    "is":	"Bakgrunns litur",
+    "pl":	"Kolor tła",
+    "pt":	"Cor de fundo"
+  },
+  "whitecolor": {
+    "en": "White",
+    "es": "Blanco",
+    "gl": "Branco",
+    "is":	"Hvítur",
+    "pl": "Biały",
+    "pt":	"Branco"
+  },
+  "ochercolor": {
+    "en": "Ocher",
+    "es": "Ocre",
+    "gl": "Ocre",
+    "is": "Okra",
+    "pl":	"Ochra",
+    "pt":	"Ocre"
   }
+
 }
 
   
