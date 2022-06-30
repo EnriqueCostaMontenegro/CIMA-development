@@ -1,6 +1,7 @@
-# ALLURE aplicación web AIAM: Aplicación de Información Accesible para Museos
+# ALLURE project
+# CIMA (Cultural Information Made Accessible) web app
 
-### Technologies
+## Technologies
 
 For the development of this project we have mainly chosen the following technologies:
 
@@ -22,38 +23,101 @@ It facilitates the design of the website and its interfaces by providing templat
 
 
 
-### Directory structure
+## Directory structure
 
 ```
 ├── controllers --> Backend functions to generate the PDF document and constants file
+|       constants.js --> definition of the constants and information about the fonts
+|       functions.js --> definition of the functions mainly to generate the pdf
+├── dictionary --> code, input and output files to generate the dictionary in diffente languagues
+|       update_dictionary.ipynb --> generates a new dictionary that has to be copied to /public/js/language.js
 ├── images --> Images (pictograms) that may be inserted into the PDF document
 │   └── pictos
 │       └── hours
-├── public 
+├── public --> Frontend of the web app
 │   ├── css --> Stylesheets
 │   ├── fonts --> Font files
 │   ├── images --> Frontend images (that will be printed into the leftside form)
 │   └── js
+|       index.js --> code to generate the request to the backend
+|       language.js --> definition of text in the different languages
 ├── routes --> Node.js routes
-└── views --> Template for the page render
+|       form.js --> call from frontend to backend functions
+├── sample_logos --> some logos to test
+├── user_images --> location for images uploaded by the user
+├── views --> Template for the page render
+|       index.ejs --> html of the webpage
+├── app.js --> code to launch Node
+├── default.json --> 
+├── package-lock.json --> 
+├── package.json --> 
+└── parameters.json --> version and database information
+
 ```
 
-### Bug fixing / Development report (31/03/2022)
+## Usage
 
-[ ] En “información sobre horarios” una caja de texto extra para excepciones
+### Previous steps
 
-[ ] Al final de “Tipo de actividad” información de contacto: web, correo, teléfono, campo de texto general
+Test if MongoDB daemon is running: ```sudo service mongod status```
 
+Start MongoDB daemon if not: ```sudo service mongod start```
 
-### Usage
+Update packages in Node (maybe need to correct vulnerabilities): ```npm install```
 
-Normal execution: ```node app.js```
+### Execution in development
+
+Install nodemon: ```npm install -g nodemon```
 
 Execution in hot-reload mode: ```nodemon```
+
+### Execution in production
+
+Install pm2 (https://pm2.keymetrics.io/): ```npm install pm2 -g```
+
+Execution: ```pm2 start app.js```
+
+Monit execution: ```pm2 monit```
+
+List task executing: ```pm2 list```
+
+Stop task: ```pm2 stop```
+
+Restart task: ```pm2 restart```
+
+Delete task ```pm2 delete ```
+
+### Accessing the information collected in the database
 
 Accessing the database: ```mongo```
 
 In the MongoDB console: ```use Allure```
 
 List all the documents: ```db.pdf_info.find({}).pretty()```
+
+### Developers
+
+Jose Ángel Regueiro Janeiro
+
+Camilo Piñón Blanco
+
+Enrique Costa Montenegro
+
+### Versions
+
+**v1.2.000**
+
+-Initial version
+
+### Bug fixing / Development report (01/07/2022)
+
+[ ] Separate final text in paragraphs
+
+[ ] “\n” after bus line
+
+[ ] Copying text from pdf to text editor includes spaces inside words
+
+[ ] Check final logos over final text
+
+[ ] Option to select pdf background color also in white
 
