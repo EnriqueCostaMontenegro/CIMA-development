@@ -226,21 +226,21 @@ module.exports.loadBanner = (req, res) => {
   }
 };
 
-//All the logic for the form processing and PDF generation
+//
+//
+// All the logic for the form processing and PDF generation
+//
+//
 module.exports.validateForm = async function (req, res, next) {
+  // define the default global background
   let global_background_color = "#f9f8ec"
-  //let global_background_color = "#ffffff"
-
-  //console.log("[DEBUG] received bgcolor ---%s---", req.body["bgcolor"])
-
+  // obtain the background to use from the body of the request
+  // this is necessary done before creating the PDF document
   if (req.body["bgcolor"] == undefined) {
     global_background_color = "#f9f8ec";
   } else {
     global_background_color = req.body["bgcolor"];
   }
-
-  //console.log("[DEBUG] selected global_background_color ---%s---", global_background_color)
-
 
   var new_pdf_document = createPDFDocument();
   var doc = new_pdf_document.document;
@@ -298,41 +298,70 @@ module.exports.validateForm = async function (req, res, next) {
   const lang = req.headers["accept-language"];
   // Create the pdf
 
+  console.log("\n[DEBUG] doc.page.size: %s x %s", doc.page.height, doc.page.width)
+
   //Processing all the text configuration that will be applied to the document
+  let characterSpaces= [1, 0.2/0.35, 0.1/0.35]; // 1 - high, 0.2 / 0.35 - medium , 0.1 / 0.35 - nornmal    
+  let characterSpacesOption= 0; // selected option for character spaces    
+
+  // TODO - study influence of other options of characterSpacesOption
+
+  console.log("[DEBUG] characterSpacesOption %s: %s", characterSpacesOption, characterSpaces[characterSpacesOption])
+
   var text_options = {
+    /*
     characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
     wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
     lineGap: constants.FONTS[selected_text_type]["line_spacing"],
     //align:'justify'
+    */
+    characterSpacing: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption],
+    wordSpacing: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption] * 0.35 * characterSpaces[characterSpacesOption],
+    lineGap: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption] * 0.35 * characterSpaces[characterSpacesOption] * 1.5,
+    //align:'justify'
+    
   };
-  const normal_font_size =
-    constants.FONTS[selected_text_type]["normal_font_size"];
-  const heading_font_size =
-    constants.FONTS[selected_text_type]["heading_font_size"];
+  console.log("[DEBUG] characterSpacing: %s", text_options.characterSpacing);
+  console.log("[DEBUG] wordSpacing: %s", text_options.wordSpacing);
+  console.log("[DEBUG] lineGap: %s\n", text_options.lineGap);
 
-  //TODO: ADD header
-  let global_pos_y = 5; //this is a marker to the position where the PDF is to be written in the vertical (Y) axis.
-  let header = false;
+  const normal_font_size= constants.FONTS[selected_text_type]["normal_font_size"];
+  const heading_font_size= constants.FONTS[selected_text_type]["heading_font_size"];
 
-  /*
-      Header code
-          Recommended height: 100 px
-          Recommended weight: doc width (595.28) - margins (10 each) = 575 px aprox
-      */
 
+  let global_pos_y = 10; //this is a marker to the position where the PDF is to be written in the vertical (Y) axis.
+  //let header = false;
+
+
+  //
+  // call to print the banner image 
+  //
+  //debug_print_global_pos_y("printBannerImage - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("banner")) {
-    printBannerImage(global_pos_y, 20, 0, 230, 230); //printBannerImage(global_pos_y, x, y, x_fit = "", y_fit = "")
-    global_pos_y += 90;
+    var imagePrinted= printBannerImage();
+    if (imagePrinted) {
+      global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    }
   }
+  //debug_print_global_pos_y("printBannerImage - after", global_pos_y, doc.page.height)
 
+
+  //
+  // call to print the activity type 
+  //
+  debug_print_global_pos_y("printActivityType - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("activity_type")) {
-    printHeader(req);
-    global_pos_y += 5;
+    printActivityType(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
+  debug_print_global_pos_y("printActivityType - end", global_pos_y, doc.page.height)
 
+
+  debug_print_global_pos_y("printSchedules - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_hours")) {
     printSchedules(req);
   }
+  debug_print_global_pos_y("printSchedules - end", global_pos_y, doc.page.height)
 
   if (
     enabled_fields.includes("location") &&
@@ -407,19 +436,26 @@ module.exports.validateForm = async function (req, res, next) {
     }
   }
 
+
   /**
-   * This function split a sentence by certain size
+   * This function split a sentence in slices of a maximum size
    *
    * @param {String} sentence original sentence
    * @param {Integer} size_split maximum size of slice
    * @returns {array} of slices
    *
    */
-  function split_sentence(sentence, size_split) {
-    let [slices, pos, pos_before] = [
+  function splitSentence(sentence, size_split) {
+    //console.log("[DEBUG] splitSentence ---%s---%s---", sentence, size_split)
+    /* let [slices, pos, pos_before] = [
       [], 0, 0
-    ];
-    let split = sentence.split(" ");
+    ]; */
+
+    let slices= [];
+    let split= sentence.split(" ");
+    
+    //console.log("[DEBUG] split ---%s---", split)
+    /*
     if (split.length > 2) {
       for (let i = 1; i <= split.length; i++) {
         if (split.slice(pos_before, i).join(" ").trim().length <= size_split) {
@@ -429,12 +465,36 @@ module.exports.validateForm = async function (req, res, next) {
           pos_before = pos;
         }
       }
+      console.log("[DEBUG] ---%s---", split.slice(pos_before, undefined).join(" ").trim())
+      console.log("[DEBUG] ---%s---", split.slice(pos_before, undefined).join(" ").trim().length)
       slices.push(split.slice(pos_before, undefined).join(" ").trim());
     } else {
       slices = [sentence];
+    }*/
+    
+    let currentSlice= split[0];
+    //console.log("[DEBUG] currentSlice ---%s---", currentSlice)
+    for (let i= 1; i< split.length; i++) {
+      if ( (currentSlice.length + 1 + split[i].length) > size_split ) {
+        console.log("[DEBUG] saving currentSlice ---%s---", currentSlice, currentSlice.length)
+        slices.push(currentSlice);
+        //console.log("[DEBUG] slices ---%s---", slices)
+        currentSlice= split[i]
+        //console.log("[DEBUG] new currentSlice ---%s---", currentSlice)
+      } else {
+        tempText= currentSlice + " " + split[i]
+        //console.log("[DEBUG] added to tempText ---%s---", tempText)
+        currentSlice= tempText;
+        //console.log("[DEBUG] added to currentSlice ---%s---%s", currentSlice, currentSlice.length)
+      }
     }
+    console.log("[DEBUG] saving currentSlice ---%s---", currentSlice, currentSlice.length)
+    slices.push(currentSlice);
+    //console.log("[DEBUG] slices ---%s---", slices)
+
     return slices;
   }
+
 
   /**
    * This function creates the form for sections
@@ -459,6 +519,7 @@ module.exports.validateForm = async function (req, res, next) {
     size_title = size_title === null ? [300, 40, 10] : size_title;
     pos_x = typeof pos_x === "object" ? pos_x : [pos_x, pos_x, pos_x];
     pos_y = typeof pos_y === "object" ? pos_y : [pos_y, pos_y, pos_y];
+
     doc
       .lineWidth(2)
       .roundedRect(
@@ -683,42 +744,7 @@ module.exports.validateForm = async function (req, res, next) {
     return;
   }
 
-  function printBannerImage(global_pos_y, x, y, x_fit = "", y_fit = "") {
-    const logos = [];
 
-    if (!fs.existsSync("./user_images/banners/" + cookie + "/")) {
-      fs.mkdirSync("./user_images/banners/" + cookie + "/", {
-        recursive: true,
-      });
-    }
-    fs.readdirSync("./user_images/banners/" + cookie + "/").forEach((file) => {
-      logos.push(file);
-    });
-
-    logos.forEach(function (banner) {
-      try {
-        if (fs.existsSync("./user_images/banners/" + cookie + "/" + banner)) {
-          doc.image(
-            "./user_images/banners/" + cookie + "/" + banner,
-            255,
-            global_pos_y, {
-            fit: [120, 100],
-            align: "center",
-            valign: "center"
-          }
-          );
-          //.rect(190, global_pos_y, 200, 100);
-
-          //doc.image('./user_images/banners/' + banner, 20, global_pos_y, { fit: [x_fit, y_fit], align: 'center' })
-        }
-      } catch (e) {
-        console.log(
-          "Imagen: " + "./user_images/logos/" + banner + " no existe"
-        );
-      }
-    });
-    return;
-  }
 
   /**
    * Creates the basic body of the PDF document.
@@ -730,8 +756,6 @@ module.exports.validateForm = async function (req, res, next) {
    */
 
   function createPDFDocument(
-    //background_color = "#f9f8ec",
-    //background_color = "#ffffff", //blanco
     title = "Cultural Information Made Accessible Document",
     author = "ALLURE Project"
   ) {
@@ -824,31 +848,133 @@ module.exports.validateForm = async function (req, res, next) {
     };
   }
 
-  function printHeader(req) {
-    let text = dictionary["activity_type"][lang] + ": ";
-    try {
-      text = text + dictionary[req.body["activity_type"]][lang];
-    } catch (e) { }
-    if (header) {
-      global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+
+
+
+  /**
+  * Draws the banner at the beginning of the document.
+  *
+  * @returns {imagePrinted} true is an image was printed (i.e. was selected), false otherwise
+  */
+  function printBannerImage() {
+    const aLogos = [];
+    let bImagePrinted= false;
+    const iMaxWidth= 575;
+    const iMaxHeight= 100;
+
+    // create directory if it doesnt exist
+    if (!fs.existsSync("./user_images/banners/" + cookie + "/")) {
+      fs.mkdirSync("./user_images/banners/" + cookie + "/", {
+        recursive: true,
+      });
     }
 
-    let text_split = split_sentence(req.body["activity_name"], 34);
-    let text_size =
-      text_split.length > 1 ?
-        30 + 33 * 11 :
-        20 + req.body["activity_name"].length * 11;
-    let box_height = text_split.length > 1 ? 26 * text_split.length : 35;
+    // reads the images in the directory
+    fs.readdirSync("./user_images/banners/" + cookie + "/").forEach((file) => {
+      aLogos.push(file);
+    });
 
+    aLogos.forEach(function (banner) {
+      try {
+        // with the size of the image calculates its proportional reduction
+        let fnSizeOf= require("image-size");
+        //console.log("[DEBUG] fnSizeOf: %s", fnSizeOf);
+        let oDimensions= fnSizeOf("./user_images/banners/" + cookie + "/" + banner);
+        //console.log("[DEBUG] oDimensions: %o", oDimensions);
+        //console.log("[DEBUG] image-size: %i x %i", oDimensions.width, oDimensions.height);
+        let fWidthReduction= iMaxWidth / oDimensions.width;
+        let fHeigthReduction= iMaxHeight / oDimensions.height;
+        //console.log("[DEBUG] max image-size: %i x %i", iMaxWidth, iMaxHeight);
+        //console.log("[DEBUG] image reduction: %f x %f", fWidthReduction, fHeigthReduction);
+        let fMaxReduction= Math.min(fWidthReduction, fHeigthReduction);
+        //console.log("[DEBUG] max reduction: %f", fMaxReduction);
+
+        // print the image
+        if (fs.existsSync("./user_images/banners/" + cookie + "/" + banner)) {
+          doc.image(
+            "./user_images/banners/" + cookie + "/" + banner,
+            10,
+            global_pos_y, {
+            fit: [iMaxWidth, iMaxHeight],
+            align: "center",
+            valign: "center"
+          }
+          )
+          .rect(10 + ((iMaxWidth - oDimensions.width * fMaxReduction) / 2), global_pos_y, oDimensions.width * fMaxReduction, 
+            oDimensions.height * fMaxReduction);
+        }
+
+        // increase global position y with the printed height of image
+        global_pos_y+= oDimensions.height * fMaxReduction; 
+
+        bImagePrinted= true;
+      } catch (e) {
+        console.log("Image: " + "./user_images/logos/" + banner + " does not exist");
+      }
+    });
+
+    return bImagePrinted;
+  }
+
+
+
+  /**
+  * Print all elements in the activity type
+  *
+  */
+  function printActivityType(req) {
+    let iTempPosY= 0;
+
+    // create a text with activity type and its kind to associate with pictogram
+    let sPictogramText = dictionary["activity_type"][lang] + ": ";
+    //console.log("[DEBUG] sPictogramText: ---%s---", sPictogramText)
+    try {
+      sPictogramText = sPictogramText + dictionary[req.body["activity_type"]][lang];
+    } catch (e) { }
+    console.log("[DEBUG] sPictogramText ---%s---", sPictogramText)
+
+    // split the text of the acivity name witha maximum size depending on the character space option
+    console.log("[DEBUG] req.body[\"activity_name\"] ---%s---", req.body["activity_name"])
+    let aSplitActivityName = splitSentence(req.body["activity_name"], 31 + (characterSpacesOption * 2));
+    console.log("[DEBUG] aSplitActivityName ---%s---%s", aSplitActivityName, aSplitActivityName.length)
+
+    // calculate the longer of the splits to calculate the size for the text
+    let iLongerSplit= 0;
+    let iLengthLongerSplit= aSplitActivityName[0].length;
+    for (let i = 0; i < aSplitActivityName.length; i++) {
+      if (aSplitActivityName[i].length > iLengthLongerSplit) {
+        iLongerSplit= i;
+        iLengthLongerSplit= aSplitActivityName[i].length
+      }
+    }
+    console.log("[DEBUG] iLongerSplit ---%s---%s", iLongerSplit, iLengthLongerSplit)
+
+    // calculate the size of the rectangle containing the activity name
+    let iTextSize= 20 + calculateTextSize(characterSpacesOption, aSplitActivityName[iLongerSplit])
+    iTextSize= Math.min(iTextSize, 390); 
+    console.log("[DEBUG] iTextSize ---%s---", iTextSize)
+    let iBoxHeightAN = aSplitActivityName.length > 1 ? 26 * aSplitActivityName.length : 35;
+    console.log("[DEBUG] iBoxHeightAN ---%s---", iBoxHeightAN)
+
+    // calculate the lines of the short description to create a suitable rectangle
+    console.log("[DEBUG] ---%s---", req.body["short_description"])
+    let aSplitShortDescription = splitSentence(req.body["short_description"], 36);
+    console.log("[DEBUG] ---%s---", aSplitShortDescription)
+    let box_heightSD = (aSplitShortDescription.length - 5) * 20;
+    box_heightSD= Math.max(box_heightSD, -40);
+    console.log("[DEBUG] box_heightSD ---%s---", box_heightSD)
+
+    // print the different rectangles according to the need size
     print_rectangle(
       global_pos_y,
       [55, 27, 80],
       [20, 28, 20],
-      (size_big = [525, 140, 5]),
+      (size_big = [525, 90 + iBoxHeightAN + box_heightSD, 5]),
       (size_icon = [120, 120, 10]),
-      (size_title = [text_size, box_height, 10])
+      (size_title = [iTextSize, iBoxHeightAN, 10])
     );
 
+    // ptint the image related with the activity type with its associated text
     print_image_fit(
       global_pos_y,
       "activity_type",
@@ -858,103 +984,57 @@ module.exports.validateForm = async function (req, res, next) {
       115,
       115,
       false,
-      text
+      sPictogramText
     );
-    if (text_split.length > 1) {
-      for (let i_pos = 0; i_pos < text_split.length; i_pos++) {
-        print_text(
-          text_options,
-          global_pos_y,
-          text_split[i_pos],
-          heading_font_size,
-          165,
-          20 + 20 * i_pos,
-          lang,
-          false,
-          true
-        );
-      }
-    } else {
+
+    // print the different splits of the activity bane
+    for (let i = 0; i < aSplitActivityName.length; i++) {
       print_text(
         text_options,
         global_pos_y,
-        req.body["activity_name"],
+        aSplitActivityName[i],
         heading_font_size,
         165,
-        20,
+        20 + (20 * i),
         lang,
         false,
         true
       );
     }
 
-    global_pos_y += 20 + 20 * text_split.length + 5;
-    global_pos_y = text_split.length === 1 ? global_pos_y + 5 : global_pos_y;
+    // increase the temporal position y once the activity name is printed
+    iTempPosY+= 20 + 20 * aSplitActivityName.length + 10;
 
-    //Start short description
-    print_isolated_image(global_pos_y, "information", 160, 0, 22, 22, "false");
-    let splits_shot_description = split_sentence(
-      req.body["short_description"],
-      42
-    );
-    if (splits_shot_description.length > 1) {
+    // print the information symbol
+    print_isolated_image(global_pos_y + iTempPosY, "information", 145, 0, 22, 22, "false");
+    
+    // print the diferent lines of the short description
+    for (let i = 0; i < aSplitShortDescription.length; i++) {           
       print_text({
-        characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-        wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-        lineGap: constants.FONTS[selected_text_type]["line_spacing"],
+        characterSpacing: text_options.characterSpacing,
+        wordSpacing: text_options.wordSpacing,
+        lineGap: text_options.lineGap,
         align: "justify",
-        width: 410,
+        width: 385,
       },
-        global_pos_y,
-        splits_shot_description[0],
+        global_pos_y + iTempPosY,
+        aSplitShortDescription[i],
         normal_font_size,
-        188,
-        6,
-        lang,
-        false,
-        false
-      );
-      print_text({
-        characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-        wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-        lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-        align: "justify",
-        width: 400,
-      },
-        global_pos_y,
-        req.body["short_description"].slice(splits_shot_description[0].length),
-        normal_font_size,
-        148,
-        6 + 20,
-        lang,
-        false,
-        false
-      );
-      //}        } else {
-    } else {
-      print_text({
-        characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-        wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-        lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-        align: "justify",
-        width: 410,
-      },
-        global_pos_y,
-        req.body["short_description"],
-        normal_font_size,
-        188,
-        6,
+        168,
+        6 + (20 * i),
         lang,
         false,
         false
       );
     }
 
-    global_pos_y += 110 + constants.SPACE_BETWEEN_ELEMENTS;
-    global_pos_y = text_split.length !== 1 ? global_pos_y - 10 : global_pos_y;
+    // increase the global position y given the elements used
+    global_pos_y+= 90 + iBoxHeightAN + box_heightSD + 40;
 
     return;
   }
+
+
 
   function printSchedules(req) {
     //Schedules
@@ -1544,7 +1624,7 @@ module.exports.validateForm = async function (req, res, next) {
 
 
     var address = generateAddress(req.body, lang);
-    let address_text = split_sentence(": " + address, 45);
+    let address_text = splitSentence(": " + address, 45);
     if (address_text.length > 1) {
       print_text({
         characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
@@ -1609,7 +1689,7 @@ module.exports.validateForm = async function (req, res, next) {
 
       var additional_location_information =
         req.body["additional_location_information"];
-      let split_additional_location_information_text = split_sentence(
+      let split_additional_location_information_text = splitSentence(
         req.body["additional_location_information"],
         35
       );
@@ -1657,7 +1737,7 @@ module.exports.validateForm = async function (req, res, next) {
           lang,
           false
         );
-        additional_location_information = split_sentence(
+        additional_location_information = splitSentence(
           additional_location_information.slice(1),
           45
         );
@@ -3201,6 +3281,7 @@ module.exports.validateForm = async function (req, res, next) {
     //console.log("[DEBUG]:", global_pos_y + 14 * 5)
     //console.log("[DEBUG]:", doc.page.height)
 
+    //characterSpacesOption
     // this section has a fixed height of 155
     if (global_pos_y + 155 > doc.page.height) {
       doc.addPage({
@@ -3298,11 +3379,31 @@ module.exports.validateForm = async function (req, res, next) {
   *
   */
   function debug_print_global_pos_y(a_text, a_global_pos_y, a_doc_page_height) {
-    console.log("[DEBUG]", a_text)
-    console.log("[DEBUG] global_pos_y:", a_global_pos_y )
-    console.log("[DEBUG] doc.page.height:", a_doc_page_height)
+    //console.log("[DEBUG]", a_text)
+    //console.log("[DEBUG] global_pos_y:", a_global_pos_y )
+    //console.log("[DEBUG] doc.page.height:", a_doc_page_height)
+    console.log("[DEBUG] %s in global_pos_y: %i", a_text, a_global_pos_y )
     console.log("")
   }
+
+
+  /**
+  * Function to estimate the size of a sentence given the option used of space between characters
+  *
+  * @param {Integer} characterSpacesOption option of space used
+  * @param {String} sentence text to calculate size
+  *
+  * @returns {String} estimated size
+  */
+  // TODO - include influence of characterSpacesOption
+  // TODO - include influence of uppercase and lowercase letters
+  function calculateTextSize(characterSpacesOption, sentence) {
+    var estimatedSize= (sentence.length * 12) // 12 points per character
+    + ((sentence.length - (2 * sentence.split(" ").length) + 1) * 2); // inter letter and word spacing
+
+    return estimatedSize;
+  }     
+
 
 };
 
