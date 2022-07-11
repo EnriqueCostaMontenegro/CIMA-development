@@ -309,21 +309,21 @@ module.exports.validateForm = async function (req, res, next) {
   console.log("[DEBUG] characterSpacesOption %s: %s", characterSpacesOption, characterSpaces[characterSpacesOption])
 
   var text_options = {
-    /*
     characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
     wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
     lineGap: constants.FONTS[selected_text_type]["line_spacing"],
     //align:'justify'
-    */
+  };
+  var oTextOptionsSpacing = {
     characterSpacing: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption],
     wordSpacing: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption] * 0.35 * characterSpaces[characterSpacesOption],
     lineGap: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption] * 0.35 * characterSpaces[characterSpacesOption] * 1.5,
     //align:'justify'
-    
   };
-  console.log("[DEBUG] characterSpacing: %s", text_options.characterSpacing);
-  console.log("[DEBUG] wordSpacing: %s", text_options.wordSpacing);
-  console.log("[DEBUG] lineGap: %s\n", text_options.lineGap);
+
+  console.log("[DEBUG] oTextOptionsSpacing.characterSpacing: %s", oTextOptionsSpacing.characterSpacing);
+  console.log("[DEBUG] oTextOptionsSpacing.wordSpacing: %s", oTextOptionsSpacing.wordSpacing);
+  console.log("[DEBUG] oTextOptionsSpacing.lineGap: %s\n", oTextOptionsSpacing.lineGap);
 
   const normal_font_size= constants.FONTS[selected_text_type]["normal_font_size"];
   const heading_font_size= constants.FONTS[selected_text_type]["heading_font_size"];
@@ -357,23 +357,28 @@ module.exports.validateForm = async function (req, res, next) {
   debug_print_global_pos_y("printActivityType - end", global_pos_y, doc.page.height)
 
 
-  debug_print_global_pos_y("printSchedules - before", global_pos_y, doc.page.height)
+  //
+  // call to print the schedule information
+  //
+  debug_print_global_pos_y("printInformationSchedule - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_hours")) {
-    printSchedules(req);
+    printInformationSchedule(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
-  debug_print_global_pos_y("printSchedules - end", global_pos_y, doc.page.height)
+  debug_print_global_pos_y("printInformationSchedule - end", global_pos_y, doc.page.height)
 
-  if (
-    enabled_fields.includes("location") &&
-    req.body["activity_type"] != "online_event"
-  ) {
-    printLocation(req);
-  } else if (
-    enabled_fields.includes("location") &&
-    req.body["activity_type"] == "online_event"
-  ) {
-    printEventURL(req);
+
+  //
+  // call to print the location information
+  //
+  debug_print_global_pos_y("printLocationInformation - before", global_pos_y, doc.page.height)
+  if ( enabled_fields.includes("location") ) {
+    if ( req.body["activity_type"] != "online_event" ) printLocation(req);
+    else printEventURL(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
+  debug_print_global_pos_y("printLocationInformation - end", global_pos_y, doc.page.height)
+
 
 
   if (req.body["enabled_fields"].includes("information_buy_tickets")) {
@@ -414,10 +419,10 @@ module.exports.validateForm = async function (req, res, next) {
    *
    * @param {String} sentence original sentence
    * @param {boolean} isHeading specify if it is heading or not
-   * @returns {Integer} space
    *
+   * @returns {Integer} space
    */
-  function calculate_space(sentence, isHeading) {
+  function calculateSpace(sentence, isHeading) {
     try {
       let num_spaces = sentence.split(" ").length - 1;
       let num_caracteres = sentence.length - num_spaces;
@@ -440,59 +445,41 @@ module.exports.validateForm = async function (req, res, next) {
   /**
    * This function split a sentence in slices of a maximum size
    *
-   * @param {String} sentence original sentence
-   * @param {Integer} size_split maximum size of slice
-   * @returns {array} of slices
+   * @param {String} sSentence original sentence
+   * @param {Integer} iSizeSplit maximum size of slice
    *
+   * @returns {array} of slices
    */
-  function splitSentence(sentence, size_split) {
-    //console.log("[DEBUG] splitSentence ---%s---%s---", sentence, size_split)
-    /* let [slices, pos, pos_before] = [
-      [], 0, 0
-    ]; */
-
-    let slices= [];
-    let split= sentence.split(" ");
-    
+  function splitSentence(sSentence, iSizeSplit) {
+    //console.log("[DEBUG] splitSentence ---%s---%s---", sSentence, iSizeSplit)
+    let aSlices= [];
+    let aSplit= sSentence.split(" ");
     //console.log("[DEBUG] split ---%s---", split)
-    /*
-    if (split.length > 2) {
-      for (let i = 1; i <= split.length; i++) {
-        if (split.slice(pos_before, i).join(" ").trim().length <= size_split) {
-          pos++;
-        } else {
-          slices.push(split.slice(pos_before, pos).join(" ").trim());
-          pos_before = pos;
-        }
-      }
-      console.log("[DEBUG] ---%s---", split.slice(pos_before, undefined).join(" ").trim())
-      console.log("[DEBUG] ---%s---", split.slice(pos_before, undefined).join(" ").trim().length)
-      slices.push(split.slice(pos_before, undefined).join(" ").trim());
-    } else {
-      slices = [sentence];
-    }*/
-    
-    let currentSlice= split[0];
+
+    // initialize current slice with the first split
+    let sCurrentSlice= aSplit[0];
     //console.log("[DEBUG] currentSlice ---%s---", currentSlice)
-    for (let i= 1; i< split.length; i++) {
-      if ( (currentSlice.length + 1 + split[i].length) > size_split ) {
-        console.log("[DEBUG] saving currentSlice ---%s---", currentSlice, currentSlice.length)
-        slices.push(currentSlice);
-        //console.log("[DEBUG] slices ---%s---", slices)
-        currentSlice= split[i]
+
+    // iterate through the next splits
+    for (let i= 1; i< aSplit.length; i++) {
+      if ( (sCurrentSlice.length + 1 + aSplit[i].length) > iSizeSplit ) { // if no size in current slice
+        console.log("[DEBUG] saving sCurrentSlice ---%s---", sCurrentSlice, sCurrentSlice.length)
+        aSlices.push(sCurrentSlice); // save current slice to array
+        //console.log("[DEBUG] aSlices ---%s---", aSlices)
+        sCurrentSlice= aSplit[i] // initialize the current slice
         //console.log("[DEBUG] new currentSlice ---%s---", currentSlice)
-      } else {
-        tempText= currentSlice + " " + split[i]
+      } else {  // if there is still size in the current slice
+        sTempText= sCurrentSlice + " " + aSplit[i] // create a temporal text
         //console.log("[DEBUG] added to tempText ---%s---", tempText)
-        currentSlice= tempText;
-        //console.log("[DEBUG] added to currentSlice ---%s---%s", currentSlice, currentSlice.length)
+        sCurrentSlice= sTempText; // copy to the current slice
+        //console.log("[DEBUG] added to sCurrentSlice ---%s---%s", sCurrentSlice, sCurrentSlice.length)
       }
     }
-    console.log("[DEBUG] saving currentSlice ---%s---", currentSlice, currentSlice.length)
-    slices.push(currentSlice);
-    //console.log("[DEBUG] slices ---%s---", slices)
+    console.log("[DEBUG] saving sCurrentSlice ---%s---", sCurrentSlice, sCurrentSlice.length)
+    aSlices.push(sCurrentSlice); // save the las current slice
+    //console.log("[DEBUG] aSlices ---%s---", aSlices)
 
-    return slices;
+    return aSlices;
   }
 
 
@@ -931,47 +918,36 @@ module.exports.validateForm = async function (req, res, next) {
     try {
       sPictogramText = sPictogramText + dictionary[req.body["activity_type"]][lang];
     } catch (e) { }
-    console.log("[DEBUG] sPictogramText ---%s---", sPictogramText)
+    //console.log("[DEBUG] sPictogramText ---%s---", sPictogramText)
 
-    // split the text of the acivity name witha maximum size depending on the character space option
-    console.log("[DEBUG] req.body[\"activity_name\"] ---%s---", req.body["activity_name"])
-    let aSplitActivityName = splitSentence(req.body["activity_name"], 31 + (characterSpacesOption * 2));
-    console.log("[DEBUG] aSplitActivityName ---%s---%s", aSplitActivityName, aSplitActivityName.length)
+    // create new text options for the activity name
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 375 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
-    // calculate the longer of the splits to calculate the size for the text
-    let iLongerSplit= 0;
-    let iLengthLongerSplit= aSplitActivityName[0].length;
-    for (let i = 0; i < aSplitActivityName.length; i++) {
-      if (aSplitActivityName[i].length > iLengthLongerSplit) {
-        iLongerSplit= i;
-        iLengthLongerSplit= aSplitActivityName[i].length
-      }
-    }
-    console.log("[DEBUG] iLongerSplit ---%s---%s", iLongerSplit, iLengthLongerSplit)
+    // calculate the text size of the activity name with the new text options
+    let oTextDimensionsAN= calculateTextSize(oTempTextOptions, req.body["activity_name"], heading_font_size)
+    //console.log("[DEBUG] calculateTextSize: %o", oTextDimensionsAN)
 
-    // calculate the size of the rectangle containing the activity name
-    let iTextSize= 20 + calculateTextSize(characterSpacesOption, aSplitActivityName[iLongerSplit])
-    iTextSize= Math.min(iTextSize, 390); 
-    console.log("[DEBUG] iTextSize ---%s---", iTextSize)
-    let iBoxHeightAN = aSplitActivityName.length > 1 ? 26 * aSplitActivityName.length : 35;
-    console.log("[DEBUG] iBoxHeightAN ---%s---", iBoxHeightAN)
+    // calculate the text size of the short description with the new text options
+    let oTextDimensionsSD= calculateTextSize(oTempTextOptions, req.body["short_description"], normal_font_size)
+    //console.log("[DEBUG] calculateTextSize: %o", oTextDimensionsSD)
 
-    // calculate the lines of the short description to create a suitable rectangle
-    console.log("[DEBUG] ---%s---", req.body["short_description"])
-    let aSplitShortDescription = splitSentence(req.body["short_description"], 36);
-    console.log("[DEBUG] ---%s---", aSplitShortDescription)
-    let box_heightSD = (aSplitShortDescription.length - 5) * 20;
-    box_heightSD= Math.max(box_heightSD, -40);
-    console.log("[DEBUG] box_heightSD ---%s---", box_heightSD)
-
-    // print the different rectangles according to the need size
+    // print the different rectangles according to the needed size
+    // activity name box: min 32, max 54? (oTextDimensionsAN.height + 10)
+    // big box: min 130, max 144? (oTextDimensionsAN.height + oTextDimensionsSD.height + 10)
     print_rectangle(
       global_pos_y,
       [55, 27, 80],
       [20, 28, 20],
-      (size_big = [525, 90 + iBoxHeightAN + box_heightSD, 5]),
+      (size_big = [525, Math.max(oTextDimensionsAN.height + oTextDimensionsSD.height + 10, 130), 5]),
       (size_icon = [120, 120, 10]),
-      (size_title = [iTextSize, iBoxHeightAN, 10])
+      (size_title = [Math.min(oTextDimensionsAN.width + 15, 390), Math.max(oTextDimensionsAN.height + 10, 32), 10])
     );
 
     // ptint the image related with the activity type with its associated text
@@ -987,65 +963,79 @@ module.exports.validateForm = async function (req, res, next) {
       sPictogramText
     );
 
-    // print the different splits of the activity bane
-    for (let i = 0; i < aSplitActivityName.length; i++) {
-      print_text(
-        text_options,
-        global_pos_y,
-        aSplitActivityName[i],
-        heading_font_size,
-        165,
-        20 + (20 * i),
-        lang,
-        false,
-        true
-      );
-    }
+    // print the activity name with the new text options
+    print_text(
+      oTempTextOptions,
+      global_pos_y,
+      req.body["activity_name"],
+      heading_font_size,
+      165,
+      18,
+      lang,
+      false,
+      true
+    );
 
     // increase the temporal position y once the activity name is printed
-    iTempPosY+= 20 + 20 * aSplitActivityName.length + 10;
+    iTempPosY+= 20 + Math.max(oTextDimensionsAN.height + 10, 32);
 
     // print the information symbol
     print_isolated_image(global_pos_y + iTempPosY, "information", 145, 0, 22, 22, "false");
     
     // print the diferent lines of the short description
-    for (let i = 0; i < aSplitShortDescription.length; i++) {           
-      print_text({
-        characterSpacing: text_options.characterSpacing,
-        wordSpacing: text_options.wordSpacing,
-        lineGap: text_options.lineGap,
-        align: "justify",
-        width: 385,
-      },
-        global_pos_y + iTempPosY,
-        aSplitShortDescription[i],
-        normal_font_size,
-        168,
-        6 + (20 * i),
-        lang,
-        false,
-        false
-      );
-    }
+    print_text(
+      oTempTextOptions,
+      global_pos_y + iTempPosY,
+      req.body["short_description"],
+      normal_font_size,
+      168,
+      6, 
+      lang,
+      false,
+      false
+    );
 
     // increase the global position y given the elements used
-    global_pos_y+= 90 + iBoxHeightAN + box_heightSD + 40;
+    global_pos_y+= Math.max(oTextDimensionsAN.height + oTextDimensionsSD.height + 10, 130) + 50;
 
     return;
   }
 
 
 
-  function printSchedules(req) {
-    //Schedules
+
+  /**
+  * Print all elements in the information hours
+  *
+  */
+  function printInformationSchedule(req) {
+    let iTempPosY= 0;
+
+    // create new text options for the activity name
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 415 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // calculate the text size of information hours with the new text options
+    let oTextDimensionsIH= calculateTextSize(oTempTextOptions, dictionary["information_hours"][lang], heading_font_size)
+    //console.log("[DEBUG] calculateTextSize: %o", oTextDimensionsIH)
+
+    // Prnt rectangle according to the needed size
     print_rectangle(
       global_pos_y,
       37,
       0,
       [543, 135, 5],
       [50, 50, 10],
-      [calculate_space(dictionary["information_hours"][lang], true), 40, 10]
+      [Math.min(oTextDimensionsIH.width + 20, 430), Math.max(oTextDimensionsIH.height + 10, 32), 10]
     );
+
+    // Print the associated pictogram
     print_isolated_image(
       global_pos_y,
       "time_information",
@@ -1055,23 +1045,32 @@ module.exports.validateForm = async function (req, res, next) {
       40,
       "false"
     );
+
+    // print the text in the selected language with the defined options
     print_text(
-      text_options,
+      oTempTextOptions,
       global_pos_y,
       dictionary["information_hours"][lang],
       heading_font_size,
       125,
-      1,
+      -1,
       lang,
       false,
       true
     );
-    //Schedules
+
+    
+    // Schedules
     try {
+      // var used to calculate the position of ticks and crosses in the days of the week
       let x_day = 41.5;
-      var days_week = req.body["OpenDay"];
+
+      // array with the selected days of the week obtaned from request body
+      let aDaysWeekSelected = req.body["OpenDay"];
+      //console.log("[DEBUG] aDaysWeekSelected: %s", aDaysWeekSelected)
       //var [opening_hours_morning, closing_hours_morning, opening_hours_afternoon, closing_hours_afternoon] = [req.body["opening_hours_morning"], req.body["closing_hours_morning"], req.body["opening_hours_afternoon"], req.body["closing_hours_afternoon"]]
 
+      // opening and closing hours in morning and afternoon obtained from request body
       var opening_hours_morning = [
         req.body["opening_hour_morning"],
         req.body["opening_minute_morning"],
@@ -1093,6 +1092,7 @@ module.exports.validateForm = async function (req, res, next) {
         req.body["closing_period_afternoon"],
       ];
 
+      // definition of months array
       var months = [
         "January",
         "February",
@@ -1108,12 +1108,16 @@ module.exports.validateForm = async function (req, res, next) {
         "December",
       ];
 
+      //console.log("[DEBUG] specific_date %s:\n\tstart_date %s - end_date %s", req.body["specific_date"], req.body["start_date"], req.body["end_date"])
+
+      // Case specific data and not only one day
       if (
         req.body["specific_date"] == "Yes" &&
         req.body["start_date"] != "" &&
         req.body["end_date"] != "" &&
         req.body["end_date"] != req.body["start_date"]
-      ) {
+      ) 
+      {
         var start_date = new Date(req.body["start_date"]);
         var start_month = months[start_date.getMonth()];
         var ending_date = new Date(req.body["end_date"]);
@@ -1124,6 +1128,7 @@ module.exports.validateForm = async function (req, res, next) {
           day: "numeric"
         };
 
+        // print the image of the days of the week in different languages
         print_isolated_image(
           global_pos_y,
           "week_" + lang,
@@ -1132,10 +1137,13 @@ module.exports.validateForm = async function (req, res, next) {
           240,
           240,
           dictionary["opening_days"][lang]
-        ); // prints the box with the days of the week in language lang
-        if ("OpenDay" in req.body && days_week.length > 0) {
+        );
+        
+        
+        // print the tick or cross over the days of the week depending on their availability
+        if ("OpenDay" in req.body && aDaysWeekSelected.length > 0) {
           for (let i = 0; i < constants.WEEK_ORDER.length; i++) {
-            let open_day = days_week.includes(constants.WEEK_ORDER[i]) ?
+            let open_day = aDaysWeekSelected.includes(constants.WEEK_ORDER[i]) ?
               "yes" :
               "no";
             print_isolated_image(
@@ -1151,8 +1159,9 @@ module.exports.validateForm = async function (req, res, next) {
             );
             x_day += 31;
           }
-        }
+        } 
 
+        // print first pictogram of date
         print_isolated_image(
           global_pos_y,
           start_month,
@@ -1162,6 +1171,8 @@ module.exports.validateForm = async function (req, res, next) {
           40,
           dictionary["opening_days"][lang]
         );
+        
+        // print start date
         print_text(
           text_options,
           global_pos_y,
@@ -1172,13 +1183,16 @@ module.exports.validateForm = async function (req, res, next) {
           lang,
           false
         );
+
+        // print dash separating dated
         doc.lineWidth(5);
         doc
           .lineCap("butt")
           .moveTo(140, global_pos_y + 110)
           .lineTo(150, global_pos_y + 110)
           .stroke();
-
+        
+        // print second pictogram of date
         print_isolated_image(
           global_pos_y,
           end_month,
@@ -1188,6 +1202,8 @@ module.exports.validateForm = async function (req, res, next) {
           40,
           dictionary["opening_days"][lang]
         );
+
+        // print end date
         print_text(
           text_options,
           global_pos_y,
@@ -1201,7 +1217,9 @@ module.exports.validateForm = async function (req, res, next) {
       } else if (
         req.body["specific_date"] == "Yes" &&
         req.body["start_date"] != ""
-      ) {
+      ) 
+      // Case specific data and selected start date
+      {
         var start_date = new Date(req.body["start_date"]);
         var start_month = months[start_date.getMonth()];
         const options = {
@@ -1210,6 +1228,7 @@ module.exports.validateForm = async function (req, res, next) {
           day: "numeric"
         };
 
+        // print pictogram of date
         print_isolated_image(
           global_pos_y,
           start_month,
@@ -1219,6 +1238,8 @@ module.exports.validateForm = async function (req, res, next) {
           80,
           dictionary["opening_days"][lang]
         );
+
+        // print start date
         print_text(
           text_options,
           global_pos_y,
@@ -1232,7 +1253,9 @@ module.exports.validateForm = async function (req, res, next) {
       } else if (
         req.body["specific_date"] == "Yes" &&
         req.body["end_date"] != ""
-      ) {
+      ) 
+      // Case specific data and selected end date
+      {
         var ending_date = new Date(req.body["end_date"]);
         var end_month = months[ending_date.getMonth()];
         const options = {
@@ -1241,6 +1264,7 @@ module.exports.validateForm = async function (req, res, next) {
           day: "numeric"
         };
 
+        // print pictogram of date
         print_isolated_image(
           global_pos_y,
           end_month,
@@ -1250,6 +1274,8 @@ module.exports.validateForm = async function (req, res, next) {
           80,
           dictionary["opening_days"][lang]
         );
+
+        // print end date
         print_text(
           text_options,
           global_pos_y,
@@ -1262,28 +1288,37 @@ module.exports.validateForm = async function (req, res, next) {
         );
       }
 
+      // Case specific data and not only one day
       if (req.body["specific_date"] == "No") {
+        // print the image of the days of the week in different languages
         print_isolated_image(
           global_pos_y,
           "week_" + lang,
           30,
-          -35,
+          //-35,
+          -60,
           240,
           240,
           dictionary["opening_days"][lang]
-        ); // prints the box with the days of the week in language lang
-        if ("OpenDay" in req.body && days_week.length > 0) {
+        ); 
+
+        // print the tick or cross over the days of the week depending on their availability
+        if ("OpenDay" in req.body && aDaysWeekSelected.length > 0) {
           for (let i = 0; i < constants.WEEK_ORDER.length; i++) {
-            let open_day = days_week.includes(constants.WEEK_ORDER[i]) ?
+            let open_day = aDaysWeekSelected.includes(constants.WEEK_ORDER[i]) ?
               "yes" :
               "no";
             print_isolated_image(
               global_pos_y,
               open_day,
-              x_day,
-              50,
-              30,
-              30,
+              //x_day,
+              x_day + 5,
+              //50,
+              60,
+              //30,
+              25,
+              //30,
+              25,
               dictionary[constants.WEEK_ORDER[i].toLowerCase()][lang] +
               " " +
               dictionary[open_day][lang]
@@ -1292,20 +1327,25 @@ module.exports.validateForm = async function (req, res, next) {
           }
         }
       }
+
+      // define a function to calculate if the defined opening and closing hours are empty or not
       let isEmpty = (a) => !a.some((x) => x !== "");
+      //console.log("[DEBUG] opening_hours_morning: %s - %s", opening_hours_morning, isEmpty(opening_hours_morning))
+      //console.log("[DEBUG] closing_hours_morning: %s - %s", closing_hours_morning, isEmpty(closing_hours_morning))
+      //console.log("[DEBUG] opening_hours_afternoon: %s - %s", opening_hours_afternoon, isEmpty(opening_hours_afternoon))
+      //console.log("[DEBUG] closing_hours_afternoon: %s - %s", closing_hours_afternoon, isEmpty(closing_hours_afternoon))
 
       if (
         closing_hours_morning.filter(
           (e) => !opening_hours_afternoon.includes(e)
         ).length === 0 ||
         (isEmpty(closing_hours_morning) && isEmpty(opening_hours_afternoon))
-      ) {
-        //Continues schedule
-
-        if (
-          !isEmpty(opening_hours_morning) &&
-          !isEmpty(closing_hours_afternoon)
-        ) {
+      )
+      // case of continuous schedule, no closing hours morning and no opening hours afternoon 
+      {
+        // if opening hours morning and closing hours afternoon defined
+        if ( !isEmpty(opening_hours_morning) && !isEmpty(closing_hours_afternoon) ) {
+          //print text for continuous schedule
           print_text(
             text_options,
             global_pos_y,
@@ -1316,6 +1356,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of opening hours morning
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1327,6 +1369,8 @@ module.exports.validateForm = async function (req, res, next) {
             40,
             40
           );
+
+          // print dash
           print_text(
             text_options,
             global_pos_y,
@@ -1337,6 +1381,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of closing hours afternoon
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1350,12 +1396,12 @@ module.exports.validateForm = async function (req, res, next) {
           );
         }
       } else {
-        if (
-          !isEmpty(opening_hours_morning) &&
-          !isEmpty(closing_hours_morning) &&
-          !isEmpty(opening_hours_afternoon) &&
-          !isEmpty(closing_hours_afternoon)
-        ) {
+      // cases with no continuous schedule
+        if ( !isEmpty(opening_hours_morning) && !isEmpty(closing_hours_morning) &&
+          !isEmpty(opening_hours_afternoon) && !isEmpty(closing_hours_afternoon) ) 
+        // case with morning and afternoon schedule
+        {
+          //print text for morning schedule
           print_text(
             text_options,
             global_pos_y,
@@ -1366,6 +1412,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of opening hours morning
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1377,6 +1425,8 @@ module.exports.validateForm = async function (req, res, next) {
             40,
             40
           );
+
+          // print dash
           print_text(
             text_options,
             global_pos_y,
@@ -1387,6 +1437,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of closing hours morning
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1399,6 +1451,7 @@ module.exports.validateForm = async function (req, res, next) {
             40
           );
 
+          //print text for afternoon schedule
           print_text(
             text_options,
             global_pos_y,
@@ -1409,6 +1462,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of opening hours afternoon
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1420,6 +1475,8 @@ module.exports.validateForm = async function (req, res, next) {
             40,
             40
           );
+
+          // print dash
           print_text(
             text_options,
             global_pos_y,
@@ -1430,6 +1487,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of closing hours afternoon
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1441,10 +1500,10 @@ module.exports.validateForm = async function (req, res, next) {
             40,
             40
           );
-        } else if (
-          !isEmpty(opening_hours_morning) &&
-          !isEmpty(closing_hours_morning)
-        ) {
+        } else if ( !isEmpty(opening_hours_morning) && !isEmpty(closing_hours_morning) )
+        // case with only morning schedule
+        {
+          //print text for morning schedule
           print_text(
             text_options,
             global_pos_y,
@@ -1455,6 +1514,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of opening hours morning
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1466,6 +1527,8 @@ module.exports.validateForm = async function (req, res, next) {
             40,
             40
           );
+
+          // print dash
           print_text(
             text_options,
             global_pos_y,
@@ -1476,6 +1539,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of closing hours morning
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1487,10 +1552,10 @@ module.exports.validateForm = async function (req, res, next) {
             40,
             40
           );
-        } else if (
-          !isEmpty(opening_hours_afternoon) &&
-          !isEmpty(closing_hours_afternoon)
-        ) {
+        } else if ( !isEmpty(opening_hours_afternoon) && !isEmpty(closing_hours_afternoon) ) 
+        // case for only afternoon schedule
+        {
+          //print text for afternoon schedule
           print_text(
             text_options,
             global_pos_y,
@@ -1501,6 +1566,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of opening hours afternoon
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1512,6 +1579,8 @@ module.exports.validateForm = async function (req, res, next) {
             40,
             40
           );
+
+          // print dash
           print_text(
             text_options,
             global_pos_y,
@@ -1522,6 +1591,8 @@ module.exports.validateForm = async function (req, res, next) {
             lang,
             false
           );
+
+          // print pictogram of closing hours afternoon
           print_isolated_image(
             global_pos_y,
             "hours/" +
@@ -1539,51 +1610,46 @@ module.exports.validateForm = async function (req, res, next) {
       console.log(e);
     }
 
+    // increase the global position y given the elements used
     global_pos_y += 145 + constants.SPACE_BETWEEN_ELEMENTS;
   }
 
+
+
+
+  /**
+  * Print all elements in the information hours
+  *
+  */
   function printEventURL(req) {
     //Information about the location
     let [pos_x, pos_y] = [34, 2];
 
-    var url = req.body["url_online_event"];
-    let linkSection = doc.struct("Sect");
-    structure.add(linkSection);
-    linkSection.add(
-      doc.struct(
-        "Link", {
-        alt: dictionary["press_buy_tickets"][lang],
-      },
-        () => {
-          doc
-            .fontSize(normal_font_size)
-            .fillColor("red")
-            .text(url, pos_x + 100, global_pos_y + pos_y + 50, {
-              link: req.body["ph_link"],
-              underline: true,
-            });
-        }
-      )
-    );
-    print_text(
-      text_options,
-      global_pos_y,
-      ": ",
-      normal_font_size,
-      pos_x + 86,
-      pos_y + 51,
-      lang,
-      false
-    );
+    // create new text options for the location information
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 415 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsLO= calculateTextSize(oTempTextOptions, dictionary["location"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["location"][lang], oTextDimensionsLO)
+
+    // Print rectangle according to the needed size
     print_rectangle(
       global_pos_y,
       37,
       0,
       [543, 65, 5],
       [50, 50, 10],
-      [calculate_space(dictionary["location"][lang], true), 50, 10]
+      [Math.min(oTextDimensionsLO.width + 20, 430), Math.max(oTextDimensionsLO.height + 10, 32), 10]
     );
+    
+    // Print the associated pictogram
     print_isolated_image(
       global_pos_y,
       "where",
@@ -1593,30 +1659,53 @@ module.exports.validateForm = async function (req, res, next) {
       45,
       "false"
     );
+
+    // print the text in the selected language with the defined options
     print_text(
-      text_options,
+      oTempTextOptions,
       global_pos_y,
-      "location",
+      dictionary["location"][lang],
       heading_font_size,
-      pos_x + 95,
-      pos_y,
+      //pos_x + 95,
+      125,  
+      //pos_y,
+      -1,
       lang,
-      true,
+      false,
       true
-    ); //prints section title
+    );
+
+    // print the text before the link
     print_text(
-      text_options,
+      //text_options,
+      oTempTextOptions,
       global_pos_y,
-      "address",
+      dictionary["address"][lang] + ": ",
       normal_font_size,
       pos_x + 5,
       pos_y + 50,
       lang,
-      true,
+      false,
       true
-    ); //prints Address: in bold
+    ); 
+    
+    // print the link  
+    var url = req.body["url_online_event"];
+    doc.fontSize(normal_font_size)
+    .fillColor('blue')
+    .text(url, pos_x + 100, global_pos_y + pos_y + 50)
+    .underline(pos_x + 100, global_pos_y + pos_y + 50, doc.widthOfString(url), doc.currentLineHeight(), {color: 'blue'})
+    .link(pos_x + 100, global_pos_y + pos_y + 50, doc.widthOfString(url), doc.currentLineHeight(), url)
+
+    // increase the global position y given the elements used
     global_pos_y += 80 + constants.SPACE_BETWEEN_ELEMENTS;
   }
+
+
+
+
+
+
 
   function printLocation(req) {
     //Information about the location
@@ -1764,7 +1853,7 @@ module.exports.validateForm = async function (req, res, next) {
           0,
           [543, 80 + 25 * address_text.length, 5],
           [50, 50, 10],
-          [calculate_space(dictionary["location"][lang], true), 50, 10]
+          [calculateSpace(dictionary["location"][lang], true), 50, 10]
         );
       } else {
         print_rectangle(
@@ -1773,7 +1862,7 @@ module.exports.validateForm = async function (req, res, next) {
           0,
           [543, 60 + 25 * address_text.length, 5],
           [50, 50, 10],
-          [calculate_space(dictionary["location"][lang], true), 50, 10]
+          [calculateSpace(dictionary["location"][lang], true), 50, 10]
         );
 
         print_text(
@@ -1828,7 +1917,7 @@ module.exports.validateForm = async function (req, res, next) {
         0,
         [543, 45 + 25 * address_text.length, 5],
         [50, 50, 10],
-        [calculate_space(dictionary["location"][lang], true), 50, 10]
+        [calculateSpace(dictionary["location"][lang], true), 50, 10]
       );
       [pos_x, pos_y] = [34, 2]; //reset normal text printing positions
       print_isolated_image(
@@ -1910,7 +1999,7 @@ module.exports.validateForm = async function (req, res, next) {
       0,
       [543, 40 + spaces * 67, 5],
       [50, 50, 10],
-      [calculate_space(dictionary["how_to_get_there"][lang], true), 40, 10]
+      [calculateSpace(dictionary["how_to_get_there"][lang], true), 40, 10]
     );
     print_isolated_image(
       global_pos_y,
@@ -2273,7 +2362,7 @@ module.exports.validateForm = async function (req, res, next) {
       0,
       [543, 25 + space * 31, 5],
       [60, 50, 10],
-      [calculate_space(dictionary["tickets_information"][lang], true), 40, 10]
+      [calculateSpace(dictionary["tickets_information"][lang], true), 40, 10]
     );
     print_isolated_image(
       global_pos_y,
@@ -2588,7 +2677,7 @@ module.exports.validateForm = async function (req, res, next) {
       [543, array_lengths[array_x + 1], 5],
       [70, 50, 10],
       [
-        calculate_space(dictionary["information_facilities"][lang], true),
+        calculateSpace(dictionary["information_facilities"][lang], true),
         40,
         10,
       ]
@@ -2738,7 +2827,7 @@ module.exports.validateForm = async function (req, res, next) {
       0,
       [543, array_lengths[array_x + 1], 5],
       [60, 60, 10],
-      [calculate_space(dictionary["information_guides"][lang], true), 40, 10]
+      [calculateSpace(dictionary["information_guides"][lang], true), 40, 10]
     );
     print_isolated_image(
       global_pos_y,
@@ -2858,7 +2947,7 @@ module.exports.validateForm = async function (req, res, next) {
       [543, array_lengths[array_x + 1], 5],
       [70, 50, 10],
       [
-        calculate_space(dictionary["information_allowed_actions"][lang], true),
+        calculateSpace(dictionary["information_allowed_actions"][lang], true),
         40,
         10,
       ]
@@ -3004,7 +3093,7 @@ module.exports.validateForm = async function (req, res, next) {
       0,
       [543, array_lengths[array_x + 1], 5],
       [60, 60, 10],
-      [calculate_space(dictionary["covid_19_restrictions"][lang], true), 40, 10]
+      [calculateSpace(dictionary["covid_19_restrictions"][lang], true), 40, 10]
     );
     print_isolated_image(
       global_pos_y,
@@ -3085,7 +3174,7 @@ module.exports.validateForm = async function (req, res, next) {
       0,
       [543, 40 + space * 24, 5],
       [70, 55, 10],
-      [calculate_space(dictionary["extra_information"][lang], true) + 5, 40, 10]
+      [calculateSpace(dictionary["extra_information"][lang], true) + 5, 40, 10]
     );
     print_isolated_image(
       global_pos_y,
@@ -3394,18 +3483,43 @@ module.exports.validateForm = async function (req, res, next) {
   * @param {String} sentence text to calculate size
   *
   * @returns {String} estimated size
-  */
-  // TODO - include influence of characterSpacesOption
+    // TODO - include influence of characterSpacesOption
   // TODO - include influence of uppercase and lowercase letters
   function calculateTextSize(characterSpacesOption, sentence) {
     var estimatedSize= (sentence.length * 12) // 12 points per character
     + ((sentence.length - (2 * sentence.split(" ").length) + 1) * 2); // inter letter and word spacing
 
     return estimatedSize;
+  } 
+  */    
+
+
+
+  /**
+  * Function to estimate the size of a sentence given the option used of space between characters
+  *
+  * @param {Integer} characterSpacesOption option of space used
+  * @param {String} sentence text to calculate size
+  *
+  * @returns {String} estimated size
+  */
+  // TODO - include influence of characterSpacesOption
+  // TODO - include influence of uppercase and lowercase letters
+  function calculateTextSize(oRequestedTextOptions, sSentence, iFontSize) {
+    console.log("[DEBUG] calculating size of ---%s--- with font size %i and options %o", sSentence, iFontSize, oRequestedTextOptions); 
+
+    doc.fontSize(iFontSize)
+    let iEstimatedWidth= Math.ceil( doc.widthOfString(sSentence, oRequestedTextOptions) )
+    let iEstimatedHeight= Math.ceil( doc.heightOfString(sSentence, oRequestedTextOptions) )
+    
+    return ({"width": iEstimatedWidth, "height": iEstimatedHeight})
   }     
 
 
 };
+
+
+
 
 /**
  * This function creates the address format
