@@ -248,7 +248,7 @@ module.exports.validateForm = async function (req, res, next) {
   let selected_text_type = "";
   let enabled_fields = "";
 
-  //console.log("[DEBUG INFO] Request body: ", req.body)
+  console.log("[DEBUG INFO] Request body: ", req.body)
 
   console.log("[DEBUG INFO] Version: ", req.body["version"]);
   console.log("[DEBUG INFO] Timestamp: ", new Date());
@@ -380,25 +380,74 @@ module.exports.validateForm = async function (req, res, next) {
   debug_print_global_pos_y("printLocationInformation - end", global_pos_y, doc.page.height)
 
 
-
+  //
+  // call to print the ticket information
+  //
+  debug_print_global_pos_y("printTicketInformation - before", global_pos_y, doc.page.height)
   if (req.body["enabled_fields"].includes("information_buy_tickets")) {
     printTicketInformation(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
+  debug_print_global_pos_y("printTicketInformation - end", global_pos_y, doc.page.height)
 
+
+
+
+
+
+  //
+  // call to print the facilities information
+  //
+  debug_print_global_pos_y("printFacilitiesInformation - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_facilities")) {
     printFacilitiesInformation(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
+  debug_print_global_pos_y("printFacilitiesInformation - end", global_pos_y, doc.page.height)
+
+
+
+
+
+  //
+  // call to print the information guides
+  //
+  debug_print_global_pos_y("printGuidesInformation - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_guides")) {
     printGuidesInformation(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
+  debug_print_global_pos_y("printGuidesInformation - end", global_pos_y, doc.page.height)
 
+
+
+
+  //
+  // call to print the information allowed actions
+  //
+  debug_print_global_pos_y("printAllowedActionsInformation - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_allowed_actions")) {
     printAllowedActionsInformation(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
+  debug_print_global_pos_y("printAllowedActionsInformation - end", global_pos_y, doc.page.height)
 
+
+
+
+
+  //
+  // call to print the covid restrictions
+  //
+  debug_print_global_pos_y("printCOVID19Restrictions - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("covid_19_restrictions")) {
     printCOVID19Restrictions(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
   }
+  debug_print_global_pos_y("printCOVID19Restrictions - end", global_pos_y, doc.page.height)
+
+
+
 
   if (enabled_fields.includes("extra_information")) {
     printMoreInformation(req);
@@ -1618,11 +1667,11 @@ module.exports.validateForm = async function (req, res, next) {
 
 
   /**
-  * Print all elements in the information hours
+  * Print all elements in the case the location is an oline event
   *
   */
   function printEventURL(req) {
-    //Information about the location
+    // variables for positions
     let [pos_x, pos_y] = [34, 2];
 
     // create new text options for the location information
@@ -1707,277 +1756,171 @@ module.exports.validateForm = async function (req, res, next) {
 
 
 
-  function printLocation(req) {
-    //Information about the location
+  /**
+  * Print all elements in the case the location is not an oline event
+  *
+  */
+   function printLocation(req) {
+    // variables for positions
     let [pos_x, pos_y] = [34, 2];
+    let iTempPosY= 0
 
+    // create new text options for the location information
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 450 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
-    var address = generateAddress(req.body, lang);
-    let address_text = splitSentence(": " + address, 45);
-    if (address_text.length > 1) {
-      print_text({
-        characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-        wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-        lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-        //align: "justify",
-        width: 440,
-      },
-        global_pos_y,
-        address_text[0],
-        normal_font_size,
-        pos_x + 86,
-        pos_y + 50,
-        lang,
-        false,
-        false
-      )
-      print_text({
-        characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-        wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-        lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-        //align: "justify",
-        width: 440,
-      },
-        global_pos_y,
-        address.slice(address_text[0].length - 1),
-        normal_font_size,
-        pos_x + 5,
-        pos_y + 50 + 20,
-        lang,
-        false,
-        false
-      );
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsLO= calculateTextSize(oTempTextOptions, dictionary["location"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["location"][lang], oTextDimensionsLO)
 
-    } else {
+    // calculate address and its size, 0 is there is no address
+    var sAddress = dictionary["address"][lang] + ": " + fnGenerateAddress(req.body, lang);
+    let oTextDimensionsAD= calculateTextSize(oTempTextOptions, sAddress, normal_font_size)
+    if (sAddress === dictionary["address"][lang] + ": ") {
+      oTextDimensionsAD.width= 0;
+      oTextDimensionsAD.height= 0;
+    }
+    console.log("[DEBUG] address: ---%s--- - %o", sAddress, oTextDimensionsAD)
+
+    // calculate the additional information size, 0 is there is no 
+    var sAdditionalInf = dictionary["additional_location_information"][lang] + ": " + req.body["additional_location_information"];
+    let oTextDimensionsAI= calculateTextSize(oTempTextOptions, sAdditionalInf, normal_font_size)
+    if (sAdditionalInf === dictionary["additional_location_information"][lang] + ": ") {
+      oTextDimensionsAI.width= 0;
+      oTextDimensionsAI.height= 0;
+    }
+    console.log("[DEBUG] address: ---%s--- - %o", sAdditionalInf, oTextDimensionsAI)
+
+    // Print rectangle according to the needed size
+    print_rectangle(
+      global_pos_y,
+      37,
+      0,
+      // [543, 65, 5],
+      (size_big = [543, Math.max(oTextDimensionsLO.height + oTextDimensionsAD.height + oTextDimensionsAI.height + 20, 65), 5]),
+      [50, 50, 10],
+      [Math.min(oTextDimensionsLO.width + 20, 430), Math.max(oTextDimensionsLO.height + 10, 32), 10]
+    );
+
+    // Print the associated pictogram
+    print_isolated_image(
+      global_pos_y,
+      "where",
+      pos_x,
+      pos_y - 10,
+      45,
+      45,
+      "false"
+    );
+
+    // print the text in the selected language with the defined options
+    print_text(
+      oTempTextOptions,
+      global_pos_y,
+      dictionary["location"][lang],
+      heading_font_size,
+      //pos_x + 95,
+      125,  
+      //pos_y,
+      -1,
+      lang,
+      false,
+      true
+    );
+
+    // increase the temporal position y
+    iTempPosY+= 20;
+
+    // print address if there is an address to print
+    if (sAddress != dictionary["address"][lang] + ": ") {
+      // increase the temporal position y before printing address
+      iTempPosY+= Math.max(oTextDimensionsLO.height + 10, 32);
+
+      // print the diferent lines of the address
       print_text(
-        text_options,
-        global_pos_y,
-        ": " + address,
+        oTempTextOptions,
+        global_pos_y + iTempPosY,
+        sAddress,
         normal_font_size,
-        pos_x + 86,
-        pos_y + 50,
+        //168,
+        100,
+        //6, 
+        -15, 
         lang,
+        false,
         false
       );
     }
 
-    pos_y += 15 * (address_text.length - 1); //modify writing position in case on line jump in the address field
+    // print additional information if there is one to print
+    if (sAdditionalInf != dictionary["additional_location_information"][lang] + ": ") {
+      // increase the temporal position y before printing additional information
+      iTempPosY+= Math.max(oTextDimensionsAD.height + 10, 32);
 
-    if (req.body["additional_location_information"] != "") {
+      // print the diferent lines of the additional information
       print_text(
-        text_options,
-        global_pos_y,
-        "additional_location_information",
+        oTempTextOptions,
+        global_pos_y + iTempPosY,
+        sAdditionalInf,
         normal_font_size,
-        pos_x + 5,
-        pos_y + 75,
+        //168,
+        100,
+        //6, 
+        -15, 
         lang,
-        true,
-        true
-      ); //prints Address: in bold
-
-      var additional_location_information =
-        req.body["additional_location_information"];
-      let split_additional_location_information_text = splitSentence(
-        req.body["additional_location_information"],
-        35
+        false,
+        false
       );
-
-      if (split_additional_location_information_text.length > 1) {
-        print_text({
-          characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-          wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-          lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-          align: "justify",
-          width: 440,
-        },
-          global_pos_y,
-          ": " + split_additional_location_information_text[0],
-          normal_font_size,
-          pos_x + 200,
-          pos_y + 75,
-          lang,
-          false,
-          false
-        )
-        print_text({
-          characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-          wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-          lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-          align: "justify",
-          width: 440,
-        },
-          global_pos_y,
-          additional_location_information.slice(split_additional_location_information_text[0].length),
-          normal_font_size,
-          pos_x + 5,
-          pos_y + 75 + 20,
-          lang,
-          false,
-          false
-        );
-        /*print_text(
-          text_options,
-          global_pos_y,
-          ": " + split_additional_location_information_text[0],
-          normal_font_size,
-          pos_x + 200,
-          pos_y + 75,
-          lang,
-          false
-        );
-        additional_location_information = splitSentence(
-          additional_location_information.slice(1),
-          45
-        );
-
-        for (
-          let i_pos = 1;
-          i_pos < additional_location_information.length;
-          i_pos++
-        ) {
-          print_text(
-            text_options,
-            global_pos_y,
-            additional_location_information[i_pos],
-            normal_font_size,
-            pos_x + 5,
-            pos_y + 75 + 20 * i_pos,
-            lang,
-            false
-          );
-        }*/
-        print_rectangle(
-          global_pos_y,
-          37,
-          0,
-          [543, 80 + 25 * address_text.length, 5],
-          [50, 50, 10],
-          [calculateSpace(dictionary["location"][lang], true), 50, 10]
-        );
-      } else {
-        print_rectangle(
-          global_pos_y,
-          37,
-          0,
-          [543, 60 + 25 * address_text.length, 5],
-          [50, 50, 10],
-          [calculateSpace(dictionary["location"][lang], true), 50, 10]
-        );
-
-        print_text(
-          text_options,
-          global_pos_y,
-          ": " + additional_location_information,
-          normal_font_size,
-          pos_x + 200,
-          pos_y + 75,
-          lang,
-          false
-        );
-      }
-      [pos_x, pos_y] = [34, 2]; //reset normal text printing positions
-      print_isolated_image(
-        global_pos_y,
-        "where",
-        pos_x,
-        pos_y - 10,
-        45,
-        45,
-        "false"
-      );
-      print_text(
-        text_options,
-        global_pos_y,
-        "location",
-        heading_font_size,
-        pos_x + 95,
-        pos_y,
-        lang,
-        true,
-        true
-      ); //prints section title
-      print_text(
-        text_options,
-        global_pos_y,
-        "address",
-        normal_font_size,
-        pos_x + 5,
-        pos_y + 50,
-        lang,
-        true,
-        true
-      ); //prints Address: in bold
-      global_pos_y +=
-        90 + constants.SPACE_BETWEEN_ELEMENTS + 25 * address_text.length;
-    } else {
-      print_rectangle(
-        global_pos_y,
-        37,
-        0,
-        [543, 45 + 25 * address_text.length, 5],
-        [50, 50, 10],
-        [calculateSpace(dictionary["location"][lang], true), 50, 10]
-      );
-      [pos_x, pos_y] = [34, 2]; //reset normal text printing positions
-      print_isolated_image(
-        global_pos_y,
-        "where",
-        pos_x,
-        pos_y - 10,
-        45,
-        45,
-        "false"
-      );
-      print_text(
-        text_options,
-        global_pos_y,
-        "location",
-        heading_font_size,
-        pos_x + 95,
-        pos_y,
-        lang,
-        true,
-        true
-      ); //prints section title
-      print_text(
-        text_options,
-        global_pos_y,
-        "address",
-        normal_font_size,
-        pos_x + 5,
-        pos_y + 50,
-        lang,
-        true,
-        true
-      ); //prints Address: in bold
-      global_pos_y +=
-        70 + constants.SPACE_BETWEEN_ELEMENTS + 25 * address_text.length;
     }
 
+    // increase the global position y given the elements used
+    global_pos_y+= Math.max(oTextDimensionsLO.height + oTextDimensionsAD.height + oTextDimensionsAI.height + 65, 105);
 
-
-
-
-    // How to get there
-
+    // variables related to elements in how to get there
     pos_y += 0;
     let spaces = 0;
+    iTempPosY= 0
+    let aGetThereElements= [];
+    let iNoTextElements= 0;
+    let iTextElements= 0;
+    let iLongTextElements= 0;
+
     for (let element of ["taxi", "bus", "car", "metro", "parking"]) {
       if (req.body[element] === "Yes") {
+        aGetThereElements= aGetThereElements.concat(element);
         if (element === "taxi" || element === "car") {
           spaces += 1;
+          iNoTextElements++
         } else if (element === "bus" || element === "metro") {
           spaces += 2;
+          iTextElements++
         } else if (element === "parking") {
           spaces += 1;
+          iLongTextElements++
           spaces = req.body["parking_slots"] !== "" ? spaces + 1 : spaces;
           spaces = req.body["disabled_num_slots"] !== "" ? spaces + 1 : spaces;
         }
       }
     }
+    console.log("[DEBUG] aGetThereElements: ---%s--- - NT %i - T %i - LT %i", aGetThereElements, iNoTextElements, iTextElements, iLongTextElements)
+    let iNeededRows= Math.max(Math.ceil((iNoTextElements/2)), iTextElements) + iLongTextElements
+    console.log("[DEBUG] iNeededRows: %i", iNeededRows)
 
-    if (global_pos_y + 50 + 90 * 2 > doc.page.height - 20 && spaces > 6) {
+    // exit if there are no elements to print
+    if (aGetThereElements.length === 0) {
+      console.log("[DEBUG] No get there information")
+      return
+    }
+
+    // creates new page if there is no space in the current one
+    //if (global_pos_y + 50 + 90 * 2 > doc.page.height - 20 && spaces > 6) {
+    if ( (global_pos_y + 50 + (iNeededRows * 55)) > (doc.page.height - 20) ) {
       doc.addPage({
         margins: {
           top: 10,
@@ -1991,37 +1934,53 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y = 40;
     }
 
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsGT= calculateTextSize(oTempTextOptions, dictionary["how_to_get_there"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["how_to_get_there"][lang], oTextDimensionsLO)
 
-    spaces = Math.ceil(spaces / 3);
+    // Print rectangle according to the needed size
     print_rectangle(
       global_pos_y,
       37,
       0,
-      [543, 40 + spaces * 67, 5],
+      // [543, 65, 5],
+      (size_big = [543, Math.max(oTextDimensionsGT.height + (iNeededRows * 65) + 20, 65), 5]),
       [50, 50, 10],
-      [calculateSpace(dictionary["how_to_get_there"][lang], true), 40, 10]
+      [Math.min(oTextDimensionsGT.width + 20, 430), Math.max(oTextDimensionsGT.height + 10, 32), 10]
     );
+
+    // Print the associated pictogram
     print_isolated_image(
       global_pos_y,
-      "how_to_get_there",
-      pos_x + 1,
+      "where",
+      pos_x,
       pos_y - 10,
       45,
       45,
       "false"
     );
+
+    // print the text in the selected language with the defined options
     print_text(
-      text_options,
+      oTempTextOptions,
       global_pos_y,
-      "how_to_get_there",
+      dictionary["how_to_get_there"][lang],
       heading_font_size,
-      pos_x + 90,
-      pos_y,
+      //pos_x + 95,
+      125,  
+      //pos_y,
+      -1,
       lang,
-      true,
+      false,
       true
     );
-    (pos_x += 40), (pos_y += 30);
+
+    // increase the temporal position y
+    iTempPosY+= 20;
+
+    // TODO - redo this part of location of elements of how to get there
+    spaces = Math.ceil(spaces / 3);
+     (pos_x += 40), (pos_y += 30);
     let array_pos = [
       [
         [0, 0],
@@ -2029,9 +1988,9 @@ module.exports.validateForm = async function (req, res, next) {
         [320, 0],
       ],
       [
-        [0, 70],
-        [160, 70],
-        [320, 70],
+        [0, 65],
+        [160, 65],
+        [320, 65],
       ],
       [
         [0, 130],
@@ -2254,28 +2213,63 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
 
-    global_pos_y += 50 + spaces * 67 + constants.SPACE_BETWEEN_ELEMENTS;
+    // increase the global position y given the elements used
+    //global_pos_y += 50 + spaces * 67 + constants.SPACE_BETWEEN_ELEMENTS;
+    global_pos_y += Math.max(oTextDimensionsGT.height + (iNeededRows * 65) + 50, 65)
   }
 
+
+
+
+
+
+
+  /**
+  * Print all elements in ticket information
+  *
+  */
   function printTicketInformation(req) {
-    let text_to_print = "";
+    // variables for positions
+    let [pos_x, pos_y] = [34, 2];
+    let iTempPosY= 0
+
+    // create new text options for the tickets information
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 450 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsTI= calculateTextSize(oTempTextOptions, dictionary["tickets_information"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["tickets_information"][lang], oTextDimensionsTI)
+
+    // calculate needed space
+    let iNeededSpace= req.body["online"] === "Yes" || req.body["onsite"] === "Yes" ? 2 : 0;
+    iNeededSpace= req.body["reduced_price"] === "Yes" || req.body["normal_price"] !== "" ? iNeededSpace + 1 : iNeededSpace;
+    iNeededSpace = req.body["free_interpreter"] === "Yes" ? iNeededSpace + 1 : iNeededSpace;
+
+    // calculate family price its size, 0 is there is no familiy price
+    let sFamilyPrice = "";
+    let oTextDimensionsFP= calculateTextSize(oTempTextOptions, sFamilyPrice, normal_font_size)
     let print_family_price = false;
     if (req.body["family_price"] === "Yes") {
-      text_to_print = dictionary["family_price"][lang] + ": ";
+      sFamilyPrice = dictionary["family_price"][lang] + ": ";
       //get price per member
       try {
-        if (
-          parseFloat(req.body["member_price"].replace("€", "").trim()) === 0
-        ) {
-          text_to_print =
-            text_to_print + dictionary["free_for_all"][lang] + " ";
+        if ( parseFloat(req.body["member_price"].replace("€", "").trim()) === 0 ) {
+          sFamilyPrice =
+            sFamilyPrice + dictionary["free_for_all"][lang] + " ";
         } else {
           let member_price_coin =
             req.body["member_price_coin"] !== "" ?
               req.body["member_price_coin"] :
               constants.DEFAULT_COIN;
-          text_to_print =
-            text_to_print +
+          sFamilyPrice =
+            sFamilyPrice +
             req.body["member_price"] +
             member_price_coin +
             " " +
@@ -2283,8 +2277,9 @@ module.exports.validateForm = async function (req, res, next) {
             " ";
         }
       } catch (e) {
-        text_to_print = text_to_print + req.body["member_price"] + " ";
+        sFamilyPrice = sFamilyPrice + req.body["member_price"] + " ";
       }
+
       // get child and max_age number
       let children, max_age;
       try {
@@ -2306,39 +2301,98 @@ module.exports.validateForm = async function (req, res, next) {
       if (children !== -1 && max_age !== -1) {
         if (!(children === 0 && max_age === 0)) {
           if (children !== 0)
-            text_to_print =
-              text_to_print +
-              "(max. " +
-              children.toString() +
-              " " +
-              dictionary[children === 1 ? "child" : "children"][lang];
-          if (children !== 0 && max_age === 0)
-            text_to_print = text_to_print + ")";
-          if (children === 0 && max_age !== 0)
-            text_to_print = text_to_print + "(" + dictionary["children"][lang];
-          if (max_age !== 0)
-            text_to_print =
-              text_to_print +
-              " " +
-              dictionary[max_age === 1 ? "max_age_1" : "max_age_2"][
-                lang
-              ].replace("{num_y}", max_age.toString()) +
-              ")";
+            sFamilyPrice = sFamilyPrice + "(max. " + children.toString() + " " + dictionary[children === 1 ? "child" : "children"][lang];
+          if (children !== 0 && max_age === 0) sFamilyPrice = sFamilyPrice + ")";
+          if (children === 0 && max_age !== 0) sFamilyPrice = sFamilyPrice + "(" + dictionary["children"][lang];
+          if (max_age !== 0) sFamilyPrice = sFamilyPrice + " " +
+              dictionary[max_age === 1 ? "max_age_1" : "max_age_2"][lang].replace("{num_y}", max_age.toString()) + ")";
         }
         print_family_price = true;
       }
+
+      // calculate size
+      oTextDimensionsFP= calculateTextSize(oTempTextOptions, sFamilyPrice, normal_font_size)
+    } else {
+      oTextDimensionsFP.width= 0;
+      oTextDimensionsFP.height= 0;
     }
-    space =
-      req.body["online"] === "Yes" || req.body["onsite"] === "Yes" ? 2 : 0;
-    space =
-      req.body["reduced_price"] === "Yes" || req.body["normal_price"] !== "" ?
-        space + 1 :
-        space;
-    space = req.body["free_interpreter"] === "Yes" ? space + 1 : space;
-    space = text_to_print.length > 51 ? space + 2 : space + 1;
+    console.log("[DEBUG] sFamilyPrice: ---%s--- - %o", sFamilyPrice, oTextDimensionsFP)
+
+    // calculate terms and conditions and its size, 0 is there is no terms and conditions
+    let sTermCondition = req.body["terms_condition"];
+    let oTextDimensionsTC= calculateTextSize(oTempTextOptions, sTermCondition, normal_font_size)
+    if (sTermCondition === "") {
+      oTextDimensionsTC.width= 0;
+      oTextDimensionsTC.height= 0;
+    }
+    console.log("[DEBUG] sTermCondition: ---%s--- - %o", sTermCondition, oTextDimensionsTC)
+
+    // creates new page if there is no space in the current one
+    //if (global_pos_y + 50 + 90 * 2 > doc.page.height - 20 && spaces > 6) {
+    if ( (global_pos_y + 50 +  Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 25, 65)) > (doc.page.height - 20) ) {
+        doc.addPage({
+          margins: {
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: 10
+          },
+          size: "A4",
+        });
+        doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
+        global_pos_y = 40;
+      }
+
+    // Print rectangle according to the needed size
+    print_rectangle(
+      global_pos_y,
+      37,
+      0,
+      // [543, 65, 5],
+      (size_big = [543, Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 25, 65), 5]),
+      [50, 50, 10],
+      [Math.min(oTextDimensionsTI.width + 20, 430), Math.max(oTextDimensionsTI.height + 10, 32), 10]
+    );
+
+    // Print the associated pictogram
+    print_isolated_image(
+      global_pos_y,
+      "where",
+      pos_x,
+      pos_y - 10,
+      45,
+      45,
+      "false"
+    );
+
+    // print the text in the selected language with the defined options
+    print_text(
+      oTempTextOptions,
+      global_pos_y,
+      dictionary["tickets_information"][lang],
+      heading_font_size,
+      //pos_x + 95,
+      125,  
+      //pos_y,
+      -1,
+      lang,
+      false,
+      true
+    );
+
+    // increase the temporal position y
+    iTempPosY+= 20;
+
+
+    
+    //  global_pos_y+= 300
+
+
 
     let add_new_page = false;
-    if (global_pos_y + 25 + space * 31 > doc.page.height - 20) {
+
+    /*
+    if (global_pos_y + 25 + iNeededSpace * 31 > doc.page.height - 20) {
       doc.addPage({
         margins: {
           top: 10,
@@ -2360,7 +2414,7 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       37,
       0,
-      [543, 25 + space * 31, 5],
+      [543, 25 + iNeededSpace * 31, 5],
       [60, 50, 10],
       [calculateSpace(dictionary["tickets_information"][lang], true), 40, 10]
     );
@@ -2384,82 +2438,83 @@ module.exports.validateForm = async function (req, res, next) {
       true,
       true
     );
+    */
 
+    // update position for elements
+    [pos_x, pos_y] = [45, 40];
+
+    // print elemets related to sell online  
     if (req.body["online"] === "Yes") {
+      // print pictogram online
       print_image_fit(global_pos_y, "online", req.body, pos_x, pos_y, 70, 70);
-      print_image_fit(
-        global_pos_y,
-        "online",
-        req.body,
-        pos_x + 80,
-        pos_y + 15,
-        35,
-        35,
-        true
-      );
-      let linkSection = doc.struct("Sect");
-      structure.add(linkSection);
-      linkSection.add(
-        doc.struct(
-          "Link", {
-          alt: dictionary["press_buy_tickets"][lang],
-        },
-          () => {
-            doc
-              .fontSize(normal_font_size)
-              .fillColor("red")
-              .text(
-                dictionary["press"][lang],
-                pos_x + 130,
-                global_pos_y + pos_y + 25, {
-                link: req.body["ph_link"],
-                underline: true
-              }
-              );
-          }
-        )
-      );
+      // print green tick
+      print_image_fit(global_pos_y, "online", req.body, pos_x + 80, pos_y + 15, 35, 35, true);
+
+      // print the link  
+      let url = req.body["ph_link"];
+      let urlText= dictionary["press"][lang]
+      doc.fontSize(normal_font_size)
+      .fillColor('blue')
+      .text(urlText, pos_x + 130, global_pos_y + pos_y + 20)
+      .underline(pos_x + 130, global_pos_y + pos_y + 25, doc.widthOfString(urlText), doc.currentLineHeight(), {color: 'blue'})
+      .link(pos_x + 130, global_pos_y + pos_y + 25, doc.widthOfString(urlText), doc.currentLineHeight(), url)
+
       pos_x += 225;
     }
 
+    let oTempTextOptions2 = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions2["align"]= "justify"
+    oTempTextOptions2["width"]= 160 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+
+    // print elemets related to sell onsite  
     if (req.body["onsite"] === "Yes") {
+      // print pictogram onsite
       print_image_fit(global_pos_y, "onsite", req.body, pos_x, pos_y, 70, 70);
-      print_image_fit(
-        global_pos_y,
-        "onsite",
-        req.body,
-        pos_x + 80,
-        pos_y + 15,
-        35,
-        35,
-        true
-      );
+      // print green tick
+      print_image_fit(global_pos_y, "onsite", req.body, pos_x + 80, pos_y + 15, 35, 35, true);
+
+      // calculate text dimensions and prints it
+      let oTextDimensionsWH= calculateTextSize(oTempTextOptions, req.body["where"], normal_font_size)
+      console.log("[DEBUG] calculateTextSize: %s - %o", req.body["where"], oTextDimensionsWH)
       print_text(
-        text_options,
+        oTempTextOptions2,
         global_pos_y,
         req.body["where"],
         normal_font_size,
         pos_x + 120,
-        pos_y + 30,
+        pos_y + 30 - (oTextDimensionsWH.height / 1.5),
         lang,
         false,
-        false,
-        dictionary["where_buy_tickets"][lang] + " " + req.body["where"]
+        false
+        //dictionary["where_buy_tickets"][lang] + " " + req.body["where"]
       );
     }
-    //Price information
-    pos_y =
-      req.body["onsite"] !== "Yes" && req.body["online"] !== "Yes" ?
-        pos_y + 10 :
-        pos_y + 80;
+
+    // update y position if printed or not previous elements
+    pos_y = req.body["onsite"] !== "Yes" && req.body["online"] !== "Yes" ? pos_y + 10 : pos_y + 80;
     pos_x = 40;
-    let normal_price_symbol =
-      req.body["normal_price_coin"] !== "" ?
-        req.body["normal_price_coin"] :
-        constants.DEFAULT_COIN;
+
+    let oTempTextOptions3 = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions3["align"]= "justify"
+    oTempTextOptions3["width"]= 230 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // get coin used, default instead
+    let normal_price_symbol = req.body["normal_price_coin"] !== "" ? req.body["normal_price_coin"] : constants.DEFAULT_COIN;
+    let bPrices= false;
+
+    // print normal price if free or different to 0
     if (parseFloat(req.body["normal_price"]) === 0) {
       print_text(
-        text_options,
+        oTempTextOptions3,
         global_pos_y,
         dictionary["normal_price"][lang] + ": " + dictionary["free"][lang],
         normal_font_size,
@@ -2468,46 +2523,89 @@ module.exports.validateForm = async function (req, res, next) {
         lang,
         false
       );
+      bPrices= true;
     } else if (!isNaN(parseFloat(req.body["normal_price"]))) {
       print_text(
-        text_options,
+        oTempTextOptions3,
         global_pos_y,
-        dictionary["normal_price"][lang] +
-        ": " +
-        req.body["normal_price"] +
-        normal_price_symbol,
+        dictionary["normal_price"][lang] + ": " + req.body["normal_price"] + normal_price_symbol,
         normal_font_size,
         pos_x,
         pos_y,
         lang,
         false
       );
+      bPrices= true;
     }
 
+    // print reduced price
     if (req.body["reduced_price"] === "Yes") {
-      let reduced_price_symbol =
-        req.body["reduced_price_when_coin"] !== "" ?
-          req.body["reduced_price_when_coin"] :
-          constants.DEFAULT_COIN;
+      // get coin used, default instead
+      let reduced_price_symbol = req.body["reduced_price_when_coin"] !== "" ? req.body["reduced_price_when_coin"] : constants.DEFAULT_COIN;
+
+      if (parseFloat(req.body["reduced_price_when"]) === 0) {
+        print_text(
+          oTempTextOptions3,
+          global_pos_y,
+          dictionary["reduced_price"][lang] + ": " + dictionary["free"][lang],
+          normal_font_size,
+          pos_x + 250,
+          pos_y,
+          lang,
+          false
+        );
+      } else if (!isNaN(parseFloat(req.body["reduced_price_when"]))) {
+        print_text(
+          oTempTextOptions3,
+          global_pos_y,
+          dictionary["reduced_price"][lang] + ": " + req.body["reduced_price_when"] + reduced_price_symbol,
+          normal_font_size,
+          pos_x + 250,
+          pos_y,
+          lang,
+          false
+        );
+      }
+
+      bPrices= true;
+    }
+
+    //update y position if any price printed
+    if (bPrices === true) pos_y += 25;
+
+    let oTempTextOptions4 = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions4["align"]= "justify"
+    oTempTextOptions4["width"]= 500 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // print information regarding family prices
+    if (req.body["family_price"] === "Yes" && print_family_price) {
       print_text(
-        text_options,
+        //text_options,
+        oTempTextOptions4,
         global_pos_y,
-        dictionary["reduced_price"][lang] +
-        ": " +
-        req.body["reduced_price_when"] +
-        reduced_price_symbol,
+        sFamilyPrice,
         normal_font_size,
-        pos_x + 250,
+        pos_x,
         pos_y,
         lang,
         false
       );
-      pos_y += 25;
+
+      //[pos_x, pos_y] = [pos_x, pos_y + 40];
+      pos_y+= oTextDimensionsFP.height + 7
     }
 
+    let oTextDimensionsFI= calculateTextSize(oTempTextOptions, dictionary["free_interpreter"][lang], normal_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["free_interpreter"][lang], oTextDimensionsFI)
+
+    // print information regarding free interpreter
     if (req.body["free_interpreter"] === "Yes") {
       print_text(
-        text_options,
+        oTempTextOptions4,
         global_pos_y,
         dictionary["free_interpreter"][lang],
         normal_font_size,
@@ -2516,36 +2614,40 @@ module.exports.validateForm = async function (req, res, next) {
         lang,
         false
       );
+
       print_image_fit(
         global_pos_y,
         "free_interpreter",
         req.body,
-        pos_x + 345,
+        //pos_x + 345,
+        pos_x + oTextDimensionsFI.width + 9,
         pos_y - 10,
         25,
         25,
         true
       );
-      [pos_x, pos_y] = [pos_x, pos_y + 25];
+      //[pos_x, pos_y] = [pos_x, pos_y + 25];
+      pos_y+= oTextDimensionsFI.height + 7
     }
 
-    if (req.body["family_price"] === "Yes" && print_family_price) {
+    // print information regarding other discounts
+    if (req.body["other_discounts"] === "Yes" && sTermCondition !== "") {
       print_text(
-        text_options,
+        oTempTextOptions4,
         global_pos_y,
-        text_to_print,
+        sTermCondition,
         normal_font_size,
         pos_x,
         pos_y,
         lang,
         false
       );
-      [pos_x, pos_y] = [pos_x, pos_y + 40];
-    }
-    if (req.body["other_discounts"] === "Yes") {
-      // TODO
+
+      //[pos_x, pos_y] = [pos_x, pos_y + 25];
+      pos_y+= oTextDimensionsTC.height + 7
     }
 
+    /*
     if (!add_new_page) {
       doc.addPage({
         margins: {
@@ -2559,31 +2661,51 @@ module.exports.validateForm = async function (req, res, next) {
       doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     } else {
-      global_pos_y += 50 + constants.SPACE_BETWEEN_ELEMENTS + space * 31;
+      global_pos_y += 50 + constants.SPACE_BETWEEN_ELEMENTS + iNeededSpace * 31;
     }
+    */
+
+    global_pos_y+= Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 45, 65);
   }
+
+
+
+
+
+
+
+
 
   function printFacilitiesInformation(req) {
     //Features information
+    let iNumberToPrint= 0;
+    for (let element of Object.keys(constants.FACILITIES)) {
+      if (req.body[element] === "Yes") {
+        iNumberToPrint++;
+      }
+    }
+    //console.log("[DEBUG] constants.FACILITIES: %o", Object.keys(constants.FACILITIES))
+    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
+    iLinesNeeded= Math.ceil(iNumberToPrint / 4)
+    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
 
-    if (
-      (!req.body["enabled_fields"].includes("information_buy_tickets") &&
-        (req.body["enabled_fields"].includes("location_information") ||
-          !req.body["enabled_fields"].includes("banner"))) ||
-      !req.body["enabled_fields"].includes("activity_type")
-    ) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-    } else if (global_pos_y + 50 + 90 * 2 > doc.page.height - 20) {
+
+    // create new text options for the tickets information
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 450 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsIF= calculateTextSize(oTempTextOptions, dictionary["information_facilities"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_facilities"][lang], oTextDimensionsIF)
+    
+    // create a new page if necessary
+    if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 25, 65) > doc.page.height - 20) {
       doc.addPage({
         margins: {
           top: 10,
@@ -2597,6 +2719,41 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y = 40;
     }
 
+    // Print rectangle according to the needed size
+    print_rectangle(
+      global_pos_y,
+      37,
+      0,
+      (size_big = [543, Math.max(iLinesNeeded * 72 + 25, 65), 5]),
+      [70, 50, 10],
+      [Math.min(oTextDimensionsIF.width + 20, 430), Math.max(oTextDimensionsIF.height + 10, 32), 10]
+    );
+
+    // Print the associated pictogram
+    print_isolated_image(
+      global_pos_y,
+      "features_information",
+      34,
+      -8,
+      55,
+      55,
+      "false"
+    );
+
+    // print the text in the selected language with the defined options
+    print_text(
+      oTempTextOptions,
+      global_pos_y,
+      dictionary["information_facilities"][lang],
+      heading_font_size,
+      125,  
+      -1,
+      lang,
+      false,
+      true
+    );
+
+    // define positions to place elements
     [pos_x, pos_y] = [50, 15];
     array_pos = [
       [
@@ -2633,10 +2790,13 @@ module.exports.validateForm = async function (req, res, next) {
     array_lengths = [53, 108, 175, 240, 310, 380];
     [array_x, array_y] = [-1, 0];
 
+    // print the necessary elements
     for (let element of Object.keys(constants.FACILITIES)) {
       if (req.body[element] === "Yes") {
         array_x = array_x === -1 ? 0 : array_x;
         let index = array_pos[array_x][array_y];
+        
+        // print element
         print_image_fit(
           global_pos_y,
           element,
@@ -2646,6 +2806,8 @@ module.exports.validateForm = async function (req, res, next) {
           60,
           60
         );
+
+        // print green tick
         print_image_fit(
           global_pos_y,
           element,
@@ -2655,8 +2817,9 @@ module.exports.validateForm = async function (req, res, next) {
           35,
           35,
           true
-        ); //green tick
+        ); 
 
+        // calculate new postion for next element
         if (array_y + 1 >= array_pos[0].length) {
           array_x += 1;
           array_y = 0;
@@ -2670,39 +2833,11 @@ module.exports.validateForm = async function (req, res, next) {
     array_x = array_y === 0 ? array_x - 1 : array_x;
     array_x = array_x < 0 ? 0 : array_x;
 
-    print_rectangle(
-      global_pos_y,
-      37,
-      0,
-      [543, array_lengths[array_x + 1], 5],
-      [70, 50, 10],
-      [
-        calculateSpace(dictionary["information_facilities"][lang], true),
-        40,
-        10,
-      ]
-    );
-    print_isolated_image(
-      global_pos_y,
-      "features_information",
-      40,
-      -5,
-      55,
-      55,
-      "false"
-    );
-    print_text(
-      text_options,
-      global_pos_y,
-      "information_facilities",
-      heading_font_size,
-      122,
-      2,
-      lang,
-      true,
-      true
-    );
 
+
+    global_pos_y+= Math.max(iLinesNeeded * 72 + 45, 85)
+
+    /*
     global_pos_y +=
       20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
 
@@ -2719,10 +2854,95 @@ module.exports.validateForm = async function (req, res, next) {
       doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
+    */
   }
+
+
+
+
+
+
+
 
   function printGuidesInformation(req) {
     //Guides information
+
+    let iNumberToPrint= 0;
+    for (let element of ["sign_guides", "audible_guides", "braille_guides", "pictogram_guides", 
+      "easy_vocabulary_guides", "different_languages", "private_tours"]) {
+      if (req.body[element] === "Yes") {
+        iNumberToPrint++;
+      }
+    }
+    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint);
+    iLinesNeeded= Math.ceil(iNumberToPrint / 4);
+    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded);
+
+    // create new text options for the tickets information
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 450 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsGI= calculateTextSize(oTempTextOptions, dictionary["information_guides"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_guides"][lang], oTextDimensionsGI)
+    
+    // create a new page if necessary
+    if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 25, 65) > doc.page.height - 20) {
+      doc.addPage({
+        margins: {
+          top: 10,
+          left: 10,
+          right: 10,
+          bottom: 10
+        },
+        size: "A4",
+      });
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
+      global_pos_y = 40;
+    }
+
+    // Print rectangle according to the needed size
+    print_rectangle(
+      global_pos_y,
+      37,
+      0,
+      [543, Math.max(iLinesNeeded * 72 + 25, 65), 5],
+      [60, 60, 10],
+      [Math.min(oTextDimensionsGI.width + 20, 430), Math.max(oTextDimensionsGI.height + 10, 32), 10]
+    );
+
+    // Print the associated pictogram
+    print_isolated_image(
+      global_pos_y,
+      "guide_" + "generic",
+      34,
+      -8,
+      55,
+      55,
+      "false"
+    ); 
+
+    // print the text in the selected language with the defined options
+    print_text(
+      oTempTextOptions,
+      global_pos_y,
+      dictionary["information_guides"][lang],
+      heading_font_size,
+      125,
+      -1,
+      lang,
+      false,
+      true
+    );
+
+
+    // define positions to place elements
     [pos_x, pos_y] = [50, 15];
     array_pos = [
       [
@@ -2740,6 +2960,8 @@ module.exports.validateForm = async function (req, res, next) {
     ];
     array_lengths = [53, 108, 175];
     [array_x, array_y] = [-1, 0];
+
+    // print the necessary elements
     for (let element of [
       "sign_guides",
       "audible_guides",
@@ -2752,6 +2974,8 @@ module.exports.validateForm = async function (req, res, next) {
       if (req.body[element] === "Yes") {
         array_x = array_x === -1 ? 0 : array_x;
         let index = array_pos[array_x][array_y];
+
+        // print element
         print_image_fit(
           global_pos_y,
           element,
@@ -2761,6 +2985,8 @@ module.exports.validateForm = async function (req, res, next) {
           60,
           60
         );
+
+        // print green tick
         print_image_fit(
           global_pos_y,
           element,
@@ -2771,6 +2997,8 @@ module.exports.validateForm = async function (req, res, next) {
           35,
           true
         );
+
+        // calculate new postion for next element
         if (array_y + 1 >= array_pos[0].length) {
           array_x += 1;
           array_y = 0;
@@ -2782,8 +3010,11 @@ module.exports.validateForm = async function (req, res, next) {
 
     if (req.body["private_tours"] === "Yes") {
       let descuento = 0;
-      let text = req.body["duration_private_tour"] + " min";
-      if ("price_private_tour" in req.body) {
+      let text= ""
+      if (req.body["duration_private_tour"] !== "") {
+        text = text + req.body["duration_private_tour"] + " min";
+      }
+      if (req.body["price_private_tour"] !== "") {
         if (parseFloat(req.body["price_private_tour"].replace("€", "")) === 0) {
           text += " (" + dictionary["free"][lang] + ")";
         } else {
@@ -2795,67 +3026,139 @@ module.exports.validateForm = async function (req, res, next) {
             " (" + req.body["price_private_tour"] + private_tour_coin + ")";
         }
       }
-      if (text.length > 11) [text, descuento] = [text.replace(" (", "\n("), 10];
-      let index = array_pos[array_x][array_y];
-      print_isolated_image(
-        global_pos_y,
-        "chronometer",
-        pos_x + index[0] - 25,
-        pos_y + index[1] + 15,
-        35,
-        35,
-        dictionary["chronometer"][lang]
-      );
-      print_text(
-        text_options,
-        global_pos_y,
-        text,
-        normal_font_size,
-        pos_x + index[0] + 10 + descuento,
-        pos_y + index[1] + 25 - descuento,
-        lang,
-        false
-      );
+
+      if (text !== "") {
+        // create new text options for the tickets information
+        //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+        let oTempTextOptions2 = Object.assign({}, oTextOptionsSpacing) 
+        //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+        //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+        oTempTextOptions2["align"]= "left"
+        oTempTextOptions2["width"]= 100 // maximum width space
+        //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+        //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+        // calculate the text size of location information with the new text options
+        let oTextDimensionsPT= calculateTextSize(oTempTextOptions, text, normal_font_size)
+        console.log("[DEBUG] calculateTextSize: %s - %o", text, oTextDimensionsPT)
+
+        //if (text.length > 11) [text, descuento] = [text.replace(" (", "\n("), 10];
+        let index = array_pos[array_x][array_y];
+
+        print_isolated_image(
+          global_pos_y,
+          "chronometer",
+          pos_x + index[0] - 25,
+          pos_y + index[1] + 15,
+          35,
+          35,
+          dictionary["chronometer"][lang]
+        );
+
+        print_text(
+          oTempTextOptions2,
+          global_pos_y,
+          text,
+          normal_font_size,
+          pos_x + index[0] + 10 + descuento,
+          pos_y + index[1] + 25 - descuento - (oTextDimensionsPT.width > 100 ? oTextDimensionsPT.height / 2 : 0),
+          lang,
+          false
+        );
+      }
     }
 
+    /*
     array_x = array_x === 2 ? 1 : array_x;
     array_x = array_y === 0 ? array_x - 1 : array_x;
     array_x = array_x < 0 ? 0 : array_x;
-    print_rectangle(
-      global_pos_y,
-      37,
-      0,
-      [543, array_lengths[array_x + 1], 5],
-      [60, 60, 10],
-      [calculateSpace(dictionary["information_guides"][lang], true), 40, 10]
-    );
-    print_isolated_image(
-      global_pos_y,
-      "guide_" + "generic",
-      34,
-      -7,
-      55,
-      55,
-      "false"
-    ); //TODO: Traducir pictogramas y cambiar por +lang
-    print_text(
-      text_options,
-      global_pos_y,
-      "information_guides",
-      heading_font_size,
-      122,
-      2,
-      lang,
-      true,
-      true
-    );
 
     global_pos_y +=
       20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
+    */
+
+    global_pos_y+= Math.max(iLinesNeeded * 72 + 45, 85)
+
   }
 
   function printAllowedActionsInformation(req) {
     //Information allowed actions
+    let iNumberToPrint= 0;
+    for (let element of Object.keys(constants.ALLOWED_ACTIONS)) {
+      if (req.body[element] === "Yes" || req.body[element] === "No") {
+        iNumberToPrint++;
+      }
+    }
+    //console.log("[DEBUG] constants.FACILITIES: %o", Object.keys(constants.FACILITIES))
+    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
+    iLinesNeeded= Math.ceil(iNumberToPrint / 4)
+    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
+
+        // create new text options for the tickets information
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 450 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsAA= calculateTextSize(oTempTextOptions, dictionary["information_allowed_actions"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_allowed_actions"][lang], oTextDimensionsAA)
+    
+    // create a new page if necessary
+    if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 25, 65) > doc.page.height - 20) {
+      doc.addPage({
+        margins: {
+          top: 10,
+          left: 10,
+          right: 10,
+          bottom: 10
+        },
+        size: "A4",
+      });
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
+      global_pos_y = 40;
+    }
+
+
+    // Print rectangle according to the needed size
+    print_rectangle(
+      global_pos_y,
+      37,
+      0,
+      (size_big = [543, Math.max(iLinesNeeded * 72 + 25, 65), 5]),
+      [70, 50, 10],
+      [Math.min(oTextDimensionsAA.width + 20, 430), Math.max(oTextDimensionsAA.height + 10, 32), 10]
+    );
+
+    // Print the associated pictogram
+    print_isolated_image(
+      global_pos_y,
+      "allowed_actions",
+      40,
+      -5,
+      55,
+      55,
+      "false"
+    );
+
+    // print the text in the selected language with the defined options
+    print_text(
+      oTempTextOptions,
+      global_pos_y,
+      dictionary["information_allowed_actions"][lang],
+      heading_font_size,
+      125,  
+      -1,
+      lang,
+      false,
+      true
+    );
+
+    // define positions to place elements
     let [pos_x, pos_y] = [50, 15];
     array_pos = [
       [
@@ -2880,6 +3183,7 @@ module.exports.validateForm = async function (req, res, next) {
     array_lengths = [53, 108, 175, 240];
     [array_x, array_y] = [-1, 0];
 
+    /*
     //Check page swap
     spaces = 0;
     for (let element of Object.keys(constants.ALLOWED_ACTIONS)) {
@@ -2907,6 +3211,7 @@ module.exports.validateForm = async function (req, res, next) {
       doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
+    */
 
     for (let element of Object.keys(constants.ALLOWED_ACTIONS)) {
       array_x = array_x === -1 ? 0 : array_x;
@@ -2937,41 +3242,11 @@ module.exports.validateForm = async function (req, res, next) {
         array_y += 1;
       }
     }
+
+    /*
     array_x = array_x === 4 ? 3 : array_x;
     array_x = array_y === 0 ? array_x - 1 : array_x;
     array_x = array_x < 0 ? 0 : array_x;
-    print_rectangle(
-      global_pos_y,
-      37,
-      0,
-      [543, array_lengths[array_x + 1], 5],
-      [70, 50, 10],
-      [
-        calculateSpace(dictionary["information_allowed_actions"][lang], true),
-        40,
-        10,
-      ]
-    );
-    print_isolated_image(
-      global_pos_y,
-      "allowed_actions",
-      40,
-      -5,
-      55,
-      55,
-      "false"
-    );
-    print_text(
-      text_options,
-      global_pos_y,
-      "information_allowed_actions",
-      heading_font_size,
-      122,
-      2,
-      lang,
-      true,
-      true
-    );
 
     global_pos_y +=
       20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
@@ -2997,10 +3272,94 @@ module.exports.validateForm = async function (req, res, next) {
     }
 
     pos_y = 25;
+    */
+
+    global_pos_y+= Math.max(iLinesNeeded * 72 + 45, 85)
   }
+
+
+
+
+
 
   function printCOVID19Restrictions(req) {
     //Information allowed actions
+    let iNumberToPrint= 0;
+    for (let element of Object.keys(constants.COVID_19_RESTRICTIONS)) {
+      if (req.body[element] === "Yes") {
+        iNumberToPrint++;
+      }
+    }
+    //console.log("[DEBUG] constants.FACILITIES: %o", Object.keys(constants.FACILITIES))
+    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
+    iLinesNeeded= Math.ceil(iNumberToPrint / 4)
+    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
+
+
+    // create new text options for the tickets information
+    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 450 // maximum width space
+    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
+    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
+
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsCR= calculateTextSize(oTempTextOptions, dictionary["covid_19_restrictions"][lang], heading_font_size)
+    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["covid_19_restrictions"][lang], oTextDimensionsCR)
+    
+    // create a new page if necessary
+    if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 35, 65) > doc.page.height - 20) {
+      doc.addPage({
+        margins: {
+          top: 10,
+          left: 10,
+          right: 10,
+          bottom: 10
+        },
+        size: "A4",
+      });
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
+      global_pos_y = 40;
+    }
+
+    // Print rectangle according to the needed size
+    print_rectangle(
+      global_pos_y,
+      37,
+      0,
+      (size_big = [543, Math.max(iLinesNeeded * 72 + 35, 65), 5]),
+      [60, 60, 10],
+      [Math.min(oTextDimensionsCR.width + 20, 430), Math.max(oTextDimensionsCR.height + 10, 32), 10]
+    );
+
+    // Print the associated pictogram
+    print_isolated_image(
+      global_pos_y,
+      "covid_19_restrictions",
+      35,
+      -7,
+      55,
+      55,
+      "false"
+    );
+
+    // print the text in the selected language with the defined options
+    print_text(
+      oTempTextOptions,
+      global_pos_y,
+      dictionary["covid_19_restrictions"][lang],
+      heading_font_size,
+      125,  
+      -1,
+      lang,
+      false,
+      true
+    );
+
+    // define positions to place elements
     let [pos_x, pos_y] = [50, 22]; //20 instead of 15
     array_pos = [
       [
@@ -3026,6 +3385,7 @@ module.exports.validateForm = async function (req, res, next) {
     [array_x, array_y] = [-1, 0];
 
     //Check page swap
+    /*
     spaces = 0;
     for (let element of Object.keys(constants.COVID_19_RESTRICTIONS)) {
       if (req.body[element] === "Yes") {
@@ -3052,6 +3412,7 @@ module.exports.validateForm = async function (req, res, next) {
       doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
+    */
 
     for (let element of Object.keys(constants.COVID_19_RESTRICTIONS)) {
       if (req.body[element] === "Yes") {
@@ -3084,37 +3445,11 @@ module.exports.validateForm = async function (req, res, next) {
         }
       }
     }
+
+    /*
     array_x = array_x === 4 ? 3 : array_x;
     array_x = array_y === 0 ? array_x - 1 : array_x;
     array_x = array_x < 0 ? 0 : array_x;
-    print_rectangle(
-      global_pos_y,
-      37,
-      0,
-      [543, array_lengths[array_x + 1], 5],
-      [60, 60, 10],
-      [calculateSpace(dictionary["covid_19_restrictions"][lang], true), 40, 10]
-    );
-    print_isolated_image(
-      global_pos_y,
-      "covid_19_restrictions",
-      35,
-      -5,
-      55,
-      55,
-      "false"
-    );
-    print_text(
-      text_options,
-      global_pos_y,
-      "covid_19_restrictions",
-      heading_font_size,
-      122,
-      2,
-      lang,
-      true,
-      true
-    );
 
     global_pos_y +=
       20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
@@ -3138,7 +3473,13 @@ module.exports.validateForm = async function (req, res, next) {
       doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
     }
+    */
+
+    global_pos_y+= Math.max(iLinesNeeded * 72 + 55, 85)
   }
+
+
+
 
   function printMoreInformation(req) {
     text_to_print =
@@ -3527,22 +3868,35 @@ module.exports.validateForm = async function (req, res, next) {
  * @param {Object} body new information received
  *
  */
-function generateAddress(body, lang) {
+function fnGenerateAddress(body, lang) {
   var address = "";
-  if (body["street"] !== "") {
+  //if (body["street"] !== "") {
     address = body["street"];
-    if (body["number"] !== "" && body["number"] !== "0") {
-      address = address + ", " + body["number"];
-    } else {
-      address = address + ", " + dictionary["without_number"][lang];
+    if (body["street"] !== "") {
+      if (body["number"] !== "" && body["number"] !== "0") {
+        address = address + ", " + body["number"];
+      } else {
+        address = address + ", " + dictionary["without_number"][lang];
+      }
     }
-    if (body["zip"] !== "") address = address + ", " + body["zip"];
-    if (body["city"] !== "") address = address + ", " + body["city"];
+    if (body["zip"] !== "") {
+      if (address.length === 0) address = body["zip"];
+      else address = address + ", " + body["zip"];
+    }
+    if (body["city"] !== "") {
+      if (body["zip"] !== "") address = address + " " + body["city"];
+      else if (address.length === 0) address= body["city"]
+      else address = address + ", " + body["city"];
+    }
     if (body["country"] !== "")
-      address = address + " (" + body["country"] + ")";
-  }
+    if (address.length === 0) address = body["country"];
+    else address = address + " (" + body["country"] + ")";
+  //}
   return address;
 }
+
+
+
 
 /**
  * This function decides if the pdf information received should be stored or not into the Mongo Database
