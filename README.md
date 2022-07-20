@@ -105,6 +105,14 @@ Enrique Costa Montenegro
 
 ### Versions
 
+**v1.2.02 (20/07/2022)**
+
+-Internal improvements for printing texts and images
+
+-Improved all the elements
+
+-Added option to select the size of the spacing in word, between words and lines
+
 **v1.2.01 (30/06/2022)**
 
 -Separate final text in paragraphs
@@ -119,7 +127,9 @@ Enrique Costa Montenegro
 
 ### Bug fixing / Development report (01/07/2022)
 
-[ ] Copying text from pdf to text editor includes spaces inside words
+[ ] Explanation of fields and elements in the webpage
 
-[ ] Problems with parking out of its place when the other 4 are not selected: "taxi", "bus", "car" and "metro"
+[ ] Group the different coins in the html code
+
+[ ] Review all the functions in its code file
 

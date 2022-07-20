@@ -141,7 +141,7 @@ module.exports = Object.freeze(new function () {
 
     this.WEEK_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     this.FORM_FIELDS = ["activity_name", "activity_type", "street", "zip", "city", "country"];
-    this.VERSION ="1.2.01";
+    this.VERSION ="1.2.02";
 
 });
 
