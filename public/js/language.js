@@ -1527,6 +1527,54 @@ const dictionary = {
     "is": "Okra",
     "pl":	"Ochra",
     "pt":	"Ocre"
+  },
+  "spacing": {
+    "en": "Spacing",
+    "es": "Espaciado",
+    "gl": "Espazamento",
+    "is": "Bil",
+    "pl":	"Rozstaw",
+    "pt":	"Espaçamento"
+  },
+  "high": {
+    "en": "High",
+    "es": "Alto",
+    "gl": "Alto",
+    "is": "Hár",
+    "pl":	"Wysoki",
+    "pt":	"Alto"
+  },
+  "medium": {
+    "en": "Medium",
+    "es": "Medio",
+    "gl": "Medio",
+    "is": "Miðlungs",
+    "pl":	"Średni",
+    "pt":	"Médio"
+  },
+  "normal": {
+    "en": "Normal",
+    "es": "Normal",
+    "gl": "Normal",
+    "is": "Eðlilegt",
+    "pl":	"Normalna",
+    "pt":	"Normal"
+  },
+  "web_audio_description": {
+    "en": "Audio description of the website",
+    "es": "Audiodescripción del sitio web",
+    "gl": "Audiodescrición do sitio web",
+    "is": "Hljóðlýsing á vefsíðunni",
+    "pl":	"Audiodeskrypcja strony internetowej",
+    "pt":	"Audiodescrição do site"
+  },
+  "max_size": {
+    "en": "Maximum size",
+    "es": "Tamaño máximo",
+    "gl": "Tamaño máximo",
+    "is": "Hámarksstærð",
+    "pl":	"Największy rozmiar",
+    "pt":	"Tamanho máximo"
   }
 
 }

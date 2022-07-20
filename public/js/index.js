@@ -3,6 +3,7 @@ import "./language.js";
 var UUID = null;
 var font = "LexieReadable";
 var bgcolor = "#f9f8ec"
+var spacing = "high"
 var previous_blob_uri = null;
 var pdf = {
   pdf_document: null,
@@ -303,6 +304,15 @@ window.onload = function () {
     .querySelector("#bgcolorSelector")
     .addEventListener("click", function (e) {
       bgcolor = e.target.attributes["value"].value;
+      reloadPDF(); //reload automatically on font changes
+    });
+
+
+  // Spacing color selection button event
+  document
+    .querySelector("#spacingSelector")
+    .addEventListener("click", function (e) {
+      spacing = e.target.attributes["value"].value;
       reloadPDF(); //reload automatically on font changes
     });
 
@@ -1018,6 +1028,8 @@ async function reloadPDF(download = false) {
             element.id.includes("period") ||
             element.id.includes("validationPrecioCoin") ||
             element.id.includes("validationPrecioReducidoCoin") ||
+            element.id.includes("validationPrecioPlazasCoin") ||
+            element.id.includes("validationPrecioPlazasMinusvalidosCoin") ||
             element.id.includes("validationPrecioFamiliaExtraCoin") ||
             element.id.includes("validationPrecioVisitaPrivadaCoin")
           ) {
@@ -1067,6 +1079,7 @@ async function reloadPDF(download = false) {
         data["font"] = font;
       }
       data["bgcolor"] = bgcolor;
+      data["spacing"] = spacing;
       data["version"] = version;
       data["enabled_fields"] = Array.from(
         $("#fieldSelector").find(":selected")

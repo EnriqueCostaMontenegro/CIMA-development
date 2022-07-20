@@ -248,10 +248,9 @@ module.exports.validateForm = async function (req, res, next) {
   let selected_text_type = "";
   let enabled_fields = "";
 
-  console.log("[DEBUG INFO] Request body: ", req.body)
-
   console.log("[DEBUG INFO] Version: ", req.body["version"]);
   console.log("[DEBUG INFO] Timestamp: ", new Date());
+  //console.log("[DEBUG INFO] Request body: ", req.body)
 
   if (
     req.body["version"] != constants.VERSION ||
@@ -296,268 +295,220 @@ module.exports.validateForm = async function (req, res, next) {
   const cookie = req.cookies["UUID"];
   const pdf_structure = req.body;
   const lang = req.headers["accept-language"];
-  // Create the pdf
 
-  console.log("\n[DEBUG] doc.page.size: %s x %s", doc.page.height, doc.page.width)
+  //console.log("\n[DEBUG] doc.page.size: %s x %s", doc.page.height, doc.page.width)
 
-  //Processing all the text configuration that will be applied to the document
-  let characterSpaces= [1, 0.2/0.35, 0.1/0.35]; // 1 - high, 0.2 / 0.35 - medium , 0.1 / 0.35 - nornmal    
-  let characterSpacesOption= 0; // selected option for character spaces    
+  //
+  // Define the spacing configuration for the PDF
+  //
 
-  // TODO - study influence of other options of characterSpacesOption
-
-  console.log("[DEBUG] characterSpacesOption %s: %s", characterSpacesOption, characterSpaces[characterSpacesOption])
-
+  // default spacing configuration
   var text_options = {
     characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
     wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
     lineGap: constants.FONTS[selected_text_type]["line_spacing"],
     //align:'justify'
   };
+
+  // define modifications to the spacing and get the one selected form the request body
+  let characterSpaces= [1, 0.2/0.35, 0.1/0.35]; // 1 - high, 0.2 / 0.35 - medium , 0.1 / 0.35 - nornmal    
+  let characterSpacesOption= 0; // selected option for character spaces
+  if (req.body["spacing"] === "high") characterSpacesOption= 0;   
+  if (req.body["spacing"] === "medium") characterSpacesOption= 1;   
+  if (req.body["spacing"] === "normal") characterSpacesOption= 2;   
+  //console.log("[DEBUG] characterSpacesOption %s (%i): %f", req.body["spacing"], characterSpacesOption, characterSpaces[characterSpacesOption])
+
+  // define the values for the spacing option requested
   var oTextOptionsSpacing = {
     characterSpacing: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption],
     wordSpacing: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption] * 0.35 * characterSpaces[characterSpacesOption],
     lineGap: constants.FONTS[selected_text_type]["mean_character_size"] * 0.35 * characterSpaces[characterSpacesOption] * 0.35 * characterSpaces[characterSpacesOption] * 1.5,
     //align:'justify'
   };
-
-  console.log("[DEBUG] oTextOptionsSpacing.characterSpacing: %s", oTextOptionsSpacing.characterSpacing);
-  console.log("[DEBUG] oTextOptionsSpacing.wordSpacing: %s", oTextOptionsSpacing.wordSpacing);
-  console.log("[DEBUG] oTextOptionsSpacing.lineGap: %s\n", oTextOptionsSpacing.lineGap);
+  //console.log("[DEBUG] oTextOptionsSpacing.characterSpacing: %s", oTextOptionsSpacing.characterSpacing);
+  //console.log("[DEBUG] oTextOptionsSpacing.wordSpacing: %s", oTextOptionsSpacing.wordSpacing);
+  //console.log("[DEBUG] oTextOptionsSpacing.lineGap: %s\n", oTextOptionsSpacing.lineGap);
 
   const normal_font_size= constants.FONTS[selected_text_type]["normal_font_size"];
   const heading_font_size= constants.FONTS[selected_text_type]["heading_font_size"];
 
 
   let global_pos_y = 10; //this is a marker to the position where the PDF is to be written in the vertical (Y) axis.
-  //let header = false;
 
 
   //
   // call to print the banner image 
   //
-  //debug_print_global_pos_y("printBannerImage - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("banner")) {
+    //debug_print_global_pos_y("printBannerImage - before", global_pos_y, doc.page.height)
     var imagePrinted= printBannerImage();
     if (imagePrinted) {
       global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
     }
+    //debug_print_global_pos_y("printBannerImage - after", global_pos_y, doc.page.height)
   }
-  //debug_print_global_pos_y("printBannerImage - after", global_pos_y, doc.page.height)
 
 
   //
   // call to print the activity type 
   //
-  debug_print_global_pos_y("printActivityType - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("activity_type")) {
+    //debug_print_global_pos_y("printActivityType - before", global_pos_y, doc.page.height)
     printActivityType(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printActivityType - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printActivityType - end", global_pos_y, doc.page.height)
 
 
   //
   // call to print the schedule information
   //
-  debug_print_global_pos_y("printInformationSchedule - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_hours")) {
+    //debug_print_global_pos_y("printInformationSchedule - before", global_pos_y, doc.page.height)
     printInformationSchedule(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printInformationSchedule - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printInformationSchedule - end", global_pos_y, doc.page.height)
 
 
   //
   // call to print the location information
   //
-  debug_print_global_pos_y("printLocationInformation - before", global_pos_y, doc.page.height)
   if ( enabled_fields.includes("location") ) {
+    //debug_print_global_pos_y("printLocationInformation - before", global_pos_y, doc.page.height)
     if ( req.body["activity_type"] != "online_event" ) printLocation(req);
     else printEventURL(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printLocationInformation - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printLocationInformation - end", global_pos_y, doc.page.height)
 
 
   //
   // call to print the ticket information
   //
-  debug_print_global_pos_y("printTicketInformation - before", global_pos_y, doc.page.height)
   if (req.body["enabled_fields"].includes("information_buy_tickets")) {
+    //debug_print_global_pos_y("printTicketInformation - before", global_pos_y, doc.page.height)
     printTicketInformation(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printTicketInformation - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printTicketInformation - end", global_pos_y, doc.page.height)
-
-
-
-
 
 
   //
   // call to print the facilities information
   //
-  debug_print_global_pos_y("printFacilitiesInformation - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_facilities")) {
+    //debug_print_global_pos_y("printFacilitiesInformation - before", global_pos_y, doc.page.height)
     printFacilitiesInformation(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printFacilitiesInformation - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printFacilitiesInformation - end", global_pos_y, doc.page.height)
-
-
-
 
 
   //
   // call to print the information guides
   //
-  debug_print_global_pos_y("printGuidesInformation - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_guides")) {
+    //debug_print_global_pos_y("printGuidesInformation - before", global_pos_y, doc.page.height)
     printGuidesInformation(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printGuidesInformation - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printGuidesInformation - end", global_pos_y, doc.page.height)
-
-
 
 
   //
   // call to print the information allowed actions
   //
-  debug_print_global_pos_y("printAllowedActionsInformation - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("information_allowed_actions")) {
+    //debug_print_global_pos_y("printAllowedActionsInformation - before", global_pos_y, doc.page.height)
     printAllowedActionsInformation(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printAllowedActionsInformation - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printAllowedActionsInformation - end", global_pos_y, doc.page.height)
-
-
-
 
 
   //
   // call to print the covid restrictions
   //
-  debug_print_global_pos_y("printCOVID19Restrictions - before", global_pos_y, doc.page.height)
   if (enabled_fields.includes("covid_19_restrictions")) {
+    //debug_print_global_pos_y("printCOVID19Restrictions - before", global_pos_y, doc.page.height)
     printCOVID19Restrictions(req);
     global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printCOVID19Restrictions - end", global_pos_y, doc.page.height)
   }
-  debug_print_global_pos_y("printCOVID19Restrictions - end", global_pos_y, doc.page.height)
 
 
-
-
+  //
+  // call to print the more information
+  //
   if (enabled_fields.includes("extra_information")) {
+    //debug_print_global_pos_y("printMoreInformation - before", global_pos_y, doc.page.height)
     printMoreInformation(req);
+    global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    //debug_print_global_pos_y("printMoreInformation - end", global_pos_y, doc.page.height)
   }
-  //global_pos_y += 70;
 
 
+  //
+  // call to print the logos
+  //
   if (enabled_fields.includes("logos")) {
-    print_logos(70, 120, 100, 100);
+    //debug_print_global_pos_y("print_logos - before", global_pos_y, doc.page.height)
+    let bLogosPrinted= print_logos(70, 120, 100, 100);
+    if (bLogosPrinted) {
+      global_pos_y += constants.SPACE_BETWEEN_ELEMENTS;
+    }
+    //debug_print_global_pos_y("print_logos - end", global_pos_y, doc.page.height)
   }
-  //global_pos_y += 30;
+
+
+  //
+  // call to print the more information
+  //
+  //debug_print_global_pos_y("print_disclaimer_info - before", global_pos_y, doc.page.height)
   print_disclaimer_info();
-
-  doc.end(); //all fields of the PDF have been created, ending and sending it to the frontend.
-
-  /**
-   * This function calculate the space needed for storing a caption
-   *
-   * @param {String} sentence original sentence
-   * @param {boolean} isHeading specify if it is heading or not
-   *
-   * @returns {Integer} space
-   */
-  function calculateSpace(sentence, isHeading) {
-    try {
-      let num_spaces = sentence.split(" ").length - 1;
-      let num_caracteres = sentence.length - num_spaces;
-      return (
-        1.4 *
-        (num_caracteres *
-          constants.FONTS[selected_text_type]["mean_character_size"] +
-          sentence.length *
-          constants.FONTS[selected_text_type]["inter_letter"] +
-          num_spaces *
-          constants.FONTS[selected_text_type]["inter_letter"] *
-          3.5)
-      );
-    } catch (e) {
-      return 20;
-    }
-  }
+  //debug_print_global_pos_y("print_disclaimer_info - end", global_pos_y, doc.page.height)
 
 
-  /**
-   * This function split a sentence in slices of a maximum size
-   *
-   * @param {String} sSentence original sentence
-   * @param {Integer} iSizeSplit maximum size of slice
-   *
-   * @returns {array} of slices
-   */
-  function splitSentence(sSentence, iSizeSplit) {
-    //console.log("[DEBUG] splitSentence ---%s---%s---", sSentence, iSizeSplit)
-    let aSlices= [];
-    let aSplit= sSentence.split(" ");
-    //console.log("[DEBUG] split ---%s---", split)
+  //all fields of the PDF have been created, ending and sending it to the frontend.
+  doc.end(); 
 
-    // initialize current slice with the first split
-    let sCurrentSlice= aSplit[0];
-    //console.log("[DEBUG] currentSlice ---%s---", currentSlice)
 
-    // iterate through the next splits
-    for (let i= 1; i< aSplit.length; i++) {
-      if ( (sCurrentSlice.length + 1 + aSplit[i].length) > iSizeSplit ) { // if no size in current slice
-        console.log("[DEBUG] saving sCurrentSlice ---%s---", sCurrentSlice, sCurrentSlice.length)
-        aSlices.push(sCurrentSlice); // save current slice to array
-        //console.log("[DEBUG] aSlices ---%s---", aSlices)
-        sCurrentSlice= aSplit[i] // initialize the current slice
-        //console.log("[DEBUG] new currentSlice ---%s---", currentSlice)
-      } else {  // if there is still size in the current slice
-        sTempText= sCurrentSlice + " " + aSplit[i] // create a temporal text
-        //console.log("[DEBUG] added to tempText ---%s---", tempText)
-        sCurrentSlice= sTempText; // copy to the current slice
-        //console.log("[DEBUG] added to sCurrentSlice ---%s---%s", sCurrentSlice, sCurrentSlice.length)
-      }
-    }
-    console.log("[DEBUG] saving sCurrentSlice ---%s---", sCurrentSlice, sCurrentSlice.length)
-    aSlices.push(sCurrentSlice); // save the las current slice
-    //console.log("[DEBUG] aSlices ---%s---", aSlices)
 
-    return aSlices;
-  }
-
+ 
 
   /**
    * This function creates the form for sections
    *
-   * @param {Integer} pos_x coordinate x or string of coordinates for starting drawing
-   * @param {Array} pos_y coordinate y or string of coordinates for starting drawing
-   * @param {Array} size_big params for the big rectangle [length_x, length_y, radious for rounded corners]
-   * @param {Array} size_icon params for the icon rectangle [length_x, length_y, radious for rounded corners]
-   * @param {Array} size_title params for the title rectangle [length_x, length_y, radious for rounded corners]
+   * @param {Integer} global_pos_y current position y in the pdf
+   * @param {Array}   pos_x coordinate x or array of coordinates for starting drawing
+   * @param {Array}   pos_y coordinate y or array of coordinates for starting drawing
+   * @param {Array}   size_big params for the big rectangle [length_x, length_y, radious for rounded corners]
+   * @param {Array}   size_icon params for the icon rectangle [length_x, length_y, radious for rounded corners]
+   * @param {Array}   size_title params for the title rectangle [length_x, length_y, radious for rounded corners]
    *
    */
   function print_rectangle(
     global_pos_y,
     pos_x,
     pos_y,
-    size_big = [543, 150, 5],
-    size_icon = [50, 50, 10],
-    size_title = [300, 40, 10]
-  ) {
-    size_big = size_big === null ? [525, 300, 5] : size_big;
-    size_icon = size_icon === null ? [40, 40, 10] : size_icon;
-    size_title = size_title === null ? [300, 40, 10] : size_title;
+    size_big, // = [543, 150, 5],
+    size_icon, // = [50, 50, 10],
+    size_title, // = [300, 40, 10] 
+    ) 
+    {
+    // get just one value or array of values for positions
     pos_x = typeof pos_x === "object" ? pos_x : [pos_x, pos_x, pos_x];
     pos_y = typeof pos_y === "object" ? pos_y : [pos_y, pos_y, pos_y];
 
+    // define default values for the rectangles
+    size_big = size_big === null ? [525, 300, 5] : size_big;
+    size_icon = size_icon === null ? [40, 40, 10] : size_icon;
+    size_title = size_title === null ? [300, 40, 10] : size_title;
+
     doc
       .lineWidth(2)
+      // Outside rectange
       .roundedRect(
         pos_x[0] - 15,
         global_pos_y + pos_y[0] + 10,
@@ -565,7 +516,8 @@ module.exports.validateForm = async function (req, res, next) {
         size_big[1],
         size_big[2]
       )
-      .stroke() //Outside rectange
+      .stroke()
+      // Icon rectangle (background color, line color) 
       .roundedRect(
         pos_x[1] - 5,
         global_pos_y + pos_y[1] - 10,
@@ -573,7 +525,8 @@ module.exports.validateForm = async function (req, res, next) {
         size_icon[1],
         size_icon[2]
       )
-      .fillAndStroke("white", "#000") //Icon rectangle (background color, line color)
+      .fillAndStroke("white", "#000") 
+      // Title rectangle (background color, line color)
       .roundedRect(
         pos_x[2] + 80,
         global_pos_y + pos_y[2] - 10,
@@ -581,21 +534,25 @@ module.exports.validateForm = async function (req, res, next) {
         size_title[1],
         size_title[2]
       )
-      .fillAndStroke("white", "#000"); //Title rectangle (background color, line color)
+      .fillAndStroke("white", "#000"); 
   }
+
+
+
 
   /**Prints text to the specified position of the document
    *
-   * @param {Integer} global_pos_y
-   * @param {String} field field to be written
-   * @param {Integer} fontSize
+   * @param {Object}  text_options defined options for the text to print
+   * @param {Integer} global_pos_y current position y in the pdf
+   * @param {String}  field field to be written
+   * @param {Integer} fontSize size of the font
    * @param {Integer} x coordinate x or string of coordinates for starting writing
    * @param {Integer} y coordinate y or string of coordinates for starting writing
-   * @param {String} lang language of the text
+   * @param {String}  lang language of the text
    * @param {Boolean} check_dictionary whether to check for a match in the dictionary or not
-   * @param {Boolean} title
-   * @param {String} text_alt alternative text
-   * @returns
+   * @param {Boolean} title if text belongs to a title
+   * @param {String}  text_alt alternative text
+   *
    */
   function print_text(
     text_options,
@@ -608,11 +565,13 @@ module.exports.validateForm = async function (req, res, next) {
     check_dictionary = true,
     title = false,
     text_alt = ""
-  ) {
-    const font = title ?
-      constants.FONTS[selected_text_type]["bold"] :
-      constants.FONTS[selected_text_type]["regular"];
+    ) 
+    {
+    // select bold text for the titles  
+    const font = title ? constants.FONTS[selected_text_type]["bold"] : constants.FONTS[selected_text_type]["regular"];
+
     if (check_dictionary) {
+      // look for version of the text in the dictionary
       if (field !== "" && field in dictionary) {
         text_alt = text_alt !== "" ? text_alt : dictionary[field][lang];
         structure.add(
@@ -625,17 +584,13 @@ module.exports.validateForm = async function (req, res, next) {
                 .font(font)
                 .fillColor("black")
                 .fontSize(fontSize)
-                .text(
-                  dictionary[field][lang],
-                  x,
-                  global_pos_y + y,
-                  text_options
-                );
+                .text(dictionary[field][lang], x, global_pos_y + y, text_options);
             }
           )
         );
       }
     } else {
+      // do not look for version of the text in the dictionary
       text_alt = text_alt !== "" ? text_alt : field;
       structure.add(
         doc.struct(
@@ -652,11 +607,26 @@ module.exports.validateForm = async function (req, res, next) {
         )
       );
     }
-    return;
+
+    //return;
   }
 
+
+
+
   /** Prints image to fit into a square box
-   * */
+   * 
+   * @param {Integer} global_pos_y current position y in the pdf
+   * @param {String}  field name of the image to print
+   * @param {Object}  body body of the request sent
+   * @param {Integer} x coordinate x or string of coordinates for starting writing
+   * @param {Integer} y coordinate y or string of coordinates for starting writing
+   * @param {Integer} x_fit size x to fit the image
+   * @param {Integer} y_fit size y to fit the image
+   * @param {Boolean} yes_no yes to look in body the field to print, no just use field
+   * @param {String}  text_alt alternative text
+   *
+   */
   function print_image_fit(
     global_pos_y = 0,
     field,
@@ -667,7 +637,8 @@ module.exports.validateForm = async function (req, res, next) {
     y_fit = "",
     yes_no = false,
     alt_text = ""
-  ) {
+    ) {
+    // define the alternative text to print  
     try {
       if (field in body) {
         alt_text =
@@ -678,12 +649,16 @@ module.exports.validateForm = async function (req, res, next) {
               dictionary[field][lang];
       }
     } catch (e) {
-      console.log("Alt error: " + field + " yes_no: " + yes_no);
+      console.log(e + " Alt error: " + field + " yes_no: " + yes_no + "alt_text" + alt_text);
     }
+
     if (field !== "" && field in body) {
       try {
         if (!yes_no && (body[field] === "Yes" || body[field] === "No")) {
+          // exit if image not found
           if (!fs.existsSync("./images/pictos/" + field + ".png")) return;
+
+          // print image
           var imageSection = doc.struct("Sect");
           structure.add(imageSection);
           imageSection.add(
@@ -703,12 +678,10 @@ module.exports.validateForm = async function (req, res, next) {
             )
           );
         } else {
-          if (
-            !fs.existsSync(
-              "./images/pictos/" + body[field].toLowerCase() + ".png"
-            )
-          )
-            return;
+          // exit if image not found
+          if (!fs.existsSync("./images/pictos/" + body[field].toLowerCase() + ".png")) return;
+
+          // print image
           var imageSection = doc.struct("Sect");
           structure.add(imageSection);
           imageSection.add(
@@ -734,9 +707,22 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
 
-    return;
+    //return;
   }
 
+
+
+  /** Prints an isolated image to fit into a square box
+   * 
+   * @param {Integer} global_pos_y current position y in the pdf
+   * @param {String}  field name of the image to print
+   * @param {Integer} x coordinate x or string of coordinates for starting writing
+   * @param {Integer} y coordinate y or string of coordinates for starting writing
+   * @param {Integer} x_fit size x to fit the image
+   * @param {Integer} y_fit size y to fit the image
+   * @param {String}  text_alt alternative text
+   *
+   */
   function print_isolated_image(
     global_pos_y,
     field,
@@ -745,10 +731,11 @@ module.exports.validateForm = async function (req, res, next) {
     x_fit = "",
     y_fit = "",
     alt_text = ""
-  ) {
+    ) {
     try {
       if (fs.existsSync("./images/pictos/" + field + ".png")) {
         if (alt_text !== "false") {
+          // print image with alternative text
           let imageSection = doc.struct("Sect");
           structure.add(imageSection);
           imageSection.add(
@@ -757,34 +744,28 @@ module.exports.validateForm = async function (req, res, next) {
               alt: alt_text + " ",
             },
               () => {
-                doc.image(
-                  "./images/pictos/" + field + ".png",
-                  x,
-                  global_pos_y + y, {
-                  fit: [x_fit, y_fit]
-                }
-                );
+                doc.image("./images/pictos/" + field + ".png", x, global_pos_y + y, {fit: [x_fit, y_fit]});
               }
             )
           );
           imageSection.end();
         } else {
-          doc.image("./images/pictos/" + field + ".png", x, global_pos_y + y, {
-            fit: [x_fit, y_fit],
-          });
+          // print image without alternative text
+          doc.image("./images/pictos/" + field + ".png", x, global_pos_y + y, {fit: [x_fit, y_fit],});
         }
       }
     } catch (e) {
       console.log("Imagen: " + field + ".png no existe");
     }
-    return;
+
+    //return;
   }
+
 
 
 
   /**
    * Creates the basic body of the PDF document.
-   * @param {String} background_color background color for the document
    * @param {String} title title of the document
    * @param {String} author author of the document
    *
@@ -838,10 +819,7 @@ module.exports.validateForm = async function (req, res, next) {
 
     //Global parameters (for instance, fonts)
     doc.registerFont("LexieReadable", "./public/fonts/LexieReadable.ttf");
-    doc.registerFont(
-      "LexieReadable-Bold",
-      "./public/fonts/LexieReadable-Bold.ttf"
-    );
+    doc.registerFont("LexieReadable-Bold", "./public/fonts/LexieReadable-Bold.ttf");
     doc.registerFont("Arial", "./public/fonts/Arial.ttf");
     doc.registerFont("Arial-Bold", "./public/fonts/Arial-Bold.ttf");
     doc.registerFont("Helvetica", "./public/fonts/Helvetica.ttf");
@@ -930,14 +908,11 @@ module.exports.validateForm = async function (req, res, next) {
           doc.image(
             "./user_images/banners/" + cookie + "/" + banner,
             10,
-            global_pos_y, {
-            fit: [iMaxWidth, iMaxHeight],
-            align: "center",
-            valign: "center"
-          }
+            global_pos_y, 
+            { fit: [iMaxWidth, iMaxHeight], align: "center", valign: "center"}
           )
-          .rect(10 + ((iMaxWidth - oDimensions.width * fMaxReduction) / 2), global_pos_y, oDimensions.width * fMaxReduction, 
-            oDimensions.height * fMaxReduction);
+          .rect(10 + ((iMaxWidth - oDimensions.width * fMaxReduction) / 2), global_pos_y, 
+            oDimensions.width * fMaxReduction, oDimensions.height * fMaxReduction);
         }
 
         // increase global position y with the printed height of image
@@ -954,8 +929,11 @@ module.exports.validateForm = async function (req, res, next) {
 
 
 
+
   /**
   * Print all elements in the activity type
+  * 
+  * @param {Object}  body body of the request sent
   *
   */
   function printActivityType(req) {
@@ -970,14 +948,9 @@ module.exports.validateForm = async function (req, res, next) {
     //console.log("[DEBUG] sPictogramText ---%s---", sPictogramText)
 
     // create new text options for the activity name
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 375 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of the activity name with the new text options
     let oTextDimensionsAN= calculateTextSize(oTempTextOptions, req.body["activity_name"], heading_font_size)
@@ -988,15 +961,16 @@ module.exports.validateForm = async function (req, res, next) {
     //console.log("[DEBUG] calculateTextSize: %o", oTextDimensionsSD)
 
     // print the different rectangles according to the needed size
-    // activity name box: min 32, max 54? (oTextDimensionsAN.height + 10)
-    // big box: min 130, max 144? (oTextDimensionsAN.height + oTextDimensionsSD.height + 10)
     print_rectangle(
       global_pos_y,
       [55, 27, 80],
       [20, 28, 20],
-      (size_big = [525, Math.max(oTextDimensionsAN.height + oTextDimensionsSD.height + 10, 130), 5]),
-      (size_icon = [120, 120, 10]),
-      (size_title = [Math.min(oTextDimensionsAN.width + 15, 390), Math.max(oTextDimensionsAN.height + 10, 32), 10])
+      //(size_big = [525, Math.max(oTextDimensionsAN.height + oTextDimensionsSD.height + 10, 130), 5]),
+      //(size_icon = [120, 120, 10]),
+      //(size_title = [Math.min(oTextDimensionsAN.width + 15, 390), Math.max(oTextDimensionsAN.height + 10, 32), 10])
+      [525, Math.max(oTextDimensionsAN.height + oTextDimensionsSD.height + 10, 130), 5],
+      [120, 120, 10],
+      [Math.min(oTextDimensionsAN.width + 15, 390), Math.max(oTextDimensionsAN.height + 10, 32), 10]
     );
 
     // ptint the image related with the activity type with its associated text
@@ -1047,7 +1021,7 @@ module.exports.validateForm = async function (req, res, next) {
     // increase the global position y given the elements used
     global_pos_y+= Math.max(oTextDimensionsAN.height + oTextDimensionsSD.height + 10, 130) + 50;
 
-    return;
+    //return;
   }
 
 
@@ -1055,20 +1029,17 @@ module.exports.validateForm = async function (req, res, next) {
 
   /**
   * Print all elements in the information hours
+  * 
+  * @param {Object}  body body of the request sent
   *
   */
   function printInformationSchedule(req) {
-    let iTempPosY= 0;
+    //let iTempPosY= 0;
 
     // create new text options for the activity name
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 415 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of information hours with the new text options
     let oTextDimensionsIH= calculateTextSize(oTempTextOptions, dictionary["information_hours"][lang], heading_font_size)
@@ -1223,7 +1194,8 @@ module.exports.validateForm = async function (req, res, next) {
         
         // print start date
         print_text(
-          text_options,
+          //text_options,
+          oTempTextOptions,
           global_pos_y,
           start_date.toLocaleString("es", options),
           normal_font_size,
@@ -1254,7 +1226,8 @@ module.exports.validateForm = async function (req, res, next) {
 
         // print end date
         print_text(
-          text_options,
+          //text_options,
+          oTempTextOptions,
           global_pos_y,
           ending_date.toLocaleString("es", options),
           normal_font_size,
@@ -1290,7 +1263,8 @@ module.exports.validateForm = async function (req, res, next) {
 
         // print start date
         print_text(
-          text_options,
+          //text_options,
+          oTempTextOptions,
           global_pos_y,
           start_date.toLocaleString("es", options),
           normal_font_size,
@@ -1326,7 +1300,8 @@ module.exports.validateForm = async function (req, res, next) {
 
         // print end date
         print_text(
-          text_options,
+          //text_options,
+          oTempTextOptions,
           global_pos_y,
           ending_date.toLocaleString("es", options),
           normal_font_size,
@@ -1396,7 +1371,8 @@ module.exports.validateForm = async function (req, res, next) {
         if ( !isEmpty(opening_hours_morning) && !isEmpty(closing_hours_afternoon) ) {
           //print text for continuous schedule
           print_text(
-            text_options,
+            //text_options,
+            oTempTextOptions,
             global_pos_y,
             dictionary["continuous_schedule"][lang] + ":",
             normal_font_size,
@@ -1452,7 +1428,8 @@ module.exports.validateForm = async function (req, res, next) {
         {
           //print text for morning schedule
           print_text(
-            text_options,
+            //text_options,
+            oTempTextOptions,
             global_pos_y,
             dictionary["morning_schedule"][lang] + ":",
             normal_font_size,
@@ -1502,7 +1479,8 @@ module.exports.validateForm = async function (req, res, next) {
 
           //print text for afternoon schedule
           print_text(
-            text_options,
+            //text_options,
+            oTempTextOptions,
             global_pos_y,
             dictionary["afternoon_schedule"][lang] + ":",
             normal_font_size,
@@ -1554,7 +1532,8 @@ module.exports.validateForm = async function (req, res, next) {
         {
           //print text for morning schedule
           print_text(
-            text_options,
+            //text_options,
+            oTempTextOptions,
             global_pos_y,
             dictionary["morning_schedule"][lang] + ":",
             normal_font_size,
@@ -1606,7 +1585,8 @@ module.exports.validateForm = async function (req, res, next) {
         {
           //print text for afternoon schedule
           print_text(
-            text_options,
+            //text_options,
+            oTempTextOptions,
             global_pos_y,
             dictionary["afternoon_schedule"][lang] + ":",
             normal_font_size,
@@ -1668,25 +1648,19 @@ module.exports.validateForm = async function (req, res, next) {
 
   /**
   * Print all elements in the case the location is an oline event
+  * 
+  * @param {Object}  body body of the request sent
   *
   */
   function printEventURL(req) {
-    // variables for positions
-    let [pos_x, pos_y] = [34, 2];
-
     // create new text options for the location information
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 415 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsLO= calculateTextSize(oTempTextOptions, dictionary["location"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["location"][lang], oTextDimensionsLO)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["location"][lang], oTextDimensionsLO)
 
     // Print rectangle according to the needed size
     print_rectangle(
@@ -1702,8 +1676,8 @@ module.exports.validateForm = async function (req, res, next) {
     print_isolated_image(
       global_pos_y,
       "where",
-      pos_x,
-      pos_y - 10,
+      34,
+      -8,
       45,
       45,
       "false"
@@ -1715,9 +1689,7 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       dictionary["location"][lang],
       heading_font_size,
-      //pos_x + 95,
       125,  
-      //pos_y,
       -1,
       lang,
       false,
@@ -1726,13 +1698,12 @@ module.exports.validateForm = async function (req, res, next) {
 
     // print the text before the link
     print_text(
-      //text_options,
       oTempTextOptions,
       global_pos_y,
       dictionary["address"][lang] + ": ",
       normal_font_size,
-      pos_x + 5,
-      pos_y + 50,
+      39,
+      52,
       lang,
       false,
       true
@@ -1742,9 +1713,9 @@ module.exports.validateForm = async function (req, res, next) {
     var url = req.body["url_online_event"];
     doc.fontSize(normal_font_size)
     .fillColor('blue')
-    .text(url, pos_x + 100, global_pos_y + pos_y + 50)
-    .underline(pos_x + 100, global_pos_y + pos_y + 50, doc.widthOfString(url), doc.currentLineHeight(), {color: 'blue'})
-    .link(pos_x + 100, global_pos_y + pos_y + 50, doc.widthOfString(url), doc.currentLineHeight(), url)
+    .text(url, 134, global_pos_y + 52)
+    .underline(134, global_pos_y + 52, doc.widthOfString(url), doc.currentLineHeight(), {color: 'blue'})
+    .link(134, global_pos_y + 52, doc.widthOfString(url), doc.currentLineHeight(), url)
 
     // increase the global position y given the elements used
     global_pos_y += 80 + constants.SPACE_BETWEEN_ELEMENTS;
@@ -1753,11 +1724,10 @@ module.exports.validateForm = async function (req, res, next) {
 
 
 
-
-
-
   /**
   * Print all elements in the case the location is not an oline event
+  * 
+  * @param {Object}  body body of the request sent
   *
   */
    function printLocation(req) {
@@ -1766,18 +1736,13 @@ module.exports.validateForm = async function (req, res, next) {
     let iTempPosY= 0
 
     // create new text options for the location information
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 450 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsLO= calculateTextSize(oTempTextOptions, dictionary["location"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["location"][lang], oTextDimensionsLO)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["location"][lang], oTextDimensionsLO)
 
     // calculate address and its size, 0 is there is no address
     var sAddress = dictionary["address"][lang] + ": " + fnGenerateAddress(req.body, lang);
@@ -1786,7 +1751,7 @@ module.exports.validateForm = async function (req, res, next) {
       oTextDimensionsAD.width= 0;
       oTextDimensionsAD.height= 0;
     }
-    console.log("[DEBUG] address: ---%s--- - %o", sAddress, oTextDimensionsAD)
+    //console.log("[DEBUG] address: ---%s--- - %o", sAddress, oTextDimensionsAD)
 
     // calculate the additional information size, 0 is there is no 
     var sAdditionalInf = dictionary["additional_location_information"][lang] + ": " + req.body["additional_location_information"];
@@ -1795,7 +1760,7 @@ module.exports.validateForm = async function (req, res, next) {
       oTextDimensionsAI.width= 0;
       oTextDimensionsAI.height= 0;
     }
-    console.log("[DEBUG] address: ---%s--- - %o", sAdditionalInf, oTextDimensionsAI)
+    //console.log("[DEBUG] address: ---%s--- - %o", sAdditionalInf, oTextDimensionsAI)
 
     // Print rectangle according to the needed size
     print_rectangle(
@@ -1812,8 +1777,8 @@ module.exports.validateForm = async function (req, res, next) {
     print_isolated_image(
       global_pos_y,
       "where",
-      pos_x,
-      pos_y - 10,
+      34,
+      -8,
       45,
       45,
       "false"
@@ -1825,9 +1790,7 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       dictionary["location"][lang],
       heading_font_size,
-      //pos_x + 95,
       125,  
-      //pos_y,
       -1,
       lang,
       false,
@@ -1848,9 +1811,7 @@ module.exports.validateForm = async function (req, res, next) {
         global_pos_y + iTempPosY,
         sAddress,
         normal_font_size,
-        //168,
         100,
-        //6, 
         -15, 
         lang,
         false,
@@ -1869,9 +1830,7 @@ module.exports.validateForm = async function (req, res, next) {
         global_pos_y + iTempPosY,
         sAdditionalInf,
         normal_font_size,
-        //168,
         100,
-        //6, 
         -15, 
         lang,
         false,
@@ -1908,13 +1867,13 @@ module.exports.validateForm = async function (req, res, next) {
         }
       }
     }
-    console.log("[DEBUG] aGetThereElements: ---%s--- - NT %i - T %i - LT %i", aGetThereElements, iNoTextElements, iTextElements, iLongTextElements)
+    //console.log("[DEBUG] aGetThereElements: ---%s--- - NT %i - T %i - LT %i", aGetThereElements, iNoTextElements, iTextElements, iLongTextElements)
     let iNeededRows= Math.max(Math.ceil((iNoTextElements/2)), iTextElements) + iLongTextElements
-    console.log("[DEBUG] iNeededRows: %i", iNeededRows)
+    //console.log("[DEBUG] iNeededRows: %i", iNeededRows)
 
     // exit if there are no elements to print
     if (aGetThereElements.length === 0) {
-      console.log("[DEBUG] No get there information")
+      //console.log("[DEBUG] No get there information")
       return
     }
 
@@ -1936,7 +1895,7 @@ module.exports.validateForm = async function (req, res, next) {
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsGT= calculateTextSize(oTempTextOptions, dictionary["how_to_get_there"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["how_to_get_there"][lang], oTextDimensionsLO)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["how_to_get_there"][lang], oTextDimensionsLO)
 
     // Print rectangle according to the needed size
     print_rectangle(
@@ -2089,7 +2048,7 @@ module.exports.validateForm = async function (req, res, next) {
         ); //check icon
         if (extra_text !== "") {
           print_text(
-            text_options,
+            oTempTextOptions,
             global_pos_y,
             extra_text,
             12,
@@ -2118,7 +2077,7 @@ module.exports.validateForm = async function (req, res, next) {
                     parking_slot +
                     " (" +
                     req.body["parking_price"] +
-                    "€ " +
+                    req.body["parking_price_coin"] + " " +
                     dictionary["each"][lang] +
                     ")";
                 }
@@ -2143,7 +2102,7 @@ module.exports.validateForm = async function (req, res, next) {
               "false"
             );
             print_text(
-              text_options,
+              oTempTextOptions,
               global_pos_y,
               parking_slot,
               normal_font_size,
@@ -2176,7 +2135,7 @@ module.exports.validateForm = async function (req, res, next) {
                     parking_slot +
                     " (" +
                     req.body["disabled_price_slots"] +
-                    "€ " +
+                    req.body["disabled_parking_price_coin"] + " " +
                     dictionary["each"][lang] +
                     ")";
                 }
@@ -2192,7 +2151,7 @@ module.exports.validateForm = async function (req, res, next) {
               dictionary["reserved_slots"][lang]
             );
             print_text(
-              text_options,
+              oTempTextOptions,
               global_pos_y,
               parking_slot,
               normal_font_size,
@@ -2214,38 +2173,27 @@ module.exports.validateForm = async function (req, res, next) {
     }
 
     // increase the global position y given the elements used
-    //global_pos_y += 50 + spaces * 67 + constants.SPACE_BETWEEN_ELEMENTS;
     global_pos_y += Math.max(oTextDimensionsGT.height + (iNeededRows * 65) + 50, 65)
   }
 
 
 
 
-
-
-
   /**
   * Print all elements in ticket information
+  * 
+  * @param {Object}  body body of the request sent
   *
   */
   function printTicketInformation(req) {
-    // variables for positions
-    let [pos_x, pos_y] = [34, 2];
-    let iTempPosY= 0
-
     // create new text options for the tickets information
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 450 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsTI= calculateTextSize(oTempTextOptions, dictionary["tickets_information"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["tickets_information"][lang], oTextDimensionsTI)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["tickets_information"][lang], oTextDimensionsTI)
 
     // calculate needed space
     let iNeededSpace= req.body["online"] === "Yes" || req.body["onsite"] === "Yes" ? 2 : 0;
@@ -2261,20 +2209,11 @@ module.exports.validateForm = async function (req, res, next) {
       //get price per member
       try {
         if ( parseFloat(req.body["member_price"].replace("€", "").trim()) === 0 ) {
-          sFamilyPrice =
-            sFamilyPrice + dictionary["free_for_all"][lang] + " ";
+          sFamilyPrice = sFamilyPrice + dictionary["free_for_all"][lang] + " ";
         } else {
-          let member_price_coin =
-            req.body["member_price_coin"] !== "" ?
-              req.body["member_price_coin"] :
-              constants.DEFAULT_COIN;
-          sFamilyPrice =
-            sFamilyPrice +
-            req.body["member_price"] +
-            member_price_coin +
-            " " +
-            dictionary["per_member"][lang] +
-            " ";
+          let member_price_coin = req.body["member_price_coin"] !== "" ? req.body["member_price_coin"] : constants.DEFAULT_COIN;
+          sFamilyPrice = sFamilyPrice + req.body["member_price"] + member_price_coin +
+            " " + dictionary["per_member"][lang] + " ";
         }
       } catch (e) {
         sFamilyPrice = sFamilyPrice + req.body["member_price"] + " ";
@@ -2283,16 +2222,12 @@ module.exports.validateForm = async function (req, res, next) {
       // get child and max_age number
       let children, max_age;
       try {
-        children = isNaN(parseInt(req.body["max_num_children"])) ?
-          0 :
-          parseInt(req.body["max_num_children"]);
+        children = isNaN(parseInt(req.body["max_num_children"])) ? 0 : parseInt(req.body["max_num_children"]);
       } catch (e) {
         children = -1;
       }
       try {
-        max_age = isNaN(parseInt(req.body["max_age_children"])) ?
-          0 :
-          parseInt(req.body["max_age_children"]);
+        max_age = isNaN(parseInt(req.body["max_age_children"])) ? 0 : parseInt(req.body["max_age_children"]);
       } catch (e) {
         max_age = -1;
       }
@@ -2316,7 +2251,7 @@ module.exports.validateForm = async function (req, res, next) {
       oTextDimensionsFP.width= 0;
       oTextDimensionsFP.height= 0;
     }
-    console.log("[DEBUG] sFamilyPrice: ---%s--- - %o", sFamilyPrice, oTextDimensionsFP)
+    //console.log("[DEBUG] sFamilyPrice: ---%s--- - %o", sFamilyPrice, oTextDimensionsFP)
 
     // calculate terms and conditions and its size, 0 is there is no terms and conditions
     let sTermCondition = req.body["terms_condition"];
@@ -2325,11 +2260,11 @@ module.exports.validateForm = async function (req, res, next) {
       oTextDimensionsTC.width= 0;
       oTextDimensionsTC.height= 0;
     }
-    console.log("[DEBUG] sTermCondition: ---%s--- - %o", sTermCondition, oTextDimensionsTC)
+    //console.log("[DEBUG] sTermCondition: ---%s--- - %o", sTermCondition, oTextDimensionsTC)
 
     // creates new page if there is no space in the current one
-    //if (global_pos_y + 50 + 90 * 2 > doc.page.height - 20 && spaces > 6) {
-    if ( (global_pos_y + 50 +  Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 25, 65)) > (doc.page.height - 20) ) {
+    if ( (global_pos_y + 50 +  Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) + 
+      oTextDimensionsFP.height +  oTextDimensionsTC.height + 25, 65)) > (doc.page.height - 20) ) {
         doc.addPage({
           margins: {
             top: 10,
@@ -2348,8 +2283,7 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       37,
       0,
-      // [543, 65, 5],
-      (size_big = [543, Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 25, 65), 5]),
+      [543, Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 25, 65), 5],
       [50, 50, 10],
       [Math.min(oTextDimensionsTI.width + 20, 430), Math.max(oTextDimensionsTI.height + 10, 32), 10]
     );
@@ -2358,8 +2292,8 @@ module.exports.validateForm = async function (req, res, next) {
     print_isolated_image(
       global_pos_y,
       "where",
-      pos_x,
-      pos_y - 10,
+      34,
+      -8,
       45,
       45,
       "false"
@@ -2371,77 +2305,15 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       dictionary["tickets_information"][lang],
       heading_font_size,
-      //pos_x + 95,
       125,  
-      //pos_y,
       -1,
       lang,
       false,
       true
     );
 
-    // increase the temporal position y
-    iTempPosY+= 20;
-
-
-    
-    //  global_pos_y+= 300
-
-
-
-    let add_new_page = false;
-
-    /*
-    if (global_pos_y + 25 + iNeededSpace * 31 > doc.page.height - 20) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-      add_new_page = true;
-    }
-
-    //Information about the tickets
-    [pos_x, pos_y] = [45, 40];
-
-    print_rectangle(
-      global_pos_y,
-      37,
-      0,
-      [543, 25 + iNeededSpace * 31, 5],
-      [60, 50, 10],
-      [calculateSpace(dictionary["tickets_information"][lang], true), 40, 10]
-    );
-    print_isolated_image(
-      global_pos_y,
-      "ticket_" + "generic",
-      35,
-      -12,
-      55,
-      55,
-      "false"
-    ); //TODO: Pictogramas en otros idiomas
-    print_text(
-      text_options,
-      global_pos_y,
-      "tickets_information",
-      heading_font_size,
-      122,
-      2,
-      lang,
-      true,
-      true
-    );
-    */
-
     // update position for elements
-    [pos_x, pos_y] = [45, 40];
+    let [pos_x, pos_y] = [45, 40];
 
     // print elemets related to sell online  
     if (req.body["online"] === "Yes") {
@@ -2463,13 +2335,8 @@ module.exports.validateForm = async function (req, res, next) {
     }
 
     let oTempTextOptions2 = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions2["align"]= "justify"
     oTempTextOptions2["width"]= 160 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
-
 
     // print elemets related to sell onsite  
     if (req.body["onsite"] === "Yes") {
@@ -2480,7 +2347,7 @@ module.exports.validateForm = async function (req, res, next) {
 
       // calculate text dimensions and prints it
       let oTextDimensionsWH= calculateTextSize(oTempTextOptions, req.body["where"], normal_font_size)
-      console.log("[DEBUG] calculateTextSize: %s - %o", req.body["where"], oTextDimensionsWH)
+      //console.log("[DEBUG] calculateTextSize: %s - %o", req.body["where"], oTextDimensionsWH)
       print_text(
         oTempTextOptions2,
         global_pos_y,
@@ -2491,7 +2358,6 @@ module.exports.validateForm = async function (req, res, next) {
         lang,
         false,
         false
-        //dictionary["where_buy_tickets"][lang] + " " + req.body["where"]
       );
     }
 
@@ -2500,12 +2366,8 @@ module.exports.validateForm = async function (req, res, next) {
     pos_x = 40;
 
     let oTempTextOptions3 = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions3["align"]= "justify"
     oTempTextOptions3["width"]= 230 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // get coin used, default instead
     let normal_price_symbol = req.body["normal_price_coin"] !== "" ? req.body["normal_price_coin"] : constants.DEFAULT_COIN;
@@ -2574,12 +2436,8 @@ module.exports.validateForm = async function (req, res, next) {
     if (bPrices === true) pos_y += 25;
 
     let oTempTextOptions4 = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions4["align"]= "justify"
     oTempTextOptions4["width"]= 500 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // print information regarding family prices
     if (req.body["family_price"] === "Yes" && print_family_price) {
@@ -2595,12 +2453,11 @@ module.exports.validateForm = async function (req, res, next) {
         false
       );
 
-      //[pos_x, pos_y] = [pos_x, pos_y + 40];
       pos_y+= oTextDimensionsFP.height + 7
     }
 
     let oTextDimensionsFI= calculateTextSize(oTempTextOptions, dictionary["free_interpreter"][lang], normal_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["free_interpreter"][lang], oTextDimensionsFI)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["free_interpreter"][lang], oTextDimensionsFI)
 
     // print information regarding free interpreter
     if (req.body["free_interpreter"] === "Yes") {
@@ -2619,14 +2476,13 @@ module.exports.validateForm = async function (req, res, next) {
         global_pos_y,
         "free_interpreter",
         req.body,
-        //pos_x + 345,
         pos_x + oTextDimensionsFI.width + 9,
         pos_y - 10,
         25,
         25,
         true
       );
-      //[pos_x, pos_y] = [pos_x, pos_y + 25];
+ 
       pos_y+= oTextDimensionsFI.height + 7
     }
 
@@ -2643,41 +2499,24 @@ module.exports.validateForm = async function (req, res, next) {
         false
       );
 
-      //[pos_x, pos_y] = [pos_x, pos_y + 25];
       pos_y+= oTextDimensionsTC.height + 7
     }
 
-    /*
-    if (!add_new_page) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-    } else {
-      global_pos_y += 50 + constants.SPACE_BETWEEN_ELEMENTS + iNeededSpace * 31;
-    }
-    */
-
-    global_pos_y+= Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 45, 65);
+    // increase the global position y given the elements used
+    global_pos_y+= Math.max(oTextDimensionsTI.height + (iNeededSpace * 31) +  oTextDimensionsFP.height +  oTextDimensionsTC.height + 45, 65) + 20;
   }
 
 
 
 
-
-
-
-
-
+  /**
+  * Print all elements in facilities information
+  * 
+  * @param {Object}  body body of the request sent
+  *
+  */
   function printFacilitiesInformation(req) {
-    //Features information
+    // calculate elements to print and lines needed
     let iNumberToPrint= 0;
     for (let element of Object.keys(constants.FACILITIES)) {
       if (req.body[element] === "Yes") {
@@ -2685,24 +2524,19 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
     //console.log("[DEBUG] constants.FACILITIES: %o", Object.keys(constants.FACILITIES))
-    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
+    //console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
     iLinesNeeded= Math.ceil(iNumberToPrint / 4)
-    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
+    //console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
 
 
     // create new text options for the tickets information
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 450 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsIF= calculateTextSize(oTempTextOptions, dictionary["information_facilities"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_facilities"][lang], oTextDimensionsIF)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_facilities"][lang], oTextDimensionsIF)
     
     // create a new page if necessary
     if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 25, 65) > doc.page.height - 20) {
@@ -2724,7 +2558,7 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       37,
       0,
-      (size_big = [543, Math.max(iLinesNeeded * 72 + 25, 65), 5]),
+      [543, Math.max(iLinesNeeded * 72 + 25, 65), 5],
       [70, 50, 10],
       [Math.min(oTextDimensionsIF.width + 20, 430), Math.max(oTextDimensionsIF.height + 10, 32), 10]
     );
@@ -2733,7 +2567,7 @@ module.exports.validateForm = async function (req, res, next) {
     print_isolated_image(
       global_pos_y,
       "features_information",
-      34,
+      39,
       -8,
       55,
       55,
@@ -2787,7 +2621,6 @@ module.exports.validateForm = async function (req, res, next) {
         [390, 310],
       ],
     ];
-    array_lengths = [53, 108, 175, 240, 310, 380];
     [array_x, array_y] = [-1, 0];
 
     // print the necessary elements
@@ -2829,32 +2662,8 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
 
-    array_x = array_x > 3 ? 4 : array_x;
-    array_x = array_y === 0 ? array_x - 1 : array_x;
-    array_x = array_x < 0 ? 0 : array_x;
-
-
-
+    // increase the global position y given the elements used
     global_pos_y+= Math.max(iLinesNeeded * 72 + 45, 85)
-
-    /*
-    global_pos_y +=
-      20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
-
-    if (array_x == 4 || global_pos_y > 750) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-    }
-    */
   }
 
 
@@ -2863,34 +2672,34 @@ module.exports.validateForm = async function (req, res, next) {
 
 
 
-
+  /**
+  * Print all elements in guides information
+  * 
+  * @param {Object}  body body of the request sent
+  *
+  */
   function printGuidesInformation(req) {
-    //Guides information
-
+    // calculate elements to print and lines needed
     let iNumberToPrint= 0;
     for (let element of ["sign_guides", "audible_guides", "braille_guides", "pictogram_guides", 
       "easy_vocabulary_guides", "different_languages", "private_tours"]) {
       if (req.body[element] === "Yes") {
         iNumberToPrint++;
+        if (element === "private_tours") iNumberToPrint++; // add 1 for the information related to private tours
       }
     }
-    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint);
+    //console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint);
     iLinesNeeded= Math.ceil(iNumberToPrint / 4);
-    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded);
+    //console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded);
 
     // create new text options for the tickets information
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 450 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsGI= calculateTextSize(oTempTextOptions, dictionary["information_guides"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_guides"][lang], oTextDimensionsGI)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_guides"][lang], oTextDimensionsGI)
     
     // create a new page if necessary
     if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 25, 65) > doc.page.height - 20) {
@@ -2958,7 +2767,6 @@ module.exports.validateForm = async function (req, res, next) {
         [390, 100],
       ],
     ];
-    array_lengths = [53, 108, 175];
     [array_x, array_y] = [-1, 0];
 
     // print the necessary elements
@@ -2973,6 +2781,10 @@ module.exports.validateForm = async function (req, res, next) {
     ]) {
       if (req.body[element] === "Yes") {
         array_x = array_x === -1 ? 0 : array_x;
+        if ((element === "private_tours") && (array_y === 3)) {
+          array_y= 0;
+          array_x++;
+        }
         let index = array_pos[array_x][array_y];
 
         // print element
@@ -3009,7 +2821,6 @@ module.exports.validateForm = async function (req, res, next) {
     }
 
     if (req.body["private_tours"] === "Yes") {
-      let descuento = 0;
       let text= ""
       if (req.body["duration_private_tour"] !== "") {
         text = text + req.body["duration_private_tour"] + " min";
@@ -3029,20 +2840,14 @@ module.exports.validateForm = async function (req, res, next) {
 
       if (text !== "") {
         // create new text options for the tickets information
-        //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
         let oTempTextOptions2 = Object.assign({}, oTextOptionsSpacing) 
-        //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-        //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
         oTempTextOptions2["align"]= "left"
         oTempTextOptions2["width"]= 100 // maximum width space
-        //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-        //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
         // calculate the text size of location information with the new text options
         let oTextDimensionsPT= calculateTextSize(oTempTextOptions, text, normal_font_size)
-        console.log("[DEBUG] calculateTextSize: %s - %o", text, oTextDimensionsPT)
+        //console.log("[DEBUG] calculateTextSize: %s - %o", text, oTextDimensionsPT)
 
-        //if (text.length > 11) [text, descuento] = [text.replace(" (", "\n("), 10];
         let index = array_pos[array_x][array_y];
 
         print_isolated_image(
@@ -3060,29 +2865,29 @@ module.exports.validateForm = async function (req, res, next) {
           global_pos_y,
           text,
           normal_font_size,
-          pos_x + index[0] + 10 + descuento,
-          pos_y + index[1] + 25 - descuento - (oTextDimensionsPT.width > 100 ? oTextDimensionsPT.height / 2 : 0),
+          pos_x + index[0] + 10,
+          pos_y + index[1] + 25 - (oTextDimensionsPT.width > 100 ? oTextDimensionsPT.height / 2 : 0),
           lang,
           false
         );
       }
     }
 
-    /*
-    array_x = array_x === 2 ? 1 : array_x;
-    array_x = array_y === 0 ? array_x - 1 : array_x;
-    array_x = array_x < 0 ? 0 : array_x;
-
-    global_pos_y +=
-      20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
-    */
-
+    // increase the global position y given the elements used
     global_pos_y+= Math.max(iLinesNeeded * 72 + 45, 85)
-
   }
 
+
+
+
+  /**
+  * Print all elements in allowed actions information
+  * 
+  * @param {Object}  body body of the request sent
+  *
+  */
   function printAllowedActionsInformation(req) {
-    //Information allowed actions
+    // calculate elements to print and lines needed
     let iNumberToPrint= 0;
     for (let element of Object.keys(constants.ALLOWED_ACTIONS)) {
       if (req.body[element] === "Yes" || req.body[element] === "No") {
@@ -3090,23 +2895,18 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
     //console.log("[DEBUG] constants.FACILITIES: %o", Object.keys(constants.FACILITIES))
-    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
+    //console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
     iLinesNeeded= Math.ceil(iNumberToPrint / 4)
-    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
+    //console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
 
-        // create new text options for the tickets information
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
+    // create new text options for the tickets information
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 450 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsAA= calculateTextSize(oTempTextOptions, dictionary["information_allowed_actions"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_allowed_actions"][lang], oTextDimensionsAA)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_allowed_actions"][lang], oTextDimensionsAA)
     
     // create a new page if necessary
     if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 25, 65) > doc.page.height - 20) {
@@ -3123,13 +2923,12 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y = 40;
     }
 
-
     // Print rectangle according to the needed size
     print_rectangle(
       global_pos_y,
       37,
       0,
-      (size_big = [543, Math.max(iLinesNeeded * 72 + 25, 65), 5]),
+      [543, Math.max(iLinesNeeded * 72 + 25, 65), 5],
       [70, 50, 10],
       [Math.min(oTextDimensionsAA.width + 20, 430), Math.max(oTextDimensionsAA.height + 10, 32), 10]
     );
@@ -3180,40 +2979,11 @@ module.exports.validateForm = async function (req, res, next) {
         [390, 170],
       ],
     ];
-    array_lengths = [53, 108, 175, 240];
     [array_x, array_y] = [-1, 0];
 
-    /*
-    //Check page swap
-    spaces = 0;
+    // print different elements with option selected
     for (let element of Object.keys(constants.ALLOWED_ACTIONS)) {
-      //if (req.body[element] === "Yes") {
-      spaces += 1;
-      //}
-    }
-    spaces = Math.ceil(spaces / 4);
-    if (
-      global_pos_y +
-      20 +
-      constants.SPACE_BETWEEN_ELEMENTS +
-      array_lengths[spaces] >
-      doc.page.height - 20
-    ) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-    }
-    */
-
-    for (let element of Object.keys(constants.ALLOWED_ACTIONS)) {
+      if (!(req.body[element] === "Yes" || req.body[element] === "No")) continue;
       array_x = array_x === -1 ? 0 : array_x;
       let index = array_pos[array_x][array_y];
       print_image_fit(
@@ -3243,47 +3013,21 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
 
-    /*
-    array_x = array_x === 4 ? 3 : array_x;
-    array_x = array_y === 0 ? array_x - 1 : array_x;
-    array_x = array_x < 0 ? 0 : array_x;
-
-    global_pos_y +=
-      20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
-
-    if (
-      global_pos_y +
-      20 +
-      constants.SPACE_BETWEEN_ELEMENTS +
-      array_lengths[spaces] >
-      doc.page.height - 20
-    ) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-    }
-
-    pos_y = 25;
-    */
-
+    // increase the global position y given the elements used
     global_pos_y+= Math.max(iLinesNeeded * 72 + 45, 85)
   }
 
 
 
 
-
-
+  /**
+  * Print all elements in covid19 restrictions information
+  * 
+  * @param {Object}  body body of the request sent
+  *
+  */
   function printCOVID19Restrictions(req) {
-    //Information allowed actions
+    // calculate elements to print and lines needed
     let iNumberToPrint= 0;
     for (let element of Object.keys(constants.COVID_19_RESTRICTIONS)) {
       if (req.body[element] === "Yes") {
@@ -3291,24 +3035,19 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
     //console.log("[DEBUG] constants.FACILITIES: %o", Object.keys(constants.FACILITIES))
-    console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
+    //console.log("[DEBUG] iNumberToPrint: %i", iNumberToPrint)
     iLinesNeeded= Math.ceil(iNumberToPrint / 4)
-    console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
+    //console.log("[DEBUG] iLinesNeeded: %i", iLinesNeeded)
 
 
     // create new text options for the tickets information
-    //console.log("[DEBUG] typeof oTextOptionsSpacing ---%s---", typeof oTextOptionsSpacing)
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 450 // maximum width space
-    //console.log("[DEBUG] oTextOptionsSpacing ---%s---", oTextOptionsSpacing)
-    //console.log("[DEBUG] oTempTextOptions ---%s---", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsCR= calculateTextSize(oTempTextOptions, dictionary["covid_19_restrictions"][lang], heading_font_size)
-    console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["covid_19_restrictions"][lang], oTextDimensionsCR)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["covid_19_restrictions"][lang], oTextDimensionsCR)
     
     // create a new page if necessary
     if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 35, 65) > doc.page.height - 20) {
@@ -3330,7 +3069,7 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       37,
       0,
-      (size_big = [543, Math.max(iLinesNeeded * 72 + 35, 65), 5]),
+      [543, Math.max(iLinesNeeded * 72 + 35, 65), 5],
       [60, 60, 10],
       [Math.min(oTextDimensionsCR.width + 20, 430), Math.max(oTextDimensionsCR.height + 10, 32), 10]
     );
@@ -3381,39 +3120,9 @@ module.exports.validateForm = async function (req, res, next) {
         [390, 170],
       ],
     ];
-    array_lengths = [53, 108, 175, 240];
     [array_x, array_y] = [-1, 0];
 
-    //Check page swap
-    /*
-    spaces = 0;
-    for (let element of Object.keys(constants.COVID_19_RESTRICTIONS)) {
-      if (req.body[element] === "Yes") {
-        spaces += 1;
-      }
-    }
-    spaces = Math.ceil(spaces / 4);
-    if (
-      global_pos_y +
-      20 +
-      constants.SPACE_BETWEEN_ELEMENTS +
-      array_lengths[spaces] >
-      doc.page.height - 20
-    ) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-    }
-    */
-
+    // print different elements with option selected
     for (let element of Object.keys(constants.COVID_19_RESTRICTIONS)) {
       if (req.body[element] === "Yes") {
         array_x = array_x === -1 ? 0 : array_x;
@@ -3446,77 +3155,85 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
 
-    /*
-    array_x = array_x === 4 ? 3 : array_x;
-    array_x = array_y === 0 ? array_x - 1 : array_x;
-    array_x = array_x < 0 ? 0 : array_x;
-
-    global_pos_y +=
-      20 + array_lengths[array_x + 1] + constants.SPACE_BETWEEN_ELEMENTS;
-
-    if (
-      global_pos_y +
-      60 +
-      constants.SPACE_BETWEEN_ELEMENTS +
-      array_lengths[spaces] >
-      doc.page.height - 20
-    ) {
-      doc.addPage({
-        margins: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10
-        },
-        size: "A4",
-      });
-      doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
-      global_pos_y = 40;
-    }
-    */
-
+    // increase the global position y given the elements used
     global_pos_y+= Math.max(iLinesNeeded * 72 + 55, 85)
   }
 
 
 
-
+  /**
+  * Print all elements in more information
+  * 
+  * @param {Object}  body body of the request sent
+  *
+  */
   function printMoreInformation(req) {
-    text_to_print =
-      req.body["before_going_info"].length > 0 ?
-        req.body["before_going_info"] +
-        "\n" +
-        req.body["give_extra_info"] +
-        " " :
-        req.body["give_extra_info"];
-    print_text(
-      text_options,
-      global_pos_y,
-      text_to_print,
-      normal_font_size,
-      pos_x - 5,
-      pos_y + 40,
-      lang,
-      false
-    );
-    space = req.body["virtual_tours"] === "Yes" ? 2 : 0;
-    space =
-      req.body["before_going_info"].length > 0 ?
-        space + Math.ceil(req.body["before_going_info"].length / 53) :
-        space + 0;
-    space =
-      req.body["give_extra_info"].length > 0 ?
-        space + Math.ceil(req.body["before_going_info"].length / 53) :
-        space + 0;
+    // create new text options for more information
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 450 // maximum width space
 
+    // calculate the text size of location information with the new text options
+    let oTextDimensionsMI= calculateTextSize(oTempTextOptions, dictionary["extra_information"][lang], heading_font_size)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["extra_information"][lang], oTextDimensionsMI)
+
+    // create new text options for the tickets information
+    let oTempTextOptions2 = Object.assign({}, oTextOptionsSpacing) 
+    oTempTextOptions2["align"]= "justify"
+    oTempTextOptions2["width"]= 500 // maximum width space
+
+    let sMoreInformationText = "";
+    let oTextDimensionsMIT= calculateTextSize(oTempTextOptions2, sMoreInformationText, normal_font_size)
+
+    if (req.body["before_going_info"] !== "") {
+      sMoreInformationText+= req.body["before_going_info"]
+    }
+    
+    if ((req.body["before_going_info"] !== "") && (req.body["give_extra_info"] !== "")) {
+      sMoreInformationText+= "\n"
+    }
+    
+    if (req.body["give_extra_info"] !== "") {
+      sMoreInformationText+= req.body["give_extra_info"]
+    }
+    
+    if (sMoreInformationText !== "") {
+      oTextDimensionsMIT= calculateTextSize(oTempTextOptions2, sMoreInformationText, normal_font_size)
+    } else {
+      oTextDimensionsMIT.width= 0;
+      oTextDimensionsMIT.height= 0;
+    }
+    //console.log("[DEBUG] sMoreInformationText: ---%s--- - %o", sMoreInformationText, oTextDimensionsMIT)
+
+    let iVirtualToursSize= req.body["virtual_tours"] === "Yes" ? 51 : 0;
+    //console.log("[DEBUG] req.body[virtual_tours]: %o - %i", req.body["virtual_tours"], iVirtualToursSize)
+
+    // creates new page if there is no space in the current one
+    if ( (global_pos_y + 50 + Math.max(oTextDimensionsMIT.height + iVirtualToursSize + 50, 65)) > (doc.page.height - 20) ) {
+        doc.addPage({
+          margins: {
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: 10
+          },
+          size: "A4",
+        });
+        doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
+        global_pos_y = 40;
+    }
+
+    // Print rectangle according to the needed size
     print_rectangle(
       global_pos_y,
       37,
       0,
-      [543, 40 + space * 24, 5],
+      [543, Math.max(oTextDimensionsMIT.height + iVirtualToursSize + 50, 65), 5],
       [70, 55, 10],
-      [calculateSpace(dictionary["extra_information"][lang], true) + 5, 40, 10]
+      [Math.min(oTextDimensionsMI.width + 20, 430), Math.max(oTextDimensionsMI.height + 10, 32), 10]
     );
+
+    // Print the associated pictogram
     print_isolated_image(
       global_pos_y,
       "more_information",
@@ -3526,108 +3243,89 @@ module.exports.validateForm = async function (req, res, next) {
       55,
       "false"
     );
+
+    // print the text in the selected language with the defined options
     print_text(
-      text_options,
+      oTempTextOptions,
       global_pos_y,
-      "extra_information",
+      dictionary["extra_information"][lang],
       heading_font_size,
-      122,
-      2,
+      125,  
+      -1,
       lang,
-      true,
+      false,
       true
     );
+
+    // print the more information text
+    print_text(
+      oTempTextOptions2,
+      global_pos_y,
+      sMoreInformationText,
+      normal_font_size,
+      45,
+      55,
+      lang,
+      false
+    );
+
+    // print information relative to virtual tours
     if (req.body["virtual_tours"] === "Yes") {
-      if (space > 5) {
-        pos_y += 45;
-      } else if (space == 2) {
-        pos_y -= 50;
-      }
-      print_image_fit(
-        global_pos_y,
-        "virtual_tours",
-        req.body,
-        pos_x + 10,
-        pos_y + 80,
-        50,
-        50
-      );
-      print_image_fit(
-        global_pos_y,
-        "virtual_tours",
-        req.body,
-        pos_x + 80,
-        pos_y + 90,
-        35,
-        35,
-        true
-      ); // Falta picto
-      let linkSection = doc.struct("Sect");
-      structure.add(linkSection);
+      let pos_y= oTextDimensionsMIT.height - 25
 
-      linkSection.add(
-        doc.struct(
-          "Link", {
-          alt: dictionary["press_virtual_visit"][lang],
-        },
-          () => {
-            doc
-              .fontSize(normal_font_size)
-              .fillColor("red")
-              .text(
-                dictionary["press"][lang],
-                pos_x + 120,
-                global_pos_y + pos_y + 100, {
-                link: req.body["link_virtual_tour"],
-                underline: true
-              }
-              );
-          }
-        )
+      // print pictogram online
+      print_image_fit(global_pos_y, "virtual_tours", req.body, 60, pos_y + 80, 50, 50);
 
-      );
-      pos_y += 40;
+      // print green tick
+      print_image_fit(global_pos_y, "virtual_tours", req.body, 130, pos_y + 90, 35, 35, true);
 
+      // print the link  
+      let url = req.body["link_virtual_tour"];
+      let urlText= dictionary["press"][lang]
+      doc.fontSize(normal_font_size)
+      .fillColor('blue')
+      .text(urlText, 170, global_pos_y + pos_y + 100)
+      .underline(170, global_pos_y + pos_y + 100, doc.widthOfString(urlText), doc.currentLineHeight(), {color: 'blue'})
+      .link(170, global_pos_y + pos_y + 100, doc.widthOfString(urlText), doc.currentLineHeight(), url)
     }
-    if (space < 3) {
-      //avoid creating a new page if only one text element in print more information
-      global_pos_y -= 50;
-    }
-    if (space == 5) {
-      global_pos_y += 30;
-    } else if (space == 6) {
-      global_pos_y += 40;
-    }
-    if (space>0)global_pos_y += 70;
-    if (space==0) global_pos_y += 40;
 
+    // increase the global position y given the elements used
+    global_pos_y+= Math.max(oTextDimensionsMIT.height + iVirtualToursSize + 50, 65);
   }
+
+
+
+
+
 
   /** This function prints all the logos
    *
-   * @param {*} global_pos_y
-   * @param {*} x
-   * @param {*} y
-   * @param {*} x_fit
-   * @param {*} y_fit
-   * @returns
+   * @param {Integer} x coordinate x for starting writing
+   * @param {Integer} y coordinate y for starting writing
+   * @param {Integer} x_fit size x to fit the image
+   * @param {Integer} y_fit size y to fit the image
+   * 
+   * @returns {bLogosPrinted} true if any logo is printed
    */
   function print_logos(x, y, x_fit = "", y_fit = "") {
+    let bLogosPrinted= false;
     const logos = [];
 
-
-
+    // creates directory if it doesn't exist
     if (!fs.existsSync("./user_images/logos/" + cookie + "/")) {
       fs.mkdirSync("./user_images/logos/" + cookie + "/", {
         recursive: true
       });
     }
+
+    // read the logos
     fs.readdirSync("./user_images/logos/" + cookie + "/").forEach((file) => {
       logos.push(file);
     });
+    //console.log("[DEBUG] readed %i logos", logos.length)
 
-
-    if (global_pos_y + 50 + 90 * 2 > doc.page.height - 20 && logos.length > 0) {
+    // create a new page if necessary
+    if ((global_pos_y + 50 + (Math.ceil(logos.length / 3) * 90)) > (doc.page.height - 20) && (logos.length > 0)) {
       doc.addPage({
         margins: {
           top: 10,
@@ -3639,53 +3337,55 @@ module.exports.validateForm = async function (req, res, next) {
       });
       doc.rect(0, 0, doc.page.width, doc.page.height).fill(global_background_color);
       global_pos_y = 40;
-    } else {
-      global_pos_y += 90;
-    }
+    } 
 
     let i = 0;
     let x_init = x;
     logos.forEach(function (logo) {
       try {
         if (fs.existsSync("./user_images/logos/" + cookie + "/" + logo)) {
-          
-
-
-
-          
           i++;
-          if (i ==4 || i==7) {
-            // 3 logos per row, then jump to next logo row
-            global_pos_y += 120;
+          //console.log("[DEBUG] i %i - %o", i, logo)
+          // add new row after printed 3 lgos
+          if ((i>1) && (i%3 == 1)) {
+            global_pos_y += 100;
             x = x_init;
           }
+
+          // print image
           doc.image(
             "./user_images/logos/" + cookie + "/" + logo,
             x,
-            global_pos_y, {fit: [90, 90], align: 'center', valign: 'center'}
+            global_pos_y + 10, {fit: [90, 90], align: 'center', valign: 'center'}
           );
           x += 180;
           
-          
+          bLogosPrinted= true;
         }
       } catch (e) {
-        console.log(
-          "Imagen: " +
-          "./user_images/logos/" +
-          cookie +
-          "/" +
-          logo +
-          " no existe"
-        );
+        console.log("Imagen: " + "./user_images/logos/" + cookie + "/" + logo + " no existe");
       }
     });
-    if (logos.length >0) global_pos_y += 100;
-    return;
+
+    // increase the global position y given the elements used
+    if (bLogosPrinted) global_pos_y += 100;
+
+    return bLogosPrinted;
   }
 
+
+
+
+  /**
+  * Print all elements in ticket information
+  * 
+  * @param {Object}  body body of the request sent
+  *
+  */
   function print_disclaimer_info() {
     //debug_print_global_pos_y("print_disclaimer_info - in", global_pos_y, doc.page.height)
 
+    /*
     const logos = [];
     var extra_space = 0;
     if (!fs.existsSync("./user_images/logos/" + cookie + "/")) {
@@ -3696,6 +3396,7 @@ module.exports.validateForm = async function (req, res, next) {
     fs.readdirSync("./user_images/logos/" + cookie + "/").forEach((file) => {
       logos.push(file);
     });
+    */
 
     /* if (logos.length == 0) {
          global_pos_y += 20;
@@ -3711,10 +3412,19 @@ module.exports.validateForm = async function (req, res, next) {
     //console.log("[DEBUG]:", global_pos_y + 14 * 5)
     //console.log("[DEBUG]:", doc.page.height)
 
-    //characterSpacesOption
-    // this section has a fixed height of 155
-    if (global_pos_y + 155 > doc.page.height) {
-      doc.addPage({
+    // create new text options for the tickets information
+    let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
+    oTempTextOptions["align"]= "justify"
+    oTempTextOptions["width"]= 550 // maximum width space
+
+    let iText1Height= (calculateTextSize(oTempTextOptions, constants.FINAL_TEXT, normal_font_size * 0.5)).height
+    let iText2Height= (calculateTextSize(oTempTextOptions, constants.FINAL_TEXT2, normal_font_size * 0.5)).height
+    let iText3Height= (calculateTextSize(oTempTextOptions, constants.FINAL_TEXT3, normal_font_size * 0.5)).height
+    let iTotalText= iText1Height + iText2Height + iText3Height + 30 // 30 = 10 for each paragraph
+    
+    // create a new page if necessary
+    if (global_pos_y + iTotalText + 30 > doc.page.height) { // 30 is the aproxomate height of the image
+        doc.addPage({
         margins: {
           top: 10,
           left: 10,
@@ -3728,77 +3438,57 @@ module.exports.validateForm = async function (req, res, next) {
       add_new_page = true;
     }
 
-    //debug_print_global_pos_y("print_disclaimer_info - before printing", global_pos_y, doc.page.height)
-
-    print_text({
-      characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-      wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-      lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-      align: "justify",
-      width: 550,
-      wordSpacing: 0.5,
-      lineGap: 1.4,
-    },
+    // prints 3 different paragraphs
+    print_text(
+      oTempTextOptions,
       global_pos_y,
       constants.FINAL_TEXT,
       normal_font_size * 0.5,
       20,
-      extra_space,
+      0,
       lang,
       false,
       false
     );
 
-    global_pos_y+=65;
+    //global_pos_y+=65;
+    global_pos_y+= iText1Height + 10
 
-    print_text({
-      characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-      wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-      lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-      align: "justify",
-      width: 550,
-      wordSpacing: 0.5,
-      lineGap: 1.4,
-    },
+    print_text(
+      oTempTextOptions,
       global_pos_y,
       constants.FINAL_TEXT2,
       normal_font_size * 0.5,
       20,
-      extra_space,
+      0,
       lang,
       false,
       false
     );
 
-    global_pos_y+=35;
+    global_pos_y+= iText2Height + 10
 
-    print_text({
-      characterSpacing: constants.FONTS[selected_text_type]["inter_letter"],
-      wordSpacing: constants.FONTS[selected_text_type]["word_spacing"],
-      lineGap: constants.FONTS[selected_text_type]["line_spacing"],
-      align: "justify",
-      width: 550,
-      wordSpacing: 0.5,
-      lineGap: 1.4,
-    },
+    print_text(
+      oTempTextOptions,
       global_pos_y,
       constants.FINAL_TEXT3,
       normal_font_size * 0.5,
       20,
-      extra_space,
+      0,
       lang,
       false,
       false
     );
 
-    global_pos_y+=25;
+    global_pos_y+= iText3Height + 10
 
-    doc.image("./images/cofinanciadoEN.png", 450, global_pos_y, {
-        fit: [120, 120],
-    });
+    // print co-funded by image
+    doc.image("./images/cofinanciadoEN.png", 450, global_pos_y, {fit: [120, 120],});
 
-    //debug_print_global_pos_y("print_disclaimer_info - out", global_pos_y, doc.page.height)
   }
+
+
+
 
   /**
   * Debug function to print positions of elements in the page
@@ -3815,43 +3505,25 @@ module.exports.validateForm = async function (req, res, next) {
     console.log("[DEBUG] %s in global_pos_y: %i", a_text, a_global_pos_y )
     console.log("")
   }
-
-
-  /**
-  * Function to estimate the size of a sentence given the option used of space between characters
-  *
-  * @param {Integer} characterSpacesOption option of space used
-  * @param {String} sentence text to calculate size
-  *
-  * @returns {String} estimated size
-    // TODO - include influence of characterSpacesOption
-  // TODO - include influence of uppercase and lowercase letters
-  function calculateTextSize(characterSpacesOption, sentence) {
-    var estimatedSize= (sentence.length * 12) // 12 points per character
-    + ((sentence.length - (2 * sentence.split(" ").length) + 1) * 2); // inter letter and word spacing
-
-    return estimatedSize;
-  } 
-  */    
+ 
 
 
 
   /**
   * Function to estimate the size of a sentence given the option used of space between characters
   *
-  * @param {Integer} characterSpacesOption option of space used
-  * @param {String} sentence text to calculate size
+  * @param {Object} oRequestedTextOptions text options used to calculte size
+  * @param {String} sSentence text to calculate size
+  * @param {Integer} iFontSize font of the text to calculate size
   *
-  * @returns {String} estimated size
+  * @returns {Object} estimated width and height
   */
-  // TODO - include influence of characterSpacesOption
-  // TODO - include influence of uppercase and lowercase letters
   function calculateTextSize(oRequestedTextOptions, sSentence, iFontSize) {
-    console.log("[DEBUG] calculating size of ---%s--- with font size %i and options %o", sSentence, iFontSize, oRequestedTextOptions); 
+    //console.log("[DEBUG] calculating size of ---%s--- with font size %i and options %o", sSentence, iFontSize, oRequestedTextOptions); 
 
-    doc.fontSize(iFontSize)
-    let iEstimatedWidth= Math.ceil( doc.widthOfString(sSentence, oRequestedTextOptions) )
-    let iEstimatedHeight= Math.ceil( doc.heightOfString(sSentence, oRequestedTextOptions) )
+    doc.fontSize(iFontSize);
+    let iEstimatedWidth= Math.ceil( doc.widthOfString(sSentence, oRequestedTextOptions) );
+    let iEstimatedHeight= Math.ceil( doc.heightOfString(sSentence, oRequestedTextOptions) );
     
     return ({"width": iEstimatedWidth, "height": iEstimatedHeight})
   }     
@@ -3910,7 +3582,8 @@ async function storeData(pdf_structure) {
   }, function (err, db) {
     if (err) {
       console.log(err);
-      db.close();
+      //db.close();
+      return
     }
 
     var dbo = db.db(jsonData["DB"]["BD_NAME"]);

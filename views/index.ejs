@@ -3,7 +3,7 @@
 
 <head>
     <title>CIMA</title>
-    <link rel="icon" type="image/png" href="/images/allure_logo.png">
+    <link rel="icon" type="image/png" href="/images/allure_logo_favicon2.png">
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -116,6 +116,7 @@
                         </li>
                     </ul>
 
+
                     <button class="btn btn-primary dropdown-toggle" type="button" id="font_button"
                         data-bs-toggle="dropdown" aria-expanded="false" translation="font">Fuente</button>
                     <ul class="country dropdown-menu" id="fontSelector" aria-labelledby="dropdownMenuButton1">
@@ -173,6 +174,25 @@
                     </ul>
 
 
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="font_button"
+                        data-bs-toggle="dropdown" aria-expanded="false" translation="spacing">Spacing</button>
+                    <ul class="country dropdown-menu" id="spacingSelector" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="high" href="#" value="high" translation="high">High</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="medium" href="#" value="medium" translation="medium">Medium</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <a class="dropdown-item" id="normal" href="#" value="normal" translation="normal">Normal</a>
+                            </div>
+                        </li>
+                    </ul>
 
 
 
@@ -280,8 +300,9 @@
                                 </div>
                                 <label for="validationInformacionPrevia" class="form-label" translation="banner">Adjunte
                                     banner para el evento</label>
-
-
+                       
+                                <label> (</label><label translation="max_size">Maximum size</label><label>: 570 x 100)</label>
+    
                                 <div class="drag-area-banner">
                                     <h2 id="drag-text-banner" translation="drop_files">Drop files here... </h2>
                                     <span translation="or">or</span>
@@ -853,7 +874,7 @@
 
                                                 <div class="col col-coin">
 
-                                                    <input type="number" class="form-control"
+                                                    <input type="number" class="form-control number-coin"
                                                         id="validationPrecioPlazas" name="parking_price"
                                                         placeholder="Precio de las plazas"
                                                         translation="ph_slot_price"></input>
@@ -1507,6 +1528,8 @@
                                 </div>
                                 <label for="validationInformacionPrevia" class="form-label" translation="logo">Adjunte
                                     logo(s) para el evento</label>
+
+                                <label> (</label><label translation="max_size">Maximum size</label><label>: 90 x 90)</label>
 
                                 <div class="drag-area">
                                     <h2 id="drag-text" translation="drop_files">Drop files here... </h2>
