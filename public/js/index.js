@@ -17,7 +17,7 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.2.02";
+var version = "1.2.03dev";
 const dictionary = getDictionary();
 
 Object.defineProperty(pdf, "isReady", {

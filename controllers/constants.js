@@ -76,8 +76,10 @@ module.exports = Object.freeze(new function () {
             "mean_character_size": 6.1,
             "word_spacing":  (0.10 * 6.1)*1,
             "line_spacing":(0.25  * 6.1)*3.5*1,
-            "normal_font_size": 13,
-            "heading_font_size": Math.ceil(13 * 1.2),
+            //"normal_font_size": 13,
+            //"heading_font_size": Math.ceil(13 * 1.2),
+            "normal_font_size": 14,
+            "heading_font_size": Math.ceil(14 * 1.2),
             "format":".ttf"
         }, "Verdana": {
             "regular": "Verdana",
@@ -86,8 +88,10 @@ module.exports = Object.freeze(new function () {
             "mean_character_size": 6.1,
             "word_spacing":  (0.20 * 6.1)*3,
             "line_spacing":(0.25  * 6.1)*3,
-            "normal_font_size": 12,
-            "heading_font_size": Math.ceil(12.5 * 1.1),
+            //"normal_font_size": 12,
+            //"heading_font_size": Math.ceil(12.5 * 1.1),
+            "normal_font_size": 14,
+            "heading_font_size": Math.ceil(14 * 1.2),
             "format":".ttf"
         }, "XuntaSans": {
             "regular": "XuntaSans",
@@ -96,6 +100,8 @@ module.exports = Object.freeze(new function () {
             "mean_character_size": 6.1,
             "word_spacing":  (0.20 * 6.1)*2.5,
             "line_spacing":(0.25  * 6.1)*2.5*1,
+            //"word_spacing":  (0.20 * 6.1)*2,
+            //"line_spacing":(0.25  * 6.1)*3*1,
             "normal_font_size": 14,
             "heading_font_size": Math.ceil(14 * 1.2),
             "format":".woff"
@@ -141,7 +147,7 @@ module.exports = Object.freeze(new function () {
 
     this.WEEK_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     this.FORM_FIELDS = ["activity_name", "activity_type", "street", "zip", "city", "country"];
-    this.VERSION ="1.2.02";
+    this.VERSION ="1.2.03dev";
 
 });
 

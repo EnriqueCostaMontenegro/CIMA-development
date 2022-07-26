@@ -537,12 +537,12 @@ const dictionary = {
     "pt": "Pre\u00e7o para fam\u00edlias"
   },
   "member_price": {
-    "en": "Price per family member (\u20ac)",
-    "es": "Precio por miembro (\u20ac)",
-    "gl": "Prezo por membro (\u20ac)",
-    "is": "Ver\u00f0 \u00e1 fj\u00f6lskyldume\u00f0lim (\u20ac)",
-    "pl": "Cena biletu za cz\u0142onka rodziny (\u20ac)",
-    "pt": "Pre\u00e7o por membro da fam\u00edlia (\u20ac)"
+    "en": "Price per family member",
+    "es": "Precio por miembro",
+    "gl": "Prezo por membro",
+    "is": "Ver\u00f0 \u00e1 fj\u00f6lskyldume\u00f0lim",
+    "pl": "Cena biletu za cz\u0142onka rodziny",
+    "pt": "Pre\u00e7o por membro da fam\u00edlia"
   },
   "max_num_children": {
     "en": "Maximum number of children",

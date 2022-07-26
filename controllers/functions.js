@@ -226,6 +226,9 @@ module.exports.loadBanner = (req, res) => {
   }
 };
 
+
+
+
 //
 //
 // All the logic for the form processing and PDF generation
@@ -270,6 +273,9 @@ module.exports.validateForm = async function (req, res, next) {
   } else {
     selected_text_type = req.body["font"];
   }
+  doc.font(selected_text_type);
+  //console.log("[DEBUG] selected_text_type %s", selected_text_type);
+
 
   if (
     req.body["enabled_fields"] == undefined ||
@@ -309,6 +315,9 @@ module.exports.validateForm = async function (req, res, next) {
     lineGap: constants.FONTS[selected_text_type]["line_spacing"],
     //align:'justify'
   };
+  //console.log("[DEBUG] text_options.characterSpacing: %s", text_options.characterSpacing);
+  //console.log("[DEBUG] text_options.wordSpacing: %s", text_options.wordSpacing);
+  //console.log("[DEBUG] text_options.lineGap: %s\n", text_options.lineGap);
 
   // define modifications to the spacing and get the one selected form the request body
   let characterSpaces= [1, 0.2/0.35, 0.1/0.35]; // 1 - high, 0.2 / 0.35 - medium , 0.1 / 0.35 - nornmal    
@@ -331,6 +340,7 @@ module.exports.validateForm = async function (req, res, next) {
 
   const normal_font_size= constants.FONTS[selected_text_type]["normal_font_size"];
   const heading_font_size= constants.FONTS[selected_text_type]["heading_font_size"];
+  //console.log("[DEBUG] normal_font_size %s - heading_font_size %s", normal_font_size, heading_font_size);
 
 
   let global_pos_y = 10; //this is a marker to the position where the PDF is to be written in the vertical (Y) axis.
@@ -773,7 +783,7 @@ module.exports.validateForm = async function (req, res, next) {
    */
 
   function createPDFDocument(
-    title = "Cultural Information Made Accessible Document",
+    title = "Cultural Information Made Accessible Document " + constants.VERSION,
     author = "ALLURE Project"
   ) {
     /**
@@ -1040,17 +1050,18 @@ module.exports.validateForm = async function (req, res, next) {
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 415 // maximum width space
+    //console.log("[DEBUG] oTempTextOptions: %o", oTempTextOptions)
 
     // calculate the text size of information hours with the new text options
     let oTextDimensionsIH= calculateTextSize(oTempTextOptions, dictionary["information_hours"][lang], heading_font_size)
-    //console.log("[DEBUG] calculateTextSize: %o", oTextDimensionsIH)
+    //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_hours"][lang], oTextDimensionsIH)
 
     // Prnt rectangle according to the needed size
     print_rectangle(
       global_pos_y,
       37,
       0,
-      [543, 135, 5],
+      [543, 140, 5],
       [50, 50, 10],
       [Math.min(oTextDimensionsIH.width + 20, 430), Math.max(oTextDimensionsIH.height + 10, 32), 10]
     );
@@ -1640,7 +1651,7 @@ module.exports.validateForm = async function (req, res, next) {
     }
 
     // increase the global position y given the elements used
-    global_pos_y += 145 + constants.SPACE_BETWEEN_ELEMENTS;
+    global_pos_y += 150 + constants.SPACE_BETWEEN_ELEMENTS;
   }
 
 
@@ -1657,6 +1668,7 @@ module.exports.validateForm = async function (req, res, next) {
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 415 // maximum width space
+    //console.log("[DEBUG] oTempTextOptions: %o", oTempTextOptions)
 
     // calculate the text size of location information with the new text options
     let oTextDimensionsLO= calculateTextSize(oTempTextOptions, dictionary["location"][lang], heading_font_size)
@@ -1768,7 +1780,7 @@ module.exports.validateForm = async function (req, res, next) {
       37,
       0,
       // [543, 65, 5],
-      (size_big = [543, Math.max(oTextDimensionsLO.height + oTextDimensionsAD.height + oTextDimensionsAI.height + 20, 65), 5]),
+      [543, Math.max(oTextDimensionsLO.height + oTextDimensionsAD.height + oTextDimensionsAI.height + 25, 65), 5],
       [50, 50, 10],
       [Math.min(oTextDimensionsLO.width + 20, 430), Math.max(oTextDimensionsLO.height + 10, 32), 10]
     );
@@ -1839,7 +1851,7 @@ module.exports.validateForm = async function (req, res, next) {
     }
 
     // increase the global position y given the elements used
-    global_pos_y+= Math.max(oTextDimensionsLO.height + oTextDimensionsAD.height + oTextDimensionsAI.height + 65, 105);
+    global_pos_y+= Math.max(oTextDimensionsLO.height + oTextDimensionsAD.height + oTextDimensionsAI.height + 70, 105);
 
     // variables related to elements in how to get there
     pos_y += 0;
@@ -1868,7 +1880,8 @@ module.exports.validateForm = async function (req, res, next) {
       }
     }
     //console.log("[DEBUG] aGetThereElements: ---%s--- - NT %i - T %i - LT %i", aGetThereElements, iNoTextElements, iTextElements, iLongTextElements)
-    let iNeededRows= Math.max(Math.ceil((iNoTextElements/2)), iTextElements) + iLongTextElements
+    //let iNeededRows= Math.max( Math.ceil((iNoTextElements/2)), iTextElements) + iLongTextElements
+    let iNeededRows= iLongTextElements + ( iTextElements === 0 ? Math.ceil((iNoTextElements/2)) : Math.max(iNoTextElements, iTextElements) ) 
     //console.log("[DEBUG] iNeededRows: %i", iNeededRows)
 
     // exit if there are no elements to print
@@ -1903,7 +1916,7 @@ module.exports.validateForm = async function (req, res, next) {
       37,
       0,
       // [543, 65, 5],
-      (size_big = [543, Math.max(oTextDimensionsGT.height + (iNeededRows * 65) + 20, 65), 5]),
+      [543, Math.max(oTextDimensionsGT.height + (iNeededRows * 65) + 20, 65), 5],
       [50, 50, 10],
       [Math.min(oTextDimensionsGT.width + 20, 430), Math.max(oTextDimensionsGT.height + 10, 32), 10]
     );
@@ -1943,18 +1956,20 @@ module.exports.validateForm = async function (req, res, next) {
     let array_pos = [
       [
         [0, 0],
-        [160, 0],
-        [320, 0],
+        //[160, 0],
+        //[320, 0],
+        [145, 0],
+        [350, 0],
       ],
       [
         [0, 65],
-        [160, 65],
-        [320, 65],
+        [145, 65],
+        [350, 65],
       ],
       [
         [0, 130],
-        [160, 130],
-        [320, 130],
+        [145, 130],
+        [350, 130],
       ],
     ];
     let [array_x, array_y] = [0, 0];
@@ -2702,7 +2717,7 @@ module.exports.validateForm = async function (req, res, next) {
     //console.log("[DEBUG] calculateTextSize: %s - %o", dictionary["information_guides"][lang], oTextDimensionsGI)
     
     // create a new page if necessary
-    if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 25, 65) > doc.page.height - 20) {
+    if (global_pos_y + 50 + Math.max(iLinesNeeded * 72 + 30, 65) > doc.page.height - 20) {
       doc.addPage({
         margins: {
           top: 10,
@@ -2721,7 +2736,7 @@ module.exports.validateForm = async function (req, res, next) {
       global_pos_y,
       37,
       0,
-      [543, Math.max(iLinesNeeded * 72 + 25, 65), 5],
+      [543, Math.max(iLinesNeeded * 72 + 30, 65), 5],
       [60, 60, 10],
       [Math.min(oTextDimensionsGI.width + 20, 430), Math.max(oTextDimensionsGI.height + 10, 32), 10]
     );
@@ -2874,7 +2889,7 @@ module.exports.validateForm = async function (req, res, next) {
     }
 
     // increase the global position y given the elements used
-    global_pos_y+= Math.max(iLinesNeeded * 72 + 45, 85)
+    global_pos_y+= Math.max(iLinesNeeded * 72 + 50, 85)
   }
 
 
@@ -3383,36 +3398,6 @@ module.exports.validateForm = async function (req, res, next) {
   *
   */
   function print_disclaimer_info() {
-    //debug_print_global_pos_y("print_disclaimer_info - in", global_pos_y, doc.page.height)
-
-    /*
-    const logos = [];
-    var extra_space = 0;
-    if (!fs.existsSync("./user_images/logos/" + cookie + "/")) {
-      fs.mkdirSync("./user_images/logos/" + cookie + "/", {
-        recursive: true
-      });
-    }
-    fs.readdirSync("./user_images/logos/" + cookie + "/").forEach((file) => {
-      logos.push(file);
-    });
-    */
-
-    /* if (logos.length == 0) {
-         global_pos_y += 20;
-         extra_space = 30
-     }
-     if (logos.length > 0) {
-         global_pos_y += 60;
-     }
-     if (logos.length > 3) {
-         global_pos_y += 60;
-     }*/
-    //console.log(global_pos_y + 31*5,"vs ", doc.page.height)
-    //console.log("[DEBUG]:", global_pos_y + 14 * 5)
-    //console.log("[DEBUG]:", doc.page.height)
-
-    // create new text options for the tickets information
     let oTempTextOptions = Object.assign({}, oTextOptionsSpacing) 
     oTempTextOptions["align"]= "justify"
     oTempTextOptions["width"]= 550 // maximum width space
@@ -3520,10 +3505,37 @@ module.exports.validateForm = async function (req, res, next) {
   */
   function calculateTextSize(oRequestedTextOptions, sSentence, iFontSize) {
     //console.log("[DEBUG] calculating size of ---%s--- with font size %i and options %o", sSentence, iFontSize, oRequestedTextOptions); 
+    //console.log("[DEBUG] selected_text_type: %s", selected_text_type); 
+    let fCorrectionFactorW= 1.0;
+    let fCorrectionFactorH= 1.0;
+
+    // improve size of text of the heading for the different fonts
+    if (iFontSize == 17) {
+      if (selected_text_type === "Arial") {
+        fCorrectionFactorW= 1.07;
+        fCorrectionFactorH= 1.25;
+      }
+      if (selected_text_type === "Helvetica") {
+        fCorrectionFactorW= 1.07;
+        fCorrectionFactorH= 1.2;
+      }
+      if (selected_text_type === "Tahoma") {
+        fCorrectionFactorW= 1.14;
+        fCorrectionFactorH= 1.3;
+      }
+      if (selected_text_type === "Verdana") {
+        fCorrectionFactorW= 1.1;
+        fCorrectionFactorH= 1.3;
+      }
+      if (selected_text_type === "XuntaSans") {
+        fCorrectionFactorW= 1.05;
+        fCorrectionFactorH= 1.2;
+      }
+    }
 
     doc.fontSize(iFontSize);
-    let iEstimatedWidth= Math.ceil( doc.widthOfString(sSentence, oRequestedTextOptions) );
-    let iEstimatedHeight= Math.ceil( doc.heightOfString(sSentence, oRequestedTextOptions) );
+    let iEstimatedWidth= Math.ceil( doc.widthOfString(sSentence, oRequestedTextOptions) * fCorrectionFactorW );
+    let iEstimatedHeight= Math.ceil( doc.heightOfString(sSentence, oRequestedTextOptions) * fCorrectionFactorH );
     
     return ({"width": iEstimatedWidth, "height": iEstimatedHeight})
   }     
