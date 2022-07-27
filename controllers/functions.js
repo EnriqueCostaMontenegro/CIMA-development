@@ -3514,7 +3514,7 @@ module.exports.validateForm = async function (req, res, next) {
     let fCorrectionFactorH= 1.0;
 
     // improve size of text of the heading for the different fonts
-    if (iFontSize == 17) {
+    if (iFontSize == heading_font_size) {
       if (selected_text_type === "Arial") {
         fCorrectionFactorW= 1.07;
         fCorrectionFactorH= 1.25;
