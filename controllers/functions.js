@@ -275,6 +275,10 @@ module.exports.validateForm = async function (req, res, next) {
   }
   doc.font(selected_text_type);
   //console.log("[DEBUG] selected_text_type %s", selected_text_type);
+  //console.log("[DEBUG] lang %s", req.headers["accept-language"]);
+  // force Arial font in case of ukrainian to ensure we have cyrilic characters
+  if (req.headers["accept-language"] === "uk") selected_text_type= "Arial"
+  //console.log("[DEBUG] selected_text_type %s", selected_text_type);
 
 
   if (

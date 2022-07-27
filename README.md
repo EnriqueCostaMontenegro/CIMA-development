@@ -105,6 +105,16 @@ Enrique Costa Montenegro
 
 ### Versions
 
+**v1.2.03 (27/07/2022)**
+
+-Fixed wrong size of rectangle for title of section for different fonts
+
+-Added Ukrainian language
+
+-Group the different coins in the html code
+
+-Small bug fixes
+
 **v1.2.02 (20/07/2022)**
 
 -Internal improvements for printing texts and images
@@ -129,7 +139,7 @@ Enrique Costa Montenegro
 
 [ ] Explanation of fields and elements in the webpage
 
-[ ] Group the different coins in the html code
+[ ] Review number of banners and logos that can be uploaded
 
 [ ] Review all the functions in its code file
 
