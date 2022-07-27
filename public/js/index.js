@@ -17,7 +17,7 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.2.02";
+var version = "1.2.03";
 const dictionary = getDictionary();
 
 Object.defineProperty(pdf, "isReady", {
@@ -282,6 +282,8 @@ window.onload = function () {
         html.lang = "pl";
       } else if (e.target.attributes["value"].value === "portuguese") {
         html.lang = "pt";
+      } else if (e.target.attributes["value"].value === "ukrainian") {
+        html.lang = "uk";
       }
       if (previous_lang !== html.lang) {
         change_language(html.lang);

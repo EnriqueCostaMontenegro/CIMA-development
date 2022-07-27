@@ -1,184 +1,194 @@
-ID,en,es,gl,is,pl,pt
-fill_form,Fill sample form,Rellenar formulario,Encher formulario,Fylltu út sýnishorn,Wypełnij  formularz,Preencha formulário
-font,Font,Fuente,Fonte,Leturgerð,Czcionka,Fonte
-form_fields,Form fields,Campos del formulario,Campos do formulario,Reitir eyðublaðs,Pola formularza,Campos do formulário
-language,Language,Idioma,Idioma,Tungumál,Język,Idioma
-reset_form,Reset Form,Reiniciar formulario,Restablecer formulario,Endurstilla eyðublað,Wyczyść formularz,Limpar formulário
-english,English,Inglés,Inglés,Enska,angielski,Inglês
-spanish,Spanish,Español,Español,spænska,hiszpański,Espanhol
-galician,Galician,Gallego,Galego,Galisíska,galicyjski,Galego
-icelandic,Icelandic,Islandés,Islandés,Íslenska,islandzki,Islandês
-polish,Polish,Polaco,Polaco,Pólska,polski,Polaco
-portuguese,Portuguese,Portugués,Portugués,Portúgalska,portugalski,Português
-reload_pdf,Reload PDF,Recargar PDF,Recargar PDF,Endurhlaða PDF,Odśwież PDF,Recarregar PDF
-download_pdf,Download PDF,Descargar PDF,Descargar PDF,Sækja PDF,Pobierz PDF,Baixar PDF
-activity_type,Type of activity,Tipo de actividad,Tipo de actividade,Tegund starfsemi,Rodzaj aktywności,Tipo de atividade
-choose,Choose...,Elige...,Escolla...,Veldu ...,Wybierz...,Escolher...
-museum,Museum,Museo,Museo,Safn,Muzeum,Museu
-exhibition,Exhibition,Exposición,Exposición,Sýning,Wystawa,Exposição
-concert,Concert,Concierto,Concerto,Tónleikar,Koncert,Concerto
-workshop,Workshop,Taller,Taller / Obradoiro,Vinnustofa,Warsztat,Oficina
-movie_screening,Movie Screening,Proyección de películas,Proxección de películas,Kvikmyndasýning,Pokaz filmu,Exibição de filmes
-literary_meeting,Literary Meeting,Encuentro Literario,Encontro literario,Bókmenntafundur,Spotkanie literackie,Encontro Literário
-theatre_performance,Theatre Performance,Representación teatral,Representación teatral,Leiklistarsýning,Spektakl teatralny,Espetáculo de Teatro
-dance_performance,Dance Performance,Espectáculo de danza,Espectáculo de danza,Danssýning,Spektakl taneczny,Performance de dança
-festival,Festival,Festival,Festival,Hátíð,Festiwal,Festival
-cultural_tour,Cultural Tour,Tour cultural,Xira cultural,Menningarferð,Wycieczka kulturalna,Tour Cultural
-performance,Performance,Actuación,Actuación,Flutningur,Spektakl,Atuação
-fair,Fair,Feria,Feira,Sanngjarnt,Targi,Feira
-attraction,Attraction,Atracción,Atracción,Aðdráttarafl,Atrakcja,Atração
-religous_place,Religious place,Lugar Religioso,Lugar relixioso,Trúarlegur staður,Miejsce kultu,Lugar religioso
-online_event,Online Event/Web Resource,Evento online / Recurso web,Evento online / Recurso web,Viðburður á netinu/Heimild á netinu,Wydarzenie online/Zasób online,Evento Online/Recurso online
-others,Other,Otra,Outra,Annað,Inne,Outros tipos de descontos
-error_cultural_activity,"Please, select a valid cultural activity","Por favor, seleccione una actividad cultural válida","Por favor, seleccione unha actividade cultural válida",Vinsamlegast veldu gilda menningarstarfsemi,Proszę wybrać odpowiednie działanie kulturalne,"Por favor, selecione uma atividade cultural válida"
-ph_activity_name,Specify the name of the activity,Indique el nombre de la actividad,Indique o nome da actividade,Tilgreinið heiti starfseminnar,Podaj nazwę działania,Indique o nome da atividade
-ph_specify,Specify,Especifique,Especifique,Tilgreindu,Sprecyzuj,Especifique
-ph_description_activity,Describe briefly the cultural activity,Describa brevemente la actividad cultural,Describa brevemente a actividade cultural,Lýstu stuttlega menningarstarfseminni,Opisz krótko działanie kulturalne,Descreva brevemente a atividade cultural
-ph_bus_lines,Bus lines,Líneas de bus,Liñas de autobuses,Leiðarkerfi strætó,Linie autobusowe,Linhas de autocarro
-ph_bus_timetables,Bus schedules,Horarios del bus,Horarios de autobuses,Tímatöflur strætó,Rozkład jazdy autobusów,Horários dos autocarros
-ph_metro_lines,Subway lines,Líneas de metro,Liñas de metro,Leiðarkerfi neðanjarðarlestar,Linie metra,Linhas de metro
-ph_metro_timetables,Metro schedules,Horarios del metro,Horarios do metro,Tímatöflur neðanjarðarlestar,Rozkład jazdy metra,Horários do metro
-error_short_description,"Please, enter a short description.","Por favor, introduzca una descripción corta.","Por favor, introduza unha breve descrición.",Vinsamlegast sláðu inn stutta lýsingu.,Proszę podać krótki opis.,"Por favor, insira uma breve descrição."
-url_online_event,URL for the Online Event,URL del Evento Online,URL do evento online,Vefslóð viðburðar á netinu,Adres URL wydarzenia online,URL do Evento Online
-street,Street,Calle,Rúa,Gata,Ulica,Rua
-error_fill_field,"Please, complete this field.","Por favor, complete este campo.","Por favor, complete este campo.",Vinsamlegast fylltu út þennan reit.,Proszę wypełnić to pole.,"Por favor, preencha este campo."
-number,Number,Número,Número,Númer,Numer,Número
-zip,Zip,CP,CP,Póstnúmer,Kod pocztowy,Código Postal
-city,Town,Ciudad,Cidade,Bærinn,Miasto,Cidade
-country,Country,Pais,País,Land,Państwo,País
-how_to_get_there,How could you get there?,¿Cómo se podría llegar hasta allí?,Como se podería chegar ata alí?,Hvernig gast þú komið þér þangað?,Jak tam dotarłeś_aś?,Como chegar lá?
-bus,Bus:,Autobus:,Autobús:,Strætó:,Autobus:,Autocarro:
-metro,Subway:,Metro:,Metro:,Neðanjarðarlest:,Metro:,Metro:
-taxi,Cab:,Taxi:,Taxi:,Leigubíll:,Taksówka:,Táxi:
-car,Car:,Coche:,Coche:,Bíll:,Samochód:,Carro:
-parking,Parking:,Aparcamiento:,Aparcamento:,Bílastæði:,Parking:,Estacionamento:
-yes,Yes,Sí,Si,Já,Tak,Sim
-no,No,No,Non,Nei,Nie,Não
-ph_parking_slot,Number of parking places,Número de plazas,Número de prazas,Fjöldi bílastæða,Liczba miejsc parkingowych,Número de lugares de estacionamento
-ph_slot_price,Price of parking places,Precio de las plazas,Prezo das prazas,Verð á bílastæðum,Opłata za miejsce parkingowe,Preço do estacionamento
-ph_disabled_parking_slot,Number of disabled parking places,Número de plazas para personas discapacitadas,Número de prazas para persoas discapacitadas,Fjöldi bílastæða fyrir fatlað fólk,Liczba miejsc parkingowych dla osób z niepełnosprawnościami,Número de lugares de estacionamento para deficientes
-ph_disabled_price_parking_slot,Price of disabled parking places,Precio de las plazas para personas discapacitadas,Prezo das prazas para persoas discapacitadas,Verð bílastæða fyrir fatlað fólk,Opłata za miejsce parkingowe dla osób z niepełnosprawnościami,Preço do estacionamento para deficientes físicos
-information_prices,Pricing information,Información sobre los precios,Información sobre os prezos,Verðlagningarupplýsingar,Informacje o biletach,Informações sobre preços
-normal_price,Normal price,Precio normal,Prezo normal,Venjulegt verð,Cena biletu normalnego,Preço normal
-reduced_price,Reduced price,Precio reducido,Prezo reducido,Lækkað verð,Cena biletu ulgowego,Preço reduzido
-ph_when,When?,¿Cuándo?,Cando?,Hvenær?,Kiedy?,Quando?
-family_price,Special price per family,Precio especial por familia,Prezo especial por familia,Sértilboð á fjölskyldu,Cena biletu rodzinnego,Preço especial para famílias
-member_price,Price per family member (€),Precio por miembro (€),Prezo por membro (€),Verð á fjölskyldumeðlim (€),Cena biletu za członka rodziny (€),Preço por membro da família (€)
-max_num_children,Maximum number of children,Maximo número de niños,Número máximo de nenos/as,Fjöldatakmörkun barna,Maksymalna liczba dzieci,Número máximo de filhos
-max_age_children,Maximum age of children,Edad máxima de los niños,Idade máxima dos nenos/as,Aldurstakmark barna,Maksymalny wiek dzieci,Idade máxima das crianças
-free_interpreter,Free for interpreter or facilitator,Gratis para intérprete o facilitador/a,De balde para intérprete ou facilitador/a,Frítt fyrir túlk eða aðstoðarmanneskju,Bezpłatnie dla tłumacza lub opiekuna,Gratuito para intérprete ou facilitador
-other_discounts,Other types of discounts,Otro tipo de descuentos,Outros tipos de descontos,Aðrar tegundir afsláttar,Inne rodzaje zniżek,Outros tipos de descontos
-terms_condition,Terms and conditions,Términos y condiciones,Termos e condicións,Skilmálar,Regulamin,Termos e Condições
-ph_descrive_terms,Describe briefly the terms and conditions,Describa brevemente los términos y condiciones,Describa brevemente os termos e as condicións,Lýstu stuttlega skilmálunum,Opisz krótko regulamin,Descreva resumidamente os termos e condições
-information_buy_tickets,Information about buying tickets,Información sobre la compra de entradas,Información sobre a compra de billetes,Upplýsingar um miðakaup,Informacje o zakupie biletów,Informação sobre compra de bilhetes
-buy_tickets,Purchase of tickets,Compra de billetes,Compra de billetes,Kaup á miðum,Zakup biletów,Compra de bilhetes
-online,On-line,Online,En liña,Á netinu,Online,Online
-onsite,On site,En el sitio,No lugar,Á staðnum,Na miejscu,No local
-ph_link,Link:,Enlace:,Ligazón:,Tengill:,Link:,Link:
-ph_link_virtual_tour,Link:,Enlace:,Ligazón:,Tengill:,Link:,Link:
-where,Where?,¿En dónde?,Onde?,Hvar?,Gdzie?,Onde?
-information_hours,Information about schedules,Información sobre los horarios,Información sobre horarios,Upplýsingar um tímaáætlun,Informacja o harmonogramie,Informação sobre horários
-continuous_schedule,Continuous hours,Horario continuo,Horario continuo,Samfelldir tímar,Stałe godziny,Horário Contínuo
-morning_schedule,Morning schedule,Horario de mañana,Horario de mañá,Morgundagskrá,Godziny poranne,Horário da manhã
-afternoon_schedule,Afternoon schedule,Horario de tarde,Horario de tarde,Eftirmiðdagsdagskrá,Godziny popołudniowe,Horário da tarde
-opening_days,What days is it open?,¿Qué días está abierto?,Que días está aberto?,Hvaða daga er opið?,W jakie dni jest otwarte?,Em que dias está aberto?
-monday,Monday,Lunes,Luns,Mánudagur,poniedziałek,Segunda-feira
-tuesday,Tuesday,Martes,Martes,Þriðjudagur,wtorek,Terça-feira
-wednesday,Wednesday,Miércoles,Mércores,Miðvikudagur,środa,Quarta-feira
-thursday,Thursday,Jueves,Xoves,Fimmtudagur,czwartek,Quinta-feira
-friday,Friday,Viernes,Venres,Föstudagur,piątek,Sexta-feira
-saturday,Saturday,Sábado,Sábado,Laugardagur,sobota,Sábado
-sunday,Sunday,Domingo,Domingo,Sunnudagur,niedziela,Domigo
-opening_hours,Opening time,Hora de apertura,Horario de apertura,Opnunartími,Godzina otwarcia,Horário de abertura
-closing_hour,Closing time,Hora de cierre,Hora de peche,Lokunartími,Godzina zamknięcia,Horário de encerramento
-last_admission_time,Last shift time,Hora último turno,Último tempo de quenda,Síðasti vaktartími,Godzina ostatniego wejścia,Horário da última visita
-information_facilities,Information about the facilities,Información sobre las instalaciones,Información sobre as instalacións,Upplýsingar um aðstöðuna,Udogodnienia,Informação sobre as instalações
-information_guides,Information about the guides,Información sobre las guías,Información sobre as guías,Upplýsingar um leiðsögumenn,Informacje na temat przewodników,Informação sobre guias
-private_tours,Private tours,Visitas privadas,Visitas privadas,Einkaferðir,Zwiedzanie prywatne,Visitas privadas / guiadas
-duration_private_tour,Private tour schedule (minutes),Duración de la visita privada (minutos),Duración da visita privada (minutos),Dagskrá einkaferða (mínútur),Czas zwiedzania prywatnego (minuty),Programação da visita privada / guiada (minutos)
-price_private_tour,Private tour price(€),Precio de la visita privada (€),Prezo da visita privada (€),Verð einkaferða (€),Opłata za zwiedzanie prywatne (€),Preço da visita privada / guiada (€)
-information_allowed_actions,Information about allowed actions,Información sobre acciones permitidas,Información sobre accións permitidas,Upplýsingar um leyfðar aðgerðir,Informacje na temat dozwolonych działań,Informação sobre ações permitidas
-extra_information,More information,Más información,Máis información,Meiri upplýsingar,Więcej informacji,Mais informação
-before_going_info,Before-you-go information,Información previa al viaje,Información previa á viaxe,Upplýsingar áður en þú ferð,Informacje przed wyjściem,O que saber antes de ir
-ph_extra_info,Does the user need to know anything else before going?,¿Necesita la persona usuaria saber algo más antes de ir?,A persoa usuaria precisa saber algo máis antes de ir?,Þarf notandinn að vita eitthvað annað áður en hann fer?,Czy użytkownik musi o czymś wiedzieć przed przybyciem?,O visitante precisa saber mais alguma coisa antes de ir?
-give_extra_info,Extra information that you want to detail,Información extra que se desee detallar,Información adicional que desexa detallar,Frekari upplýsingar sem þú vilt tilgreina,"Dodatkowe informacje, które chcesz uszczegółowić",Informação extra que queira acrescentar
-ph_event_extra_info,Do you want to detail something more about this event?,¿Desea contar algo más sobre este evento?,Quere dicir algo máis sobre este evento?,Viltu tilgreina eitthvað frekar um þennan atburð?,Czy chcesz napisać coś więcej o tym wydarzeniu?,Quer acrescentar mais informação sobre este evento?
-virtual_tours,Would it be possible to make virtual visits?,¿Sería posible hacer visitas virtuales?,Sería posible facer visitas virtuais?,Væri hægt að fara í sýndarheimsóknir?,Czy jest możliwa relizacja wizyt wirtualnych?,É possível fazer visitas virtuais?
-send_form,Send Form,Enviar formulario,Enviar formulario,Senda eyðublað,Wyślij formularz,Submeter formulário
-accessible_areas,Wheelchair accessible,Accesible para sillas de ruedas,Accesible en cadeira de rodas,Aðgengilegt fyrir hjólastóla,Dostępność dla wózków inwalidzkich,Acessível a cadeiras de rodas
-lifts,Lifts,Ascensores,Ascensores,Lyftur,Windy,Elevadores
-toilets,Toilets,Baños,Baños,Salerni,WC,Sanitários
-disabled_toilets,Toilets for disabled,Baños para personas discapacitadas,Baños para persoas discapacitadas,Salerni fyrir fatlað fólk,Toalety dla osób z niepełnosprawnościami,Sanitários para deficientes
-changing,Changing room,Cambiador,Cambiador,Búningsherbergi,Przebieralnia,Vestiário
-cloakrooms,Cloakrooms and luggage,Guardaropa,Armario,Fatahengi og farangur,Szatnie,Bengaleiro
-blind_paths,Paths for blind people,Rutas para invidentes,Rutas para invidentes,Leiðir fyrir blint fólk,Ścieżki dotykowe dla osób niewidomych,Percursos para cegos
-interpreters,Interpreters,Intérpretes,Intérpretes,Túlkar,Tłumacze,Intérpretes
-heats,Heats,Radiadores,Radiadores,Ofnar,Grzejniki,Aquecimento
-air_condition,Air conditioning,Aire acondicionado,Aire acondicionado,Loftkæling,Klimatyzacja,Ar condicionado
-chairs_rest,Chairs to rest,Sillas para descansar,Cadeiras para descansar,Stólar til hvíldar,Krzesła do odpoczynku,Áreas para descansar
-interactive_objects,Interactive objects and displays,Objetos interactivos y pantallas,Obxectos interactivos e pantallas,Gagnvirkir hlutir og skjáir,Interaktywne obiekty i wyświetlacze,Objetos e écrans interativos
-sign_guides,Sign language guides,Guías de lengua de signos,Guías de lingua de signos,Táknmálsleiðsögn,Przewodniki w języku migowym,Guias de linguagem de sinais
-audible_guides,Audio guides,Audioguías,Audioguías,Hljóðleiðsögn,Audioprzewodniki,Guias de áudio
-braille_guides,Braille guides,Guías en braille,Guías en braille,Blindraletursleiðsögn,Przewodniki w alfabecie Braille'a,Guias em braille
-pictogram_guides,Pictograms guides,Guías con pictogramas,Guías con pictogramas,Táknmyndaleiðsögn,Przewodniki z piktogramami,Guias de pictogramas
-easy_vocabulary_guides,Easy vocabulary guides,Guías con vocabulario sencillo,Guías con vocabulario sinxelo,Leiðsögn á auðskildu máli,Przewodniki z prostym słownictwem,Guias de vocabulário fáceis
-different_languages,Available in different languages,Disponibles en diferentes idiomas,Dispoñible en diferentes idiomas,Fáanlegt á ólíkum tungumálum,Dostępne w wielu językach,Disponível em vários idiomas
-photographs_allowed,Photographs allowed,Fotografías permitidas,Permítense fotografías,Ljósmyndir leyfðar,Fotografowanie dozwolone,Fotografias permitidas
-flash_allowed,Flash photos allowed,Fotografías con flash permitidas,Permítense fotos con flash,Ljósmyndir með flassi leyfðar,Fotografowanie z fleszem dozwolone,Fotografias com flash permitidas
-recording_allowed,Video recording allowed,Grabar vídeo permitido,Permítese gravar vídeos,Myndbandsupptaka leyfð,Rejestrowanie wideo dozwolone,Gravação de vídeo permitida
-cafeteria_bar,Cafeteria and bar,Cafetería y bar,Cafetería e bar,Kaffihús og bar,Kawiarnia i bar,Cafetaria e bar
-cantina,Cantina,Comedor,Comedor,Mötuneyti,Jadalnia,Espaço de refeições
-food_drink_allowed,Food and drinks allowed,Comida y bebida permitidas,Permítese comida e bebida,Matur og drykkur leyfður,Dozwolone jedzenie i picie,Alimentos e bebidas são permitidos
-bring_own_food,Bring your own food in case of allergies allowed,Permitido traer tu propia comida si eres alérgico,Permítese levar a comida propia se se é alérxico,Leyfilegt að koma með eigin mat ef þú ert með ofnæmi,W przypadku alergii dozwolne własne jedzenie,Trazer a própria comida em caso de alergia permitida
-backpacks_allowed,Backpacks allowed,Mochilas permitidas,Mochilas permitidas,Bakpokar leyfðir,Dozwolone plecaki,Mochilas permitidas
-shop,Shop,Tienda,Tenda,Verslun,Sklep,Loja
-short_description,Short description,Descripción corta,Descrición curta,Stutt lýsing,Krótki opis,Pequena descrição
-location,Location information,Información sobre la localización,Información de localización,Upplýsingar um staðsetningu,Informacje na temat lokalizacji,Informação sobre a localização
-address,Address,Dirección,Enderezo,Heimilisfang,adres,Morada
-slots,slot,plaza,praza,staður,miejsce,por lugar
-each,each,cada una,cada unha,hvert,każdy,por pessoa
-free,free,gratis,de balde,ókeypis,bezpłatny,gratuito
-tickets_information,Ticket information,Información sobre las entradas,Información de billetes,Upplýsingar um miða,Informacje o biletach,Informação sobre bilhetes
-autoreload,Update PDF automatically,Actualizar PDF automáticamente,Actualizar PDF automaticamente,Uppfærðu PDF sjálfkrafa,Aktualizuj PDF automatycznie,Atualizar PDF automaticamente
-press,Press!,¡Presione!,Prema!,ýttu á!,Naciśnij!,Pressione!
-family_price,Price for families,Precio por familias,Prezo por familia,Verð fyrir fjölskyldur,Opłata dla rodzin,Preço para famílias
-children,sons,hijos/as,fillos/as,synir,dzieci,filhos
-child,child,niño/a,neno/a,barn,dziecko,criança
-max_age_1,up to {num_y} year old,hasta {num_y} año,ata {num_y} ano,allt að {num_y} árs,do {num_y} roku życia,até {num_y} ano
-max_age_2,up to {num_y} years old,hasta {num_y} años,ata {num_y} anos,allt að {num_y} ára,do {num_y} lat,até {num_y} anos
-free_for_all,Free for all,Gratis para todos,De balde para todos,frítt fyrir alla,bezpłatny dla wszystkich,Gratuito para todos
-per_member,per member,cada miembro,por membro,á hvern meðlim,dla członka,por membro
-hours,From {0} to {1},De {0} a {1},De {0} a {1},Frá {0} til {1},od {0} do {1},De {0} a {1}
-last_admission,(Last shift: {0}),(Último turno: {0}),(Última quenda: {0}),(Síðasta vakt: {0}),(Ostatnie wejście o {0}),(Última entrada: {0})
-reserved_slots,Disabled parking slots reserved,Número de plazas reservadas para personas discapacitadas,Número de prazas reservadas para persoas discapacitadas,Frátekin bílastæði fyrir fatlað fólk,Liczba miejsc parkingowych dla osób z niepełnosprawnościami,Número de lugares reservados para deficientes
-press_buy_tickets,Click on the link to buy tickets.,Presione en el enlace para comprar las entradas.,Faga clic na ligazón para mercar as entradas.,Smelltu á hlekkinn til að kaupa miða.,"Kliknij link, aby kupić bilety.",Clique no link para comprar bilhetes.
-press_virtual_visit,Click on the link to access the virtual tour.,Presione en el enlace para acceder a la visita virtual.,Faga clic na ligazón para acceder á visita virtual.,Smelltu á hlekkinn til að fá aðgang að sýndarleiðsögn.,"Kliknij link, aby uzyskać dostęp do wirtualnego zwiedzania.",Clique no link para aceder à visita virtual
-where_buy_tickets,Where to buy tickets?,¿Dónde comprar las entradas?,Onde mercar as entradas?,Hvar á að kaupa miða?,Gdzie można kupić bilety?,Onde comprar bilhetes?
-sure_download,"Are you sure about downloading the PDF, you still have some fields to cover?",¿Seguro que quiere desacargar el PDF? Todavía le quedan algunos campos por cubrir.,Seguro que desexa descargar o PDF? Aínda lle quedan algúns campos por encher.,"Ertu viss um að þú viljir hlaða niður PDF-skjalinu, þú átt ennþá einhverja reiti óútfyllta?",Czy na pewno chcesz pobrać plik PDF? Jest jeszcze kilka pól do uzupełnienia.,"Tem certeza de que deseja fazer o download do PDF, ainda tem alguns campos para preencher?"
-activity_name,Activity name,Nombre de la actividad,Nome da actividade,Nafn starfseminnar,Nazwa działania,Nome da atividade
-chronometer,Chronometer,Cronómetro,Cronómetro,Tímaritari,Chronometr,Cronômetro
-lines_timetable,Line{s1}: {line}\nSchedule{s2}: {timetable},Línea{s1}: {line}\nHorario{s2}: {timetable},Liña{s1}: {line}\nHorario{s2}: {timetable},Lína{s1}: {line}\nStundaskrá{s2}: {timetable},Linia{s1}: {line}\nRozkład{s2}: {timetable},Linha{s1}: {line}\nHorário{s2}: {timetable}
-without_number,S/N,S/N,S/N,S/N,S/N,S/N
-where_buy_tickets,Where can you buy tickets in person?,¿Dónde se pueden comprar las entradas presencialmente?,Onde se poden mercar as entradas en persoa?,Hvar er hægt að kaupa miða í eigin persónu?,Gdzie można osobiście kupić bilety?,Onde pode comprar bilhetes presencialmente?
-where_buy_tickets_online,On which website can you buy tickets?,¿En qué web se pueden comprar las entradas?,En que web se poden mercar as entradas?,Á hvaða vefsíðu er hægt að kaupa miða?,Na jakiej stronie można kupić bilety?,Sítio Web para comprar bilhetes online?
-logo_title,Attach logo(s),Adjunte logo(s),Anexe logo(s),Hengdu við lógó,Dołącz logo(a),Inclua logotipo(s)
-logo,Attach logo(s) for the event,Adjunte logo(s) para el evento,Anexe logo(s) para o evento,Hengdu við lógó fyrir viðburðinn,Dołącz logo(a) wydarzenia,Inclua o(s) logotipo(s) do evento
-logos,Logos,Logos,Logos,Lógó,Logo,Logos
-enable_disable,Sections,Secciones,Seccións,Köflum,Sekcje,Secções
-drop_files,Drop files here...,Arrastra los archivos aquí...,Arrastre os arquivos aquí...,Slepptu skrám hér...,Upuść pliki tutaj...,Arraste os ficheiros para aqui...
-select_files,Select your files,Seleccione sus archivos,Seleccione os seus arquivos,Veldu skrárnar þínar,Wybierz pliki,Selecione os ficheiros
-or,or,o,ou,eða,lub,ou
-banner,Banner,Banner,Banner,Borði,Baner,Banner
-quiet_relaxation_room,Quiet relaxation room,Sala de relajación tranquila,Sala de relaxación tranquila,Hljóðlátt hvíldarherbergi,Cichy pokój relaksacyjny,Sala de descanso tranquila
-soundproofing_headphones,Soundproofing headphones,Auriculares insonorizados,Auriculares insonorizados,Hljóðeinangruð heyrnartól,Słuchawki wygłuszające,Auriculares insonorizados
-availability_assistant,Available assistant,Asistente disponible,Asistente dispoñible,Aðstoðarfólk í boði,Dostępny asystent,Assistente disponível
-covid_19_restrictions,COVID-19 Restrictions,Restricciones de COVID-19,Restricións COVID-19,COVID-19 takmarkanir,Ograniczenia związane z COVID-19,Restrições COVID-19
-wear_mask,The use of a mask is mandatory,Obligatorio el uso de mascarilla,O uso de máscara é obrigatorio,Notkun grímu er skylda,Wymagane jest zasłanianie ust i nosa maseczką,O uso de máscara é obrigatório
-handwashing,Periodic hand washing is recommended,Se recomienda lavado periódico de manos,Recoméndase o lavado periódico das mans,Mælt er með reglulegum handþvotti,Zalecane jest częste dezynfekowanie rąk,Recomenda-se a lavagem periódica das mãos
-social_distance,Obligatory to maintain social distance,Obligatorio mantener la distancia social,Obrigatorio manter a distancia social,Skylt að halda félagslegri fjarlægð,Obowiązkowe zachowanie dystansu społecznego,Obrigatório manter o distanciamento social
-temperature_control,Temperature control will be carried out,Se realizará control de temperaturas,Realizarase control da temperatura,Hita verður stýrt,Zostanie przeprowadzony pomiar temperatury,O controle de temperatura será realizado
-hand_sanitizer,Hand sanitizer available,Gel hidroalcohólico disponible,Xel hidroalcohólico dispoñible,Spritt fáanlegt,Dostępny żel do dezynfekcji rąk,Alcool gel disponível
-additional_location_information,Additional information,Información adicional,Información adicional,Viðbótarupplýsingar,Dodatkowe informacje,Informação adicional
-ph_location_information_detail,"Room, hall, area, door, entrance...","Habitación, sala, zona, puerta, entrada...","Habitación, vestíbulo, zona, porta, entrada...","Herbergi, forstofa, svæði, hurð, inngangur...","Pokój, hol, powierzchnia, drzwi, wejście...","Sala, hall, área, porta, entrada..."
-allowed,Allowed,Permitido,Permitido,Leyfilegt,Dozwolony,Permitido
-not_allowed,Not allowed,No permitido,Non permitido,Ekki leyfilegt,Niedozwolony,Não permitido
+ID,ENGLISH,SPANISH,GALICIAN,ICELANDIC,POLISH,PORTUGUESE,UKRAINIAN
+fill_form,Fill sample form,Rellenar formulario,Encher formulario,Fylltu út sýnishorn,Wypełnij  formularz,Preencha formulário,Заповніть анкету
+font,Font,Fuente,Fonte,Leturgerð,Czcionka,Fonte,шрифтом
+form_fields,Form fields,Campos del formulario,Campos do formulario,Reitir eyðublaðs,Pola formularza,Campos do formulário,поля форми
+language,Language,Idioma,Idioma,Tungumál,Język,Idioma,Мови
+reset_form,Reset Form,Reiniciar formulario,Restablecer formulario,Endurstilla eyðublað,Wyczyść formularz,Limpar formulário,форма скидання
+english,English,Inglés,Inglés,Enska,angielski,Inglês,англійська
+spanish,Spanish,Español,Español,spænska,hiszpański,Espanhol,іспанська
+galician,Galician,Gallego,Galego,Galisíska,galicyjski,Galego,галицька
+icelandic,Icelandic,Islandés,Islandés,Íslenska,islandzki,Islandês,ісландська
+polish,Polish,Polaco,Polaco,Pólska,polski,Polaco,польський
+portuguese,Portuguese,Portugués,Portugués,Portúgalska,portugalski,Português,португальська
+reload_pdf,Reload PDF,Recargar PDF,Recargar PDF,Endurhlaða PDF,Odśwież PDF,Recarregar PDF,перезавантажити pdf
+download_pdf,Download PDF,Descargar PDF,Descargar PDF,Sækja PDF,Pobierz PDF,Baixar PDF,Завантажити pdf
+activity_type,Type of activity,Tipo de actividad,Tipo de actividade,Tegund starfsemi,Rodzaj aktywności,Tipo de atividade,вид діяльності
+choose,Choose...,Elige...,Escolla...,Veldu ...,Wybierz...,Escolher...,Виберіть
+museum,Museum,Museo,Museo,Safn,Muzeum,Museu,музей
+exhibition,Exhibition,Exposición,Exposición,Sýning,Wystawa,Exposição,експозиція
+concert,Concert,Concierto,Concerto,Tónleikar,Koncert,Concerto,концерт
+workshop,Workshop,Taller,Taller / Obradoiro,Vinnustofa,Warsztat,Oficina,майстерня
+movie_screening,Movie Screening,Proyección de películas,Proxección de películas,Kvikmyndasýning,Pokaz filmu,Exibição de filmes,Фільми
+literary_meeting,Literary Meeting,Encuentro Literario,Encontro literario,Bókmenntafundur,Spotkanie literackie,Encontro Literário,літературна зустріч
+theatre_performance,Theatre Performance,Representación teatral,Representación teatral,Leiklistarsýning,Spektakl teatralny,Espetáculo de Teatro,грати
+dance_performance,Dance Performance,Espectáculo de danza,Espectáculo de danza,Danssýning,Spektakl taneczny,Performance de dança,танцювати
+festival,Festival,Festival,Festival,Hátíð,Festiwal,Festival,Фестиваль
+cultural_tour,Cultural Tour,Tour cultural,Xira cultural,Menningarferð,Wycieczka kulturalna,Tour Cultural,культурний тур
+performance,Performance,Actuación,Actuación,Flutningur,Spektakl,Atuação,виконання
+fair,Fair,Feria,Feira,Sanngjarnt,Targi,Feira,Ярмарка
+attraction,Attraction,Atracción,Atracción,Aðdráttarafl,Atrakcja,Atração,Ярмарка
+religous_place,Religious place,Lugar Religioso,Lugar relixioso,Trúarlegur staður,Miejsce kultu,Lugar religioso,релігійне місце
+online_event,Online Event/Web Resource,Evento online / Recurso web,Evento online / Recurso web,Viðburður á netinu/Heimild á netinu,Wydarzenie online/Zasób online,Evento Online/Recurso online,Онлайн-подія/ веб-ресурс
+others,Other,Otra,Outra,Annað,Inne,Outros tipos de descontos,інший
+error_cultural_activity,"Please, select a valid cultural activity","Por favor, seleccione una actividad cultural válida","Por favor, seleccione unha actividade cultural válida",Vinsamlegast veldu gilda menningarstarfsemi,Proszę wybrać odpowiednie działanie kulturalne,"Por favor, selecione uma atividade cultural válida",Виберіть дійсну культурну діяльність
+ph_activity_name,Specify the name of the activity,Indique el nombre de la actividad,Indique o nome da actividade,Tilgreinið heiti starfseminnar,Podaj nazwę działania,Indique o nome da atividade,Вкажіть назву діяльності
+ph_specify,Specify,Especifique,Especifique,Tilgreindu,Sprecyzuj,Especifique,Вкажіть
+ph_description_activity,Describe briefly the cultural activity,Describa brevemente la actividad cultural,Describa brevemente a actividade cultural,Lýstu stuttlega menningarstarfseminni,Opisz krótko działanie kulturalne,Descreva brevemente a atividade cultural,Коротко охарактеризуйте культурну діяльність
+ph_bus_lines,Bus lines,Líneas de bus,Liñas de autobuses,Leiðarkerfi strætó,Linie autobusowe,Linhas de autocarro,автобусні лінії
+ph_bus_timetables,Bus schedules,Horarios del bus,Horarios de autobuses,Tímatöflur strætó,Rozkład jazdy autobusów,Horários dos autocarros,розклад автобусів
+ph_metro_lines,Subway lines,Líneas de metro,Liñas de metro,Leiðarkerfi neðanjarðarlestar,Linie metra,Linhas de metro,лінії метро
+ph_metro_timetables,Metro schedules,Horarios del metro,Horarios do metro,Tímatöflur neðanjarðarlestar,Rozkład jazdy metra,Horários do metro,розклади метро
+error_short_description,"Please, enter a short description.","Por favor, introduzca una descripción corta.","Por favor, introduza unha breve descrición.",Vinsamlegast sláðu inn stutta lýsingu.,Proszę podać krótki opis.,"Por favor, insira uma breve descrição.","Будь ласка, введіть короткий опис."
+url_online_event,URL for the Online Event,URL del Evento Online,URL do evento online,Vefslóð viðburðar á netinu,Adres URL wydarzenia online,URL do Evento Online,URL-адреса онлайн-події
+street,Street,Calle,Rúa,Gata,Ulica,Rua,вул
+error_fill_field,"Please, complete this field.","Por favor, complete este campo.","Por favor, complete este campo.",Vinsamlegast fylltu út þennan reit.,Proszę wypełnić to pole.,"Por favor, preencha este campo.","Будь ласка, заповніть це поле."
+number,Number,Número,Número,Númer,Numer,Número,Номер
+zip,Zip,CP,CP,Póstnúmer,Kod pocztowy,Código Postal,Поштовий індекс
+city,Town,Ciudad,Cidade,Bærinn,Miasto,Cidade,Місто
+country,Country,Pais,País,Land,Państwo,País,Країна
+how_to_get_there,How could you get there?,¿Cómo se podría llegar hasta allí?,Como se podería chegar ata alí?,Hvernig gast þú komið þér þangað?,Jak tam dotarłeś_aś?,Como chegar lá?,Як ти міг туди потрапити?
+bus,Bus:,Autobus:,Autobús:,Strætó:,Autobus:,Autocarro:,Автобус:
+metro,Subway:,Metro:,Metro:,Neðanjarðarlest:,Metro:,Metro:,лічильник:
+taxi,Cab:,Taxi:,Taxi:,Leigubíll:,Taksówka:,Táxi:,Таксі:
+car,Car:,Coche:,Coche:,Bíll:,Samochód:,Carro:,автомобіль:
+parking,Parking:,Aparcamiento:,Aparcamento:,Bílastæði:,Parking:,Estacionamento:,Парковка:
+yes,Yes,Sí,Si,Já,Tak,Sim,Так
+no,No,No,Non,Nei,Nie,Não,Ні
+ph_parking_slot,Number of parking places,Número de plazas,Número de prazas,Fjöldi bílastæða,Liczba miejsc parkingowych,Número de lugares de estacionamento,Кількість місць
+ph_slot_price,Price of parking places,Precio de las plazas,Prezo das prazas,Verð á bílastæðum,Opłata za miejsce parkingowe,Preço do estacionamento,Ціна сидіння
+ph_disabled_parking_slot,Number of disabled parking places,Número de plazas para personas discapacitadas,Número de prazas para persoas discapacitadas,Fjöldi bílastæða fyrir fatlað fólk,Liczba miejsc parkingowych dla osób z niepełnosprawnościami,Número de lugares de estacionamento para deficientes,Кількість місць для інвалідів
+ph_disabled_price_parking_slot,Price of disabled parking places,Precio de las plazas para personas discapacitadas,Prezo das prazas para persoas discapacitadas,Verð bílastæða fyrir fatlað fólk,Opłata za miejsce parkingowe dla osób z niepełnosprawnościami,Preço do estacionamento para deficientes físicos,Ціна місць для інвалідів
+information_prices,Pricing information,Información sobre los precios,Información sobre os prezos,Verðlagningarupplýsingar,Informacje o biletach,Informações sobre preços,Інформація про ціни
+normal_price,Normal price,Precio normal,Prezo normal,Venjulegt verð,Cena biletu normalnego,Preço normal,Нормальна ціна
+reduced_price,Reduced price,Precio reducido,Prezo reducido,Lækkað verð,Cena biletu ulgowego,Preço reduzido,Знижена ціна
+ph_when,When?,¿Cuándo?,Cando?,Hvenær?,Kiedy?,Quando?,Коли?
+family_price,Special price per family,Precio especial por familia,Prezo especial por familia,Sértilboð á fjölskyldu,Cena biletu rodzinnego,Preço especial para famílias,Спеціальна ціна на сім'ю
+member_price,Price per family member,Precio por miembro,Prezo por membro,Verð á fjölskyldumeðlim,Cena biletu za członka rodziny,Preço por membro da família,Ціна за учасника
+max_num_children,Maximum number of children,Maximo número de niños,Número máximo de nenos/as,Fjöldatakmörkun barna,Maksymalna liczba dzieci,Número máximo de filhos,Максимальна кількість дітей
+max_age_children,Maximum age of children,Edad máxima de los niños,Idade máxima dos nenos/as,Aldurstakmark barna,Maksymalny wiek dzieci,Idade máxima das crianças,максимальний вік дітей
+free_interpreter,Free for interpreter or facilitator,Gratis para intérprete o facilitador/a,De balde para intérprete ou facilitador/a,Frítt fyrir túlk eða aðstoðarmanneskju,Bezpłatnie dla tłumacza lub opiekuna,Gratuito para intérprete ou facilitador,Безкоштовно для перекладача або фасилітатора
+other_discounts,Other types of discounts,Otro tipo de descuentos,Outros tipos de descontos,Aðrar tegundir afsláttar,Inne rodzaje zniżek,Outros tipos de descontos,Інші види знижок
+terms_condition,Terms and conditions,Términos y condiciones,Termos e condicións,Skilmálar,Regulamin,Termos e Condições,Правила та умови
+ph_descrive_terms,Describe briefly the terms and conditions,Describa brevemente los términos y condiciones,Describa brevemente os termos e as condicións,Lýstu stuttlega skilmálunum,Opisz krótko regulamin,Descreva resumidamente os termos e condições,Коротко опишіть умови
+information_buy_tickets,Information about buying tickets,Información sobre la compra de entradas,Información sobre a compra de billetes,Upplýsingar um miðakaup,Informacje o zakupie biletów,Informação sobre compra de bilhetes,Інформація про покупку квитків
+buy_tickets,Purchase of tickets,Compra de billetes,Compra de billetes,Kaup á miðum,Zakup biletów,Compra de bilhetes,Придбання квитків
+online,On-line,Online,En liña,Á netinu,Online,Online,Он-лайн
+onsite,On site,En el sitio,No lugar,Á staðnum,Na miejscu,No local,На місці
+ph_link,Link:,Enlace:,Ligazón:,Tengill:,Link:,Link:,Посилання:
+ph_link_virtual_tour,Link:,Enlace:,Ligazón:,Tengill:,Link:,Link:,Посилання:
+where,Where?,¿En dónde?,Onde?,Hvar?,Gdzie?,Onde?,куди?
+information_hours,Information about schedules,Información sobre los horarios,Información sobre horarios,Upplýsingar um tímaáætlun,Informacja o harmonogramie,Informação sobre horários,Інформація про розклади
+continuous_schedule,Continuous hours,Horario continuo,Horario continuo,Samfelldir tímar,Stałe godziny,Horário Contínuo,Безперервні години
+morning_schedule,Morning schedule,Horario de mañana,Horario de mañá,Morgundagskrá,Godziny poranne,Horário da manhã,ранковий графік
+afternoon_schedule,Afternoon schedule,Horario de tarde,Horario de tarde,Eftirmiðdagsdagskrá,Godziny popołudniowe,Horário da tarde,післяобідні години
+opening_days,What days is it open?,¿Qué días está abierto?,Que días está aberto?,Hvaða daga er opið?,W jakie dni jest otwarte?,Em que dias está aberto?,В які дні він відкритий?
+monday,Monday,Lunes,Luns,Mánudagur,poniedziałek,Segunda-feira,понеділок
+tuesday,Tuesday,Martes,Martes,Þriðjudagur,wtorek,Terça-feira,вівторок
+wednesday,Wednesday,Miércoles,Mércores,Miðvikudagur,środa,Quarta-feira,середа
+thursday,Thursday,Jueves,Xoves,Fimmtudagur,czwartek,Quinta-feira,четвер
+friday,Friday,Viernes,Venres,Föstudagur,piątek,Sexta-feira,п'ятниця
+saturday,Saturday,Sábado,Sábado,Laugardagur,sobota,Sábado,субота
+sunday,Sunday,Domingo,Domingo,Sunnudagur,niedziela,Domigo,неділя
+opening_hours,Opening time,Hora de apertura,Horario de apertura,Opnunartími,Godzina otwarcia,Horário de abertura,Час відкриття
+closing_hour,Closing time,Hora de cierre,Hora de peche,Lokunartími,Godzina zamknięcia,Horário de encerramento,Час закриття
+last_admission_time,Last shift time,Hora último turno,Último tempo de quenda,Síðasti vaktartími,Godzina ostatniego wejścia,Horário da última visita,час останньої зміни
+information_facilities,Information about the facilities,Información sobre las instalaciones,Información sobre as instalacións,Upplýsingar um aðstöðuna,Udogodnienia,Informação sobre as instalações,Інформація про заклад
+information_guides,Information about the guides,Información sobre las guías,Información sobre as guías,Upplýsingar um leiðsögumenn,Informacje na temat przewodników,Informação sobre guias,Інформація про гідів
+private_tours,Private tours,Visitas privadas,Visitas privadas,Einkaferðir,Zwiedzanie prywatne,Visitas privadas / guiadas,приватні візити
+duration_private_tour,Private tour schedule (minutes),Duración de la visita privada (minutos),Duración da visita privada (minutos),Dagskrá einkaferða (mínútur),Czas zwiedzania prywatnego (minuty),Programação da visita privada / guiada (minutos),Тривалість приватного візиту (хвилин)
+price_private_tour,Private tour price,Precio de la visita privada,Prezo da visita privada,Verð einkaferða,Opłata za zwiedzanie prywatne,Preço da visita privada / guiada,Ціна приватного відвідування
+information_allowed_actions,Information about allowed actions,Información sobre acciones permitidas,Información sobre accións permitidas,Upplýsingar um leyfðar aðgerðir,Informacje na temat dozwolonych działań,Informação sobre ações permitidas,Інформація про дозволені дії
+extra_information,More information,Más información,Máis información,Meiri upplýsingar,Więcej informacji,Mais informação,Більше інформації
+before_going_info,Before-you-go information,Información previa al viaje,Información previa á viaxe,Upplýsingar áður en þú ferð,Informacje przed wyjściem,O que saber antes de ir,Інформація перед поїздкою
+ph_extra_info,Does the user need to know anything else before going?,¿Necesita la persona usuaria saber algo más antes de ir?,A persoa usuaria precisa saber algo máis antes de ir?,Þarf notandinn að vita eitthvað annað áður en hann fer?,Czy użytkownik musi o czymś wiedzieć przed przybyciem?,O visitante precisa saber mais alguma coisa antes de ir?,"Чи потрібно користувачеві знати щось ще, перш ніж йти?"
+give_extra_info,Extra information that you want to detail,Información extra que se desee detallar,Información adicional que desexa detallar,Frekari upplýsingar sem þú vilt tilgreina,"Dodatkowe informacje, które chcesz uszczegółowić",Informação extra que queira acrescentar,"Додаткова інформація, яку ви хочете деталізувати"
+ph_event_extra_info,Do you want to detail something more about this event?,¿Desea contar algo más sobre este evento?,Quere dicir algo máis sobre este evento?,Viltu tilgreina eitthvað frekar um þennan atburð?,Czy chcesz napisać coś więcej o tym wydarzeniu?,Quer acrescentar mais informação sobre este evento?,Хочете розповісти щось більше про цю подію?
+virtual_tours,Would it be possible to make virtual visits?,¿Sería posible hacer visitas virtuales?,Sería posible facer visitas virtuais?,Væri hægt að fara í sýndarheimsóknir?,Czy jest możliwa relizacja wizyt wirtualnych?,É possível fazer visitas virtuais?,Чи можна було б здійснити віртуальні візити?
+send_form,Send Form,Enviar formulario,Enviar formulario,Senda eyðublað,Wyślij formularz,Submeter formulário,Надіслати форму
+accessible_areas,Wheelchair accessible,Accesible para sillas de ruedas,Accesible en cadeira de rodas,Aðgengilegt fyrir hjólastóla,Dostępność dla wózków inwalidzkich,Acessível a cadeiras de rodas,доступний для інвалідних візків
+lifts,Lifts,Ascensores,Ascensores,Lyftur,Windy,Elevadores,ліфти
+toilets,Toilets,Baños,Baños,Salerni,WC,Sanitários,Туалети
+disabled_toilets,Toilets for disabled,Baños para personas discapacitadas,Baños para persoas discapacitadas,Salerni fyrir fatlað fólk,Toalety dla osób z niepełnosprawnościami,Sanitários para deficientes,Санвузол для людей з обмеженими можливостями
+changing,Changing room,Cambiador,Cambiador,Búningsherbergi,Przebieralnia,Vestiário,пеленальний столик
+cloakrooms,Cloakrooms and luggage,Guardaropa,Armario,Fatahengi og farangur,Szatnie,Bengaleiro,Гардероб
+blind_paths,Paths for blind people,Rutas para invidentes,Rutas para invidentes,Leiðir fyrir blint fólk,Ścieżki dotykowe dla osób niewidomych,Percursos para cegos,Маршрути для незрячих
+interpreters,Interpreters,Intérpretes,Intérpretes,Túlkar,Tłumacze,Intérpretes,перекладачі
+heats,Heats,Radiadores,Radiadores,Ofnar,Grzejniki,Aquecimento,радіатори
+air_condition,Air conditioning,Aire acondicionado,Aire acondicionado,Loftkæling,Klimatyzacja,Ar condicionado,Кондиціонер
+chairs_rest,Chairs to rest,Sillas para descansar,Cadeiras para descansar,Stólar til hvíldar,Krzesła do odpoczynku,Áreas para descansar,стільці для відпочинку
+interactive_objects,Interactive objects and displays,Objetos interactivos y pantallas,Obxectos interactivos e pantallas,Gagnvirkir hlutir og skjáir,Interaktywne obiekty i wyświetlacze,Objetos e écrans interativos,Інтерактивні об'єкти та екрани
+sign_guides,Sign language guides,Guías de lengua de signos,Guías de lingua de signos,Táknmálsleiðsögn,Przewodniki w języku migowym,Guias de linguagem de sinais,Посібники жестовою мовою
+audible_guides,Audio guides,Audioguías,Audioguías,Hljóðleiðsögn,Audioprzewodniki,Guias de áudio,Аудіогіди
+braille_guides,Braille guides,Guías en braille,Guías en braille,Blindraletursleiðsögn,Przewodniki w alfabecie Braille'a,Guias em braille,Довідники Брайля
+pictogram_guides,Pictograms guides,Guías con pictogramas,Guías con pictogramas,Táknmyndaleiðsögn,Przewodniki z piktogramami,Guias de pictogramas,Путівники з піктограмами
+easy_vocabulary_guides,Easy vocabulary guides,Guías con vocabulario sencillo,Guías con vocabulario sinxelo,Leiðsögn á auðskildu máli,Przewodniki z prostym słownictwem,Guias de vocabulário fáceis,Посібники з простою лексикою
+different_languages,Available in different languages,Disponibles en diferentes idiomas,Dispoñible en diferentes idiomas,Fáanlegt á ólíkum tungumálum,Dostępne w wielu językach,Disponível em vários idiomas,Доступно різними мовами
+photographs_allowed,Photographs allowed,Fotografías permitidas,Permítense fotografías,Ljósmyndir leyfðar,Fotografowanie dozwolone,Fotografias permitidas,Фотографії дозволені
+flash_allowed,Flash photos allowed,Fotografías con flash permitidas,Permítense fotos con flash,Ljósmyndir með flassi leyfðar,Fotografowanie z fleszem dozwolone,Fotografias com flash permitidas,Дозволено фотографування зі спалахом
+recording_allowed,Video recording allowed,Grabar vídeo permitido,Permítese gravar vídeos,Myndbandsupptaka leyfð,Rejestrowanie wideo dozwolone,Gravação de vídeo permitida,дозволено записувати відео
+cafeteria_bar,Cafeteria and bar,Cafetería y bar,Cafetería e bar,Kaffihús og bar,Kawiarnia i bar,Cafetaria e bar,кафе та бар
+cantina,Cantina,Comedor,Comedor,Mötuneyti,Jadalnia,Espaço de refeições,Їдальня
+food_drink_allowed,Food and drinks allowed,Comida y bebida permitidas,Permítese comida e bebida,Matur og drykkur leyfður,Dozwolone jedzenie i picie,Alimentos e bebidas são permitidos,Їжа та напої дозволені
+bring_own_food,Bring your own food in case of allergies allowed,Permitido traer tu propia comida si eres alérgico,Permítese levar a comida propia se se é alérxico,Leyfilegt að koma með eigin mat ef þú ert með ofnæmi,W przypadku alergii dozwolne własne jedzenie,Trazer a própria comida em caso de alergia permitida,"Якщо у вас алергія, дозволено брати з собою їжу"
+backpacks_allowed,Backpacks allowed,Mochilas permitidas,Mochilas permitidas,Bakpokar leyfðir,Dozwolone plecaki,Mochilas permitidas,Рюкзаки дозволені
+shop,Shop,Tienda,Tenda,Verslun,Sklep,Loja,Магазин
+short_description,Short description,Descripción corta,Descrición curta,Stutt lýsing,Krótki opis,Pequena descrição,Короткий опис
+location,Location information,Información sobre la localización,Información de localización,Upplýsingar um staðsetningu,Informacje na temat lokalizacji,Informação sobre a localização,інформація про місцезнаходження
+address,Address,Dirección,Enderezo,Heimilisfang,adres,Morada,Адреса
+slots,slot,plaza,praza,staður,miejsce,por lugar,Майдан
+each,each,cada una,cada unha,hvert,każdy,por pessoa,кожен
+free,free,gratis,de balde,ókeypis,bezpłatny,gratuito,безкоштовно
+tickets_information,Ticket information,Información sobre las entradas,Información de billetes,Upplýsingar um miða,Informacje o biletach,Informação sobre bilhetes,Інформація про квитки
+autoreload,Update PDF automatically,Actualizar PDF automáticamente,Actualizar PDF automaticamente,Uppfærðu PDF sjálfkrafa,Aktualizuj PDF automatycznie,Atualizar PDF automaticamente,Оновлюйте PDF автоматично
+press,Press!,¡Presione!,Prema!,ýttu á!,Naciśnij!,Pressione!,натисніть!
+family_price,Price for families,Precio por familias,Prezo por familia,Verð fyrir fjölskyldur,Opłata dla rodzin,Preço para famílias,Ціна для сімей
+children,sons,hijos/as,fillos/as,synir,dzieci,filhos,дітей
+child,child,niño/a,neno/a,barn,dziecko,criança,дитини
+max_age_1,up to {num_y} year old,hasta {num_y} año,ata {num_y} ano,allt að {num_y} árs,do {num_y} roku życia,até {num_y} ano,до {num_y} року
+max_age_2,up to {num_y} years old,hasta {num_y} años,ata {num_y} anos,allt að {num_y} ára,do {num_y} lat,até {num_y} anos,до {num_y} років
+free_for_all,Free for all,Gratis para todos,De balde para todos,frítt fyrir alla,bezpłatny dla wszystkich,Gratuito para todos,безкоштовно для всіх
+per_member,per member,cada miembro,por membro,á hvern meðlim,dla członka,por membro,кожного члена
+hours,From {0} to {1},De {0} a {1},De {0} a {1},Frá {0} til {1},od {0} do {1},De {0} a {1},Від {0} до {1}
+last_admission,(Last shift: {0}),(Último turno: {0}),(Última quenda: {0}),(Síðasta vakt: {0}),(Ostatnie wejście o {0}),(Última entrada: {0}),(Останній хід: {0})
+reserved_slots,Disabled parking slots reserved,Número de plazas reservadas para personas discapacitadas,Número de prazas reservadas para persoas discapacitadas,Frátekin bílastæði fyrir fatlað fólk,Liczba miejsc parkingowych dla osób z niepełnosprawnościami,Número de lugares reservados para deficientes,"Кількість місць, зарезервованих для людей з обмеженими можливостями"
+press_buy_tickets,Click on the link to buy tickets.,Presione en el enlace para comprar las entradas.,Faga clic na ligazón para mercar as entradas.,Smelltu á hlekkinn til að kaupa miða.,"Kliknij link, aby kupić bilety.",Clique no link para comprar bilhetes.,"Натисніть на посилання, щоб купити квитки."
+press_virtual_visit,Click on the link to access the virtual tour.,Presione en el enlace para acceder a la visita virtual.,Faga clic na ligazón para acceder á visita virtual.,Smelltu á hlekkinn til að fá aðgang að sýndarleiðsögn.,"Kliknij link, aby uzyskać dostęp do wirtualnego zwiedzania.",Clique no link para aceder à visita virtual,"Натисніть на посилання, щоб отримати доступ до віртуального візиту."
+where_buy_tickets,Where to buy tickets?,¿Dónde comprar las entradas?,Onde mercar as entradas?,Hvar á að kaupa miða?,Gdzie można kupić bilety?,Onde comprar bilhetes?,Де купити квитки?
+sure_download,"Are you sure about downloading the PDF, you still have some fields to cover?",¿Seguro que quiere desacargar el PDF? Todavía le quedan algunos campos por cubrir.,Seguro que desexa descargar o PDF? Aínda lle quedan algúns campos por encher.,"Ertu viss um að þú viljir hlaða niður PDF-skjalinu, þú átt ennþá einhverja reiti óútfyllta?",Czy na pewno chcesz pobrać plik PDF? Jest jeszcze kilka pól do uzupełnienia.,"Tem certeza de que deseja fazer o download do PDF, ainda tem alguns campos para preencher?","Ви впевнені, що хочете завантажити PDF? Залишилося охопити ще кілька полів."
+activity_name,Activity name,Nombre de la actividad,Nome da actividade,Nafn starfseminnar,Nazwa działania,Nome da atividade,Назва діяльності
+chronometer,Chronometer,Cronómetro,Cronómetro,Tímaritari,Chronometr,Cronômetro,Хронометр
+lines_timetable,Line{s1}: {line}\nSchedule{s2}: {timetable},Línea{s1}: {line}\nHorario{s2}: {timetable},Liña{s1}: {line}\nHorario{s2}: {timetable},Lína{s1}: {line}\nStundaskrá{s2}: {timetable},Linia{s1}: {line}\nRozkład{s2}: {timetable},Linha{s1}: {line}\nHorário{s2}: {timetable},Лінія{s1}: {line}\nРозклад{s2}: {розклад}
+without_number,S/N,S/N,S/N,S/N,S/N,S/N,без номера
+where_buy_tickets,Where can you buy tickets in person?,¿Dónde se pueden comprar las entradas presencialmente?,Onde se poden mercar as entradas en persoa?,Hvar er hægt að kaupa miða í eigin persónu?,Gdzie można osobiście kupić bilety?,Onde pode comprar bilhetes presencialmente?,Де можна придбати квитки особисто?
+where_buy_tickets_online,On which website can you buy tickets?,¿En qué web se pueden comprar las entradas?,En que web se poden mercar as entradas?,Á hvaða vefsíðu er hægt að kaupa miða?,Na jakiej stronie można kupić bilety?,Sítio Web para comprar bilhetes online?,На якому сайті можна придбати квитки?
+logo_title,Attach logo(s),Adjunte logo(s),Anexe logo(s),Hengdu við lógó,Dołącz logo(a),Inclua logotipo(s),Прикріпити логотип(и)
+logo,Attach logo(s) for the event,Adjunte logo(s) para el evento,Anexe logo(s) para o evento,Hengdu við lógó fyrir viðburðinn,Dołącz logo(a) wydarzenia,Inclua o(s) logotipo(s) do evento,Додайте логотип(и) події
+logos,Logos,Logos,Logos,Lógó,Logo,Logos,логотипи
+enable_disable,Sections,Secciones,Seccións,Köflum,Sekcje,Secções,Розділи
+drop_files,Drop files here...,Arrastra los archivos aquí...,Arrastre os arquivos aquí...,Slepptu skrám hér...,Upuść pliki tutaj...,Arraste os ficheiros para aqui...,Перетягніть файли сюди...
+select_files,Select your files,Seleccione sus archivos,Seleccione os seus arquivos,Veldu skrárnar þínar,Wybierz pliki,Selecione os ficheiros,Виберіть файли
+or,or,o,ou,eða,lub,ou,або
+banner,Banner,Banner,Banner,Borði,Baner,Banner,банер
+quiet_relaxation_room,Quiet relaxation room,Sala de relajación tranquila,Sala de relaxación tranquila,Hljóðlátt hvíldarherbergi,Cichy pokój relaksacyjny,Sala de descanso tranquila,тиха кімната відпочинку
+soundproofing_headphones,Soundproofing headphones,Auriculares insonorizados,Auriculares insonorizados,Hljóðeinangruð heyrnartól,Słuchawki wygłuszające,Auriculares insonorizados,звукоізоляційні навушники
+availability_assistant,Available assistant,Asistente disponible,Asistente dispoñible,Aðstoðarfólk í boði,Dostępny asystent,Assistente disponível,асистент доступний
+covid_19_restrictions,COVID-19 Restrictions,Restricciones de COVID-19,Restricións COVID-19,COVID-19 takmarkanir,Ograniczenia związane z COVID-19,Restrições COVID-19,Обмеження щодо COVID-19
+wear_mask,The use of a mask is mandatory,Obligatorio el uso de mascarilla,O uso de máscara é obrigatorio,Notkun grímu er skylda,Wymagane jest zasłanianie ust i nosa maseczką,O uso de máscara é obrigatório,Використання маски є обов’язковим
+handwashing,Periodic hand washing is recommended,Se recomienda lavado periódico de manos,Recoméndase o lavado periódico das mans,Mælt er með reglulegum handþvotti,Zalecane jest częste dezynfekowanie rąk,Recomenda-se a lavagem periódica das mãos,Рекомендується періодично мити руки
+social_distance,Obligatory to maintain social distance,Obligatorio mantener la distancia social,Obrigatorio manter a distancia social,Skylt að halda félagslegri fjarlægð,Obowiązkowe zachowanie dystansu społecznego,Obrigatório manter o distanciamento social,Обов'язкове дотримання соціальної дистанції
+temperature_control,Temperature control will be carried out,Se realizará control de temperaturas,Realizarase control da temperatura,Hita verður stýrt,Zostanie przeprowadzony pomiar temperatury,O controle de temperatura será realizado,Буде здійснюватися температурний контроль
+hand_sanitizer,Hand sanitizer available,Gel hidroalcohólico disponible,Xel hidroalcohólico dispoñible,Spritt fáanlegt,Dostępny żel do dezynfekcji rąk,Alcool gel disponível,В наявності гідроспиртовий гель
+additional_location_information,Additional information,Información adicional,Información adicional,Viðbótarupplýsingar,Dodatkowe informacje,Informação adicional,Додаткова інформація
+ph_location_information_detail,"Room, hall, area, door, entrance...","Habitación, sala, zona, puerta, entrada...","Habitación, vestíbulo, zona, porta, entrada...","Herbergi, forstofa, svæði, hurð, inngangur...","Pokój, hol, powierzchnia, drzwi, wejście...","Sala, hall, área, porta, entrada...","Кімната, хол, зона, двері, вхід..."
+allowed,Allowed,Permitido,Permitido,Leyfilegt,Dozwolony,Permitido,Дозволено
+not_allowed,Not allowed,No permitido,Non permitido,Ekki leyfilegt,Niedozwolony,Não permitido,Не дозволено
+bgcolor,Background color,Color de fondo,Cor de fondo,Bakgrunnslitur,Kolor tła,Cor de fundo,Колір фону
+whitecolor,White,Blanco,Branco,Hvítur litur,Biały,Branco,Білий
+ochercolor,Ocher,Ocre,Ocre,Annar litur,Ochra,Ocre,Охра
+spacing,Spacing,Espaciado,Espazamento,Bil,Rozstaw,Espaçamento,Інтервал
+high,High,Alto,Alto,Hátt,Wysoki,Alto,Високий
+medium,Medium,Medio,Medio,Miðlungs,Średni,Médio,Середній
+normal,Normal,Normal,Normal,Eðlilegt,Normalna,Normal,нормальний
+web_audio_description,Audio description of the website,Audiodescripción del sitio web,Audiodescrición do sitio web,Hljóðlýsing á vefsíðu,Audiodeskrypcja strony internetowej,Audiodescrição do site,Аудіо опис сайту
+max_size,Maximum size,Tamaño máximo,Tamaño máximo,Hámarksstærð,Największy rozmiar,Tamanho máximo,Максимальний розмір
+ukrainian,Ukrainian,Ucraniano,Ucraíno,Úkraínska,Ukraiński,Ucraniano,українська

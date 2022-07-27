@@ -51,6 +51,7 @@
 
     </header>
     <main>
+        <% let coins= ["", "€", "kr", "zł", "₴", "$"] %>
         <nav>
             <div id="modal_download" class="modal" style="display: none;">
                 <div class="modal-content" style="width: 950px;">
@@ -112,6 +113,13 @@
                                 <a class="dropdown-item" href="#" value="portuguese"
                                     translation="portuguese">Portugués</a>
                                 <img class="country_flag" src="./images/portuguese_flag.png">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="country_div">
+                                <a class="dropdown-item" href="#" value="ukrainian"
+                                    translation="ukrainian">Ucraniano</a>
+                                <img class="country_flag" src="./images/ukraine_flag.png">
                             </div>
                         </li>
                     </ul>
@@ -881,8 +889,8 @@
 
                                                     <select name="parking_price_coin" id="validationPrecioPlazasCoin"
                                                         required>
-                                                        <% for (let i of ["","€", "kr" , "zł" ]) { %>
-                                                        <option value="<%= i %>">
+                                                        <% for (let i of coins) { %>
+                                                            <option value="<%= i %>">
                                                             <%= i %>
                                                         </option>
                                                         <% } %>
@@ -914,7 +922,7 @@
 
                                                     <select name="disabled_parking_price_coin"
                                                         id="validationPrecioPlazasMinusvalidosCoin" required>
-                                                        <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                                        <% for (let i of coins) { %>
                                                         <option value="<%= i %>">
                                                             <%= i %>
                                                         </option>
@@ -1008,7 +1016,7 @@
 
 
                                         <select name="normal_price_coin" id="validationPrecioCoin" required>
-                                            <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                            <% for (let i of coins) { %>
                                             <option value="<%= i %>">
                                                 <%= i %>
                                             </option>
@@ -1053,7 +1061,7 @@
 
                                         <select name="reduced_price_when_coin" id="validationPrecioReducidoCoin"
                                             required>
-                                            <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                            <% for (let i of coins) { %>
                                             <option value="<%= i %>">
                                                 <%= i %>
                                             </option>
@@ -1089,7 +1097,7 @@
                                     <div class="col-md-6">
                                         <label for="validationPrecioFamiliaExtra" class="form-label"
                                             translation="member_price">Precio por miembro
-                                            (€)</label>
+                                        </label>
                                         <div class="col-coin">
                                             <input type="number" class="form-control number_coin" name="member_price"
                                                 id="validationPrecioFamiliaExtra">
@@ -1097,7 +1105,7 @@
                                                 id="validationPrecioFamiliaExtraCoin" minlength="1" , maxlength="1"
                                                 placeholder="€" required>-->
                                             <select name="member_price_coin" id="validationPrecioFamiliaExtraCoin">
-                                                <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                                <% for (let i of coins) { %>
                                                 <option value="<%= i %>">
                                                     <%= i %>
                                                 </option>
@@ -1335,7 +1343,7 @@
 
                                                 <select name="price_private_tour_coin"
                                                     id="validationPrecioVisitaPrivadaCoin">
-                                                    <% for (let i of ["","€", "kr" , "zł" ]) { %>
+                                                    <% for (let i of coins) { %>
                                                     <option value="<%= i %>">
                                                         <%= i %>
                                                     </option>
