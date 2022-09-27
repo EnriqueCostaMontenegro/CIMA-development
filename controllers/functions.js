@@ -5,6 +5,7 @@ const {
   different_languages,
   normal_price,
   reduced_price,
+  language,
 } = require("../public/js/language.js");
 const fs = require("fs");
 const dictionary = require("../public/js/language.js");
@@ -251,9 +252,55 @@ module.exports.validateForm = async function (req, res, next) {
   let selected_text_type = "";
   let enabled_fields = "";
 
+
+  // function to obtain the remote country using a whois of the remote address
+  let remoteCountry= "unknown"
+  //remoteAddress= "333.333.333.333"
+  //remoteAddress= "pepito.manolito.com"
+  //async function countryUsingWhoIs() {
+  async function countryUsingWhoIs(remoteAddress) {
+    const whois = require('whois-json');
+
+    try {
+      //console.log("looking whois of: ", remoteAddress);
+      var results = await whois(remoteAddress);
+      //console.log(results);
+      return results
+    } catch (err) {throw err}
+  }
+
+
   console.log("[DEBUG INFO] Version: ", req.body["version"]);
   console.log("[DEBUG INFO] Timestamp: ", new Date());
+  req.body["creation_time"] = new Date();
+  let remoteAddress= "" + req.connection.remoteAddress
+  req.body["origin_IP"] = remoteAddress
+  console.log("[DEBUG INFO] Request req.body[origin_IP]: ", req.body["origin_IP"])
+  results= countryUsingWhoIs(remoteAddress)
+    .then((results) => { 
+      remoteCountry= results["country"]
+      //console.log("[DEBUG INFO] Request remoteCountry: ", remoteCountry)
+      req.body["origin_country"] = remoteCountry
+      console.log("[DEBUG INFO] Request req.body[origin_country]: ", req.body["origin_country"])
+    })
+    /* .then(undefined, err => { 
+      console.log("[DEBUG INFO] no data countryUsingWwhois")
+      remoteCountry = "unknown"
+    }) */
+    .catch(err => {
+      console.log("[DEBUG INFO] err countryUsingWwhois: ", err)
+      remoteCountry = "unknown"
+    })
+
   //console.log("[DEBUG INFO] Request body: ", req.body)
+  //console.log("[DEBUG INFO] req.headers[accept-language]: ", req.headers["accept-language"])
+  //console.log("[DEBUG INFO] Request host: ", req.get('host'))
+  //console.log("[DEBUG INFO] Request origin: ", req.get('origin'))
+  //console.log("[DEBUG INFO] Request headers: ", req.headers)
+  //console.log("[DEBUG INFO] Request remoteAddress: ", typeof remoteAddress)
+  //console.log("[DEBUG INFO] Request remoteCountry: ", remoteCountry)
+  //console.log("[DEBUG INFO] Request remoteCountry: ", typeof remoteCountry)
+
 
   if (
     req.body["version"] != constants.VERSION ||
@@ -2141,8 +2188,9 @@ module.exports.validateForm = async function (req, res, next) {
               " " +
               dictionary["slots"][lang] +
               s;
-            if (parseInt(req.body["disabled_num_slots"]) > 0) {
-              try {
+              //if (parseInt(req.body["disabled_num_slots"]) > 0) {
+              if (req.body["disabled_price_slots"] !== "") {
+                try {
                 const disabled_price_slot = parseFloat(
                   req.body["disabled_price_slots"].replace("€", "").trim()
                 );

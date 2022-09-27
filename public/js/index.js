@@ -4,6 +4,7 @@ var UUID = null;
 var font = "LexieReadable";
 var bgcolor = "#f9f8ec"
 var spacing = "high"
+var creationTime= "testing"
 var previous_blob_uri = null;
 var pdf = {
   pdf_document: null,
@@ -17,7 +18,7 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.2.03";
+var version = "1.2.04";
 const dictionary = getDictionary();
 
 Object.defineProperty(pdf, "isReady", {
@@ -1082,6 +1083,9 @@ async function reloadPDF(download = false) {
       }
       data["bgcolor"] = bgcolor;
       data["spacing"] = spacing;
+      data["creation_time"] = creationTime;
+      data["origin_IP"] = "unknown"
+      data["origin_country"] = "unknown"
       data["version"] = version;
       data["enabled_fields"] = Array.from(
         $("#fieldSelector").find(":selected")

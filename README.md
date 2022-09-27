@@ -105,6 +105,14 @@ Enrique Costa Montenegro
 
 ### Versions
 
+**v1.2.04 (27/09/2022)**
+
+-Save in database time of creation of document, requesting ip and country
+
+-Added some missing translations
+
+-Small bug fixes
+
 **v1.2.03 (27/07/2022)**
 
 -Fixed wrong size of rectangle for title of section for different fonts
@@ -135,11 +143,13 @@ Enrique Costa Montenegro
 
 -Initial version
 
-### Bug fixing / Development report (01/07/2022)
+### Bug fixing / Development report (01/09/2022)
 
 [ ] Explanation of fields and elements in the webpage
 
 [ ] Review number of banners and logos that can be uploaded
 
 [ ] Review all the functions in its code file
+
+[ ] Sustitute text "press" in links for URL, shorted if necessary
 
