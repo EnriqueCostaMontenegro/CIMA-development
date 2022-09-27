@@ -1760,6 +1760,15 @@ const dictionary = {
     "pl": "Ukraiński",
     "pt": "Ucraniano",
     "uk": "українська"
+  },
+  "specific_date": {
+    "en": "Does it take place on specific dates or periods?",
+    "es":	"¿Tiene lugar en fechas o períodos específicos?",
+    "gl":	"Ten lugar en datas ou períodos concretos?",
+    "is":	"Fer það fram á ákveðnum dagsetningum eða tímabilum?",
+    "pl":	"Czy odbywa się w określonych terminach lub okresach?",
+    "pt": "Ocorre em datas ou períodos específicos?",
+    "uk": "Чи відбувається це в конкретні дати чи періоди?"
   }
 }
 
