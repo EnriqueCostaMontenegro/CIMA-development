@@ -5,6 +5,7 @@ var font = "LexieReadable";
 var bgcolor = "#f9f8ec"
 var spacing = "high"
 var creationTime= "testing"
+var creationHour= "testing"
 var previous_blob_uri = null;
 var pdf = {
   pdf_document: null,
@@ -18,7 +19,7 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.2.04";
+var version = "1.2.05";
 const dictionary = getDictionary();
 
 Object.defineProperty(pdf, "isReady", {
@@ -357,12 +358,13 @@ window.onload = function () {
     });
 
   // Event listener to reset form button
-  /*document
+  document
     .getElementById("clear_form_button")
     .addEventListener("click", function (e) {
       document.getElementById("mainForm").reset();
     });
 
+  /*  
   document
     .getElementById("sample_fill_form")
     .addEventListener("click", function (e) {
@@ -1084,6 +1086,7 @@ async function reloadPDF(download = false) {
       data["bgcolor"] = bgcolor;
       data["spacing"] = spacing;
       data["creation_time"] = creationTime;
+      data["creation_hour"] = creationHour;
       data["origin_IP"] = "unknown"
       data["origin_country"] = "unknown"
       data["version"] = version;

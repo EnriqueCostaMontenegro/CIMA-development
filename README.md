@@ -105,6 +105,16 @@ Enrique Costa Montenegro
 
 ### Versions
 
+**v1.2.05 (20/10/2022)**
+
+-Fixed errors saving in database
+
+-Update pdf off by default
+
+-Updated the way links appear in the pdf
+
+-Fixed Reset Form button
+
 **v1.2.04 (27/09/2022)**
 
 -Save in database time of creation of document, requesting ip and country
@@ -150,6 +160,4 @@ Enrique Costa Montenegro
 [ ] Review number of banners and logos that can be uploaded
 
 [ ] Review all the functions in its code file
-
-[ ] Sustitute text "press" in links for URL, shorted if necessary
 
