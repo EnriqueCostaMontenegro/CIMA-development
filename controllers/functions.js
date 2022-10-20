@@ -19,6 +19,8 @@ var MongoClient = require("mongodb").MongoClient;
 var url = "mongodb://" + jsonData["DB"]["HOST"] + ":" + jsonData["DB"]["PORT"];
 console.log(url);
 
+var globalRemoteCountries= {}
+
 //Creation of the images folders on start in case they're not created
 fs.mkdirSync("./user_images/logos/", {
   recursive: true
@@ -246,15 +248,8 @@ module.exports.validateForm = async function (req, res, next) {
     global_background_color = req.body["bgcolor"];
   }
 
-  var new_pdf_document = createPDFDocument();
-  var doc = new_pdf_document.document;
-  var structure = new_pdf_document.structure;
-  let selected_text_type = "";
-  let enabled_fields = "";
-
-
   // function to obtain the remote country using a whois of the remote address
-  let remoteCountry= "unknown"
+  var remoteCountry= "unknown"
   //remoteAddress= "333.333.333.333"
   //remoteAddress= "pepito.manolito.com"
   //async function countryUsingWhoIs() {
@@ -270,36 +265,67 @@ module.exports.validateForm = async function (req, res, next) {
   }
 
 
-  console.log("[DEBUG INFO] Version: ", req.body["version"]);
-  console.log("[DEBUG INFO] Timestamp: ", new Date());
-  req.body["creation_time"] = new Date();
+  console.log("\n\n\n[DEBUG INFO] Version: ", req.body["version"]);
+  //console.log("[DEBUG INFO] Timestamp: ", new Date());
+  req.body["creation_time"] = new Date().toLocaleDateString();
+  req.body["creation_hour"] = new Date().toLocaleTimeString();
+  console.log("[DEBUG INFO] req.body[creation_time] : ", req.body["creation_time"]);
+  console.log("[DEBUG INFO] req.body[creation_hour] : ", req.body["creation_hour"]);
   let remoteAddress= "" + req.connection.remoteAddress
   req.body["origin_IP"] = remoteAddress
   console.log("[DEBUG INFO] Request req.body[origin_IP]: ", req.body["origin_IP"])
-  results= countryUsingWhoIs(remoteAddress)
-    .then((results) => { 
-      remoteCountry= results["country"]
-      //console.log("[DEBUG INFO] Request remoteCountry: ", remoteCountry)
-      req.body["origin_country"] = remoteCountry
-      console.log("[DEBUG INFO] Request req.body[origin_country]: ", req.body["origin_country"])
-    })
-    /* .then(undefined, err => { 
-      console.log("[DEBUG INFO] no data countryUsingWwhois")
-      remoteCountry = "unknown"
-    }) */
-    .catch(err => {
-      console.log("[DEBUG INFO] err countryUsingWwhois: ", err)
-      remoteCountry = "unknown"
-    })
 
-  //console.log("[DEBUG INFO] Request body: ", req.body)
-  //console.log("[DEBUG INFO] req.headers[accept-language]: ", req.headers["accept-language"])
-  //console.log("[DEBUG INFO] Request host: ", req.get('host'))
-  //console.log("[DEBUG INFO] Request origin: ", req.get('origin'))
-  //console.log("[DEBUG INFO] Request headers: ", req.headers)
-  //console.log("[DEBUG INFO] Request remoteAddress: ", typeof remoteAddress)
-  //console.log("[DEBUG INFO] Request remoteCountry: ", remoteCountry)
-  //console.log("[DEBUG INFO] Request remoteCountry: ", typeof remoteCountry)
+  // initialize the object with ips and countries if we have more than 100
+  //console.log("[DEBUG INFO] Updating globalRemoteCountries")
+  if ( Object.keys(globalRemoteCountries).length > 100 ) {
+    //console.log("[DEBUG INFO] length of globalRemoteCountries: ", Object.keys(globalRemoteCountries).length)
+    //console.log("[DEBUG INFO] initializing globalRemoteCountries: ", Object.keys(globalRemoteCountries).length)
+    globalRemoteCountries= {}
+    //console.log("[DEBUG INFO] length of globalRemoteCountries: ", Object.keys(globalRemoteCountries).length)
+  }
+
+  // get country of an ip from the object if exist, if not we look using whois and add it to the object
+  if ((remoteAddress in globalRemoteCountries) && (globalRemoteCountries[remoteAddress] !== "error")) {
+    //console.log("[DEBUG INFO] remoteAddress ", remoteAddress,  "in globalRemoteCountries", globalRemoteCountries)
+    req.body["origin_country"]= globalRemoteCountries[remoteAddress]
+    console.log("[DEBUG INFO] Request req.body[origin_country]: ", req.body["origin_country"])
+  } else {
+    results= countryUsingWhoIs(remoteAddress)
+      .then((results) => { 
+        remoteCountry= results["country"]
+        //console.log("[DEBUG INFO] Request remoteCountry: ", remoteCountry)
+        let splitArray= remoteCountry.split(" ")
+        if (splitArray.length == 2) {
+          if (splitArray[0] === splitArray[1]) remoteCountry= splitArray[0]
+        }
+        //console.log("[DEBUG INFO] Request remoteCountry: ", remoteCountry)
+        req.body["origin_country"] = remoteCountry //global_country
+        //console.log("[DEBUG INFO] remoteCountry: ", remoteCountry)
+        console.log("[DEBUG INFO] Request req.body[origin_country]: ", req.body["origin_country"])
+        globalRemoteCountries[remoteAddress]= remoteCountry
+        //console.log("[DEBUG INFO]globalRemoteCountries: ", globalRemoteCountries)
+      })
+      /* .then(undefined, err => { 
+        console.log("[DEBUG INFO] no data countryUsingWwhois")
+        remoteCountry = "unknown"
+      }) */
+      .catch(err => {
+        console.log("[DEBUG INFO] err countryUsingWwhois: ", err)
+        remoteCountry = "error"
+        req.body["origin_country"] = remoteCountry
+        globalRemoteCountries[remoteAddress]= remoteCountry
+        console.log("[DEBUG INFO]globalRemoteCountries: ", globalRemoteCountries)
+      })
+  }
+
+
+  
+  var new_pdf_document = createPDFDocument();
+  var doc = new_pdf_document.document;
+  var structure = new_pdf_document.structure;
+  let selected_text_type = "";
+  let enabled_fields = "";
+  
 
 
   if (
@@ -912,6 +938,7 @@ module.exports.validateForm = async function (req, res, next) {
           language = req.headers["accept-language"].split("-")[0];
         } catch (e) { }
         pdf_structure["language"] = language;
+        console.log("Going to store data en mongodb...");
         storeData(pdf_structure);
       }
       console.log("PDF Created and sent!");
@@ -1773,12 +1800,14 @@ module.exports.validateForm = async function (req, res, next) {
     ); 
     
     // print the link  
-    var url = req.body["url_online_event"];
+    var url = req.body["url_online_event"].toLowerCase();
+    let urlSite= getSiteFromUrl(url)
+
     doc.fontSize(normal_font_size)
     .fillColor('blue')
-    .text(url, 134, global_pos_y + 52)
-    .underline(134, global_pos_y + 52, doc.widthOfString(url), doc.currentLineHeight(), {color: 'blue'})
-    .link(134, global_pos_y + 52, doc.widthOfString(url), doc.currentLineHeight(), url)
+    .text(urlSite, 134, global_pos_y + 52)
+    .underline(134, global_pos_y + 52, doc.widthOfString(urlSite), doc.currentLineHeight(), {color: 'blue'})
+    .link(134, global_pos_y + 52, doc.widthOfString(urlSite), doc.currentLineHeight(), url)
 
     // increase the global position y given the elements used
     global_pos_y += 80 + constants.SPACE_BETWEEN_ELEMENTS;
@@ -2390,13 +2419,15 @@ module.exports.validateForm = async function (req, res, next) {
       print_image_fit(global_pos_y, "online", req.body, pos_x + 80, pos_y + 15, 35, 35, true);
 
       // print the link  
-      let url = req.body["ph_link"];
-      let urlText= dictionary["press"][lang]
+      let url = req.body["ph_link"].toLowerCase();
+      //let urlText= dictionary["press"][lang]
+      let urlSite= getSiteFromUrl(url)
+
       doc.fontSize(normal_font_size)
       .fillColor('blue')
-      .text(urlText, pos_x + 130, global_pos_y + pos_y + 20)
-      .underline(pos_x + 130, global_pos_y + pos_y + 25, doc.widthOfString(urlText), doc.currentLineHeight(), {color: 'blue'})
-      .link(pos_x + 130, global_pos_y + pos_y + 25, doc.widthOfString(urlText), doc.currentLineHeight(), url)
+      .text(urlSite, pos_x + 130, global_pos_y + pos_y + 20)
+      .underline(pos_x + 130, global_pos_y + pos_y + 25, doc.widthOfString(urlSite), doc.currentLineHeight(), {color: 'blue'})
+      .link(pos_x + 130, global_pos_y + pos_y + 25, doc.widthOfString(urlSite), doc.currentLineHeight(), url)
 
       pos_x += 225;
     }
@@ -3347,13 +3378,15 @@ module.exports.validateForm = async function (req, res, next) {
       print_image_fit(global_pos_y, "virtual_tours", req.body, 130, pos_y + 90, 35, 35, true);
 
       // print the link  
-      let url = req.body["link_virtual_tour"];
-      let urlText= dictionary["press"][lang]
+      let url = req.body["link_virtual_tour"].toLowerCase();
+      //let urlText= dictionary["press"][lang]
+      let urlSite= getSiteFromUrl(url)
+
       doc.fontSize(normal_font_size)
       .fillColor('blue')
-      .text(urlText, 170, global_pos_y + pos_y + 100)
-      .underline(170, global_pos_y + pos_y + 100, doc.widthOfString(urlText), doc.currentLineHeight(), {color: 'blue'})
-      .link(170, global_pos_y + pos_y + 100, doc.widthOfString(urlText), doc.currentLineHeight(), url)
+      .text(urlSite, 170, global_pos_y + pos_y + 100)
+      .underline(170, global_pos_y + pos_y + 100, doc.widthOfString(urlSite), doc.currentLineHeight(), {color: 'blue'})
+      .link(170, global_pos_y + pos_y + 100, doc.widthOfString(urlSite), doc.currentLineHeight(), url)
     }
 
     // increase the global position y given the elements used
@@ -3545,6 +3578,40 @@ module.exports.validateForm = async function (req, res, next) {
  
 
 
+  /**
+  * function to return a site from an url
+  *
+  * @param {String} url text of the url
+  * 
+  * @return {String} site of the url
+  */
+  function getSiteFromUrl(url) {
+    let urlSite= ""
+    let urlTemp= ""
+
+    //console.log("[DEBUG] url: ", url)
+
+    if ( url.startsWith("http://") ) {
+      //console.log("[DEBUG] url starts with http://")
+      urlTemp= url.replace("http://", "")
+      //console.log("[DEBUG] urlTemp: ", urlTemp)
+      urlSite= "http://" + urlTemp.split("/")[0]
+      //console.log("[DEBUG] urlSite: ", urlSite)
+    } else if ( url.startsWith("https://") ) {
+      //console.log("[DEBUG] url starts with https://")
+      urlTemp= url.replace("https://", "")
+      //console.log("[DEBUG] urlTemp: ", urlTemp)
+      urlSite= "https://" + urlTemp.split("/")[0]
+      //console.log("[DEBUG] urlSite: ", urlSite)
+    } else {
+      urlSite= url.split("/")[0]
+      //console.log("[DEBUG] urlSite: ", urlSite)
+    }
+
+    return urlSite
+  }
+
+
 
   /**
   * Function to estimate the size of a sentence given the option used of space between characters
@@ -3650,7 +3717,12 @@ async function storeData(pdf_structure) {
       return
     }
 
+    //console.log("[DEBUG] db: ", db )
+
     var dbo = db.db(jsonData["DB"]["BD_NAME"]);
+
+    //console.log("[DEBUG] dbo: ", dbo )
+
     dbo
       .collection(jsonData["DB"]["COLLECTION"])
       .find({
@@ -3662,37 +3734,43 @@ async function storeData(pdf_structure) {
       .toArray(function (err, resultUUID) {
         if (err) db.close();
         let addElement = false;
+
+        //console.log("[DEBUG] pdf_structure: ", pdf_structure )
+        //console.log("[DEBUG] resultUUID: ", resultUUID )
+        //console.log("[DEBUG] resultUUID.length: ", resultUUID.length )
+
         if (resultUUID.length === 0) {
           addElement = true;
-          for (let field of constants.FORM_FIELDS) {
+          //console.log("[DEBUG] checking if ", constants.FORM_FIELDS2, " are empty")
+          for (let field of constants.FORM_FIELDS2) {
             if (pdf_structure[field] === "") {
               addElement = false;
               break;
             }
           }
+          //console.log("[DEBUG] addElement: ", addElement)
         } else {
           //Checking if structura of pdf for that UUID is the same:
-          let [isTheSame, equalElement] = checkSimilarity(
-            resultUUID,
-            pdf_structure
-          );
+          let [isTheSame, equalElement] = checkSimilarity(resultUUID, pdf_structure);
+          console.log("[DEBUG] checkSimilarity: ", isTheSame) // , " - ", equalElement, "\n")
+
           if (isTheSame) {
-            let [isExactlyEqual, update_structure] = checkExactlyEqual(
-              equalElement,
-              pdf_structure
-            );
+            let [isExactlyEqual, update_structure] = checkExactlyEqual(equalElement, pdf_structure);
+            console.log("[DEBUG] checkExactlyEqual: ", isExactlyEqual , " : ", update_structure)
+
             // Checking if it is exactly the same or it is slighly different.
             if (!isExactlyEqual) {
               //Update
               dbo
                 .collection(jsonData["DB"]["COLLECTION"])
-                .updateOne({
+                //.updateOne({
+                .updateMany({
                   UUID: pdf_structure["UUID"]
                 }, {
                   $set: update_structure
                 },
                   function (err, result) {
-                    console.log("Stored!");
+                    console.log("Updated in DB!");
                     db.close();
                   }
                 );
@@ -3701,17 +3779,21 @@ async function storeData(pdf_structure) {
             addElement = true;
           }
         }
+
         if (addElement) {
           dbo
             .collection(jsonData["DB"]["COLLECTION"])
             .insertOne(pdf_structure, function (err, result) {
-              console.log("Stored!");
+              console.log("Stored in DB new element!");
               db.close();
             });
         }
       });
   });
 }
+
+
+
 
 /**
  * This function checks the similarity among the elements of the array and the new structure.
@@ -3733,14 +3815,15 @@ function checkSimilarity(resultUUID, pdf_structure) {
     "zip",
     "city",
     "country",
+    "creation_time"
   ];
+
   for (let element of resultUUID) {
     let isTheSame = true;
     for (var field of fields) {
       try {
-        if (
-          element[field].toLowerCase() !== pdf_structure[field].toLowerCase()
-        ) {
+        if ( element[field].toLowerCase() !== pdf_structure[field].toLowerCase() ) {
+          console.log("[DEBUG] checkSimilarity of ", field, " is: ", element[field].toLowerCase(), " : ", pdf_structure[field].toLowerCase())
           isTheSame = false;
           break;
         }
@@ -3748,8 +3831,13 @@ function checkSimilarity(resultUUID, pdf_structure) {
     }
     if (isTheSame) return [true, element];
   }
+
   return [false, {}];
 }
+
+
+
+
 
 /**
  * This function checks the similarity among the elements of the array and the new structure.
@@ -3764,16 +3852,30 @@ function checkExactlyEqual(element, pdf_structure) {
   let same = true;
   let update_structure = {};
   const sameLength =
-    Object.entries(pdf_structure).length === Object.entries(element).length;
+    Object.entries(pdf_structure).length === (Object.entries(element).length - 1);
+  //console.log("[DEBUG] checkExactlyEqual sameLength ", sameLength, " : ", Object.entries(pdf_structure).length, " - ", (Object.entries(element).length - 1))
+
   for (const [key, value] of Object.entries(pdf_structure)) {
     try {
-      if (value !== element[key]) {
-        same = false;
-        update_structure[key] = value;
+      if (Array.isArray(value)) {
+        if(JSON.stringify(value) == JSON.stringify(element[key])) {
+          //console.log("[DEBUG] checkExactlyEqual equal ", JSON.stringify(value), " - ",  JSON.stringify(element[key]))
+        } else {
+          same = false;
+          update_structure[key] = value;
+          console.log("[DEBUG] checkExactlyEqual update_structure different ", key, ": ", value, " - ", element[key])
+        }
+      } else {
+        if (value !== element[key]) {
+          same = false;
+          update_structure[key] = value;
+          console.log("[DEBUG] checkExactlyEqual update_structure different ", key, ": ", value, " - ", element[key])
+        }
       }
     } catch (e) {
       same = false;
       update_structure[key] = value;
+      console.log("[DEBUG] checkExactlyEqual update_structure catch ", key, ": ", value, " - ", element[key])
     }
   }
   return [same && sameLength, update_structure];
