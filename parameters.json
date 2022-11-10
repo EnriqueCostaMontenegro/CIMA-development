@@ -1,5 +1,5 @@
 {
-    "version": "v1.2.06dev",
+    "version": "v1.2.06",
     "DB": {
         "HOST": "0.0.0.0",
         "PORT": 27017,
