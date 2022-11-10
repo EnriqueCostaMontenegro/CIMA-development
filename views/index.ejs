@@ -72,6 +72,12 @@
                     <button type="button" id="clear_form_button" class="btn btn-primary" onclick=""
                         translation="reset_form">Reiniciar Formulario</button>
 
+                    <button type="button" id="export_form_button" class="btn btn-primary" onclick=""
+                    translation="export_form">Exportar Formulario</button> 
+
+                    <button type="button" id="import_form_button" class="btn btn-primary" onclick=""
+                    translation="import_form">Importar Formulario</button> 
+
                    <!--- <button type="button" id="sample_fill_form" class="btn btn-primary" onclick=""
                         translation="fill_form">Fill sample form</button>-->
 
@@ -275,7 +281,7 @@
                 <div class="col">
                     <div class="form-check form-switch">
                         <!--input class="form-check-input" type="checkbox" id="autoreload_pdf" checked-->
-                        <input class="form-check-input" type="checkbox" id="autoreload_pdf">
+                        <input class="form-check-input" type="checkbox" id="autoreload_pdf" unckecked>
                         <label class="form-check-label" for="autoreload_pdf" translation="autoreload">Actualizar PDF
                             automáticamente</label>
                     </div>
@@ -420,13 +426,13 @@
                                         </div>
                                         <div class="row" id="validationFechaEspecificaHidden" hidden>
                                             <label for="validationFechaDatePicker" class="form-label"
-                                                translation="beginning_date">Fecha inicio</label>
+                                                translation="beginning_date">Fecha de inicio</label>
+                                                
                                             <input type="date" id="validationFechaInicioDatePicker"
                                                 name="start_date" max="2030-12-31">
 
-
                                             <label for="validationFechaDatePicker" class="form-label"
-                                                translation="ending_date">Fecha fin</label>
+                                                translation="ending_date">Fecha de fin</label>
 
                                             <input type="date" id="validationFechaFinDatePicker" name="end_date"
                                                 max="2030-12-31">

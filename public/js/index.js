@@ -6,6 +6,7 @@ var bgcolor = "#f9f8ec"
 var spacing = "high"
 var creationTime= "testing"
 var creationHour= "testing"
+var selectedLanguage= "es"
 var previous_blob_uri = null;
 var pdf = {
   pdf_document: null,
@@ -19,8 +20,40 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.2.05";
+var version = "1.2.06dev";
 const dictionary = getDictionary();
+
+var formFieldsValue= [ "validationTipoActividadCultural", "validationActivityName", "validationShortDescription", "validationFechaInicioDatePicker", 
+"validationFechaFinDatePicker", "opening_hour_morning", "opening_minute_morning", "opening_period_morning", "closing_hour_morning", "closing_minute_morning",
+"closing_period_morning", "opening_hour_afternoon", "opening_minute_afternoon", "opening_period_afternoon", "closing_hour_afternoon", "closing_minute_afternoon",
+"closing_period_afternoon", "validationURL", "validationCalle", "validationNumero", "validationCP", "validationCiudad", "validationPais", 
+"validationTextareaAdditionalInfo", "validationBusLines", "validationBusTimetable", "validationMetroLines", "validationMetroTimetable",
+"validationNumPlazas", "validationPrecioPlazas", "validationPrecioPlazasCoin", "validationPlazasMinusvalidos", "validationPrecioPlazasMinusvalidos", 
+"validationPrecioPlazasMinusvalidosCoin", "validationOnlineTextarea", "validationOnsiteTextarea", "validationPrecio", "validationPrecioCoin",
+"validationPrecioReducidoTextarea", "validationPrecioReducidoCoin", "validationPrecioFamiliaExtra", "validationPrecioFamiliaExtraCoin", 
+"validationMaxNumNinhos", "validationMaxEdadNinhos", "validationTipoDescuentoTextarea", "validationDuracionVisitaPrivadaCiudad", 
+"validationPrecioVisitaPrivada", "validationPrecioVisitaPrivadaCoin", "validationVisitasVirtualesTextArea", "validationInformacionPrevia", 
+"validationInformacionExtra" ]
+
+var formFieldsCheck= [ "validationFechaEspecifica", "monday_checkbox", "tuesday_checkbox", "wednesday_checkbox", "thursday_checkbox",
+"friday_checkbox", "saturday_checkbox", "sunday_checkbox", "validationTaxi" ,"validationCoche", "validationAutobus", "validationMetro", "validationAparcamiento", 
+"validationOnline", "validationOnsite", "validationPrecioReducido", "validationPrecioFamilia", "validationPrecioInterprete", "validationOtroTipoDescuento",
+"validation_accessible_areas", "validation_lifts", "validation_toilets", "validation_disabled_toilets", "validation_changing", "validation_cloakrooms",
+"validation_blind_paths", "validation_interpreters", "validation_heats", "validation_air_condition",
+"validation_chairs_rest", "validation_interactive_objects", "validation_quiet_relaxation_room", "validation_soundproofing_headphones",
+"validation_availability_assistant", "validation_shop", "validation_cafeteria_bar", "validation_cantina", "validation_web_audio_description",
+"validation_sign_guides", "validation_audible_guides", "validation_braille_guides",
+"validation_pictogram_guides", "validation_easy_vocabulary_guides", "validation_different_languages", "validation_private_tours",
+"validation_photographs_allowed", "validation_flash_allowed", "validation_recording_allowed", 
+"validation_food_drink_allowed", "validation_bring_own_food", "validation_backpacks_allowed",
+"validation_photographs_allowedNo", "validation_flash_allowedNo", "validation_recording_allowedNo", 
+"validation_food_drink_allowedNo", "validation_bring_own_foodNo", "validation_backpacks_allowedNo",
+"validation_wear_mask", "validation_handwashing", "validation_social_distance",
+"validation_temperature_control", "validation_hand_sanitizer", "validationVisitasVirtuales" ]
+
+
+
+
 
 Object.defineProperty(pdf, "isReady", {
   set: function (params) {
@@ -47,6 +80,10 @@ window.onload = function () {
   let intervalId;
   const update_period = 0.5 * 60000; // num * minutos
   let checkbox = document.getElementById("autoreload_pdf");
+  //console.log("checkbox:", checkbox);
+  //console.log("checkbox.id:", checkbox.id);
+  //console.log("checkbox.ckecked:", checkbox.checked);
+  //console.log("checkbox.unckecked:", checkbox.unchecked);
 
   //Generate random UUID
   if (document.cookie === "" || !document.cookie.includes("UUID")) {
@@ -101,8 +138,10 @@ window.onload = function () {
   //Store variable in window session for future access or reloads
   if (checkbox.id in window.sessionStorage) {
     checkbox.checked = eval(window.sessionStorage.getItem(checkbox.id));
+    //console.log("eval(window.sessionStorage.getItem(checkbox.id)", eval(window.sessionStorage.getItem(checkbox.id)))
   } else {
-    checkbox.checked = true;
+    //checkbox.checked = true;
+    checkbox.checked = false;
   }
 
   //Activate auto reload
@@ -287,6 +326,7 @@ window.onload = function () {
       } else if (e.target.attributes["value"].value === "ukrainian") {
         html.lang = "uk";
       }
+      selectedLanguage = html.lang
       if (previous_lang !== html.lang) {
         change_language(html.lang);
         reloadPDF(); //reload automatically on language changes
@@ -363,6 +403,115 @@ window.onload = function () {
     .addEventListener("click", function (e) {
       document.getElementById("mainForm").reset();
     });
+
+
+
+    
+  // Event listener to export form button
+  document
+    .getElementById("export_form_button")
+    .addEventListener("click", function (e) {
+      console.log("Export form")
+
+      // object to contain all the different elements with their values
+      let responses= {} //document.getElementById("mainForm").getAttributeNames(); //{};
+
+      // add elemnts with values
+      for (let field of formFieldsValue) {
+        //console.log (field, " - ", document.getElementById(field).value)
+        //console.log (field, " checked - ", document.getElementById(field).checked)
+        responses[field] = document.getElementById(field).value;
+      }
+
+      // add checked elements
+      for (let field of formFieldsCheck) {
+        //console.log (field, " - ", document.getElementById(field).value)
+        //console.log (field, " checked - ", document.getElementById(field).checked)
+        responses[field] = document.getElementById(field).checked;
+      }
+
+      let data= JSON.stringify(responses)
+      console.log("data: ", data)
+      let filename= "CIMA-" + document.getElementById("validationTipoActividadCultural").value + "-" + document.getElementById("validationActivityName").value + ".txt"
+      console.log("filename: ", filename)
+      let type= 'text/plain'
+      console.log("type: ", type)
+
+      let file = new Blob([data], {type: type});
+      console.log("file: ", file)
+     
+      if (window.navigator.msSaveOrOpenBlob) { // IE10+
+          window.navigator.msSaveOrOpenBlob(file, filename);
+      } else { // Others
+          let a = document.createElement('a');
+          let url = URL.createObjectURL(file);
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function() {
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+          }, 0);
+      }
+
+    });
+
+
+
+
+  // Event listener to export form button
+  document
+    .getElementById("import_form_button")
+    .addEventListener("click", function (e) {
+      console.log("Import form")
+
+      let input = document.createElement('input');
+      input.type = 'file';
+
+      input.onchange = e => { 
+
+        // getting a hold of the file reference
+        let file = e.target.files[0]; 
+
+        // setting up the reader
+        let reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+
+        // here we tell the reader what to do when it's done reading...
+        reader.onload = readerEvent => {
+            let content = readerEvent.target.result; // this is the content!
+            //console.log( content );
+
+            let data = JSON.parse(content);
+            //console.log(data)
+
+            // add elemnts with values
+            for (let field of formFieldsValue) {
+              if ((data[field] !== undefined) && (data[field] !== "")) {
+                //console.log(field, " - ", data[field])
+                document.getElementById(field).value = data[field]
+                //console.log(document.getElementById(field).value)
+              }
+            }
+
+            // add checked elements
+            for (let field of formFieldsCheck) {
+              if ((data[field] !== undefined) && (data[field] !== false)) {
+                //console.log(field, " - ", data[field])
+                document.getElementById(field).checked = data[field]
+                //console.log(document.getElementById(field).value)
+              }
+            }
+          }
+
+      }
+
+      input.click();
+
+    });
+
+    
 
   /*  
   document
@@ -1087,6 +1236,7 @@ async function reloadPDF(download = false) {
       data["spacing"] = spacing;
       data["creation_time"] = creationTime;
       data["creation_hour"] = creationHour;
+      data["selected_language"] = selectedLanguage
       data["origin_IP"] = "unknown"
       data["origin_country"] = "unknown"
       data["version"] = version;
