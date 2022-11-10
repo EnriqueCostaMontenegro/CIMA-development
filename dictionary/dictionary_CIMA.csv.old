@@ -188,12 +188,7 @@ ochercolor,Ocher,Ocre,Ocre,Annar litur,Ochra,Ocre,Охра
 spacing,Spacing,Espaciado,Espazamento,Bil,Rozstaw,Espaçamento,Інтервал
 high,High,Alto,Alto,Hátt,Wysoki,Alto,Високий
 medium,Medium,Medio,Medio,Miðlungs,Średni,Médio,Середній
-normal,Normal,Normal,Normal,Eðlilegt,Normalny,Normal,нормальний
+normal,Normal,Normal,Normal,Eðlilegt,Normalna,Normal,нормальний
 web_audio_description,Audio description of the website,Audiodescripción del sitio web,Audiodescrición do sitio web,Hljóðlýsing á vefsíðu,Audiodeskrypcja strony internetowej,Audiodescrição do site,Аудіо опис сайту
 max_size,Maximum size,Tamaño máximo,Tamaño máximo,Hámarksstærð,Największy rozmiar,Tamanho máximo,Максимальний розмір
 ukrainian,Ukrainian,Ucraniano,Ucraíno,Úkraínska,Ukraiński,Ucraniano,українська
-specific_date,Does it take place on specific dates or periods?,¿Tiene lugar en fechas o períodos específicos?,Ten lugar en datas ou períodos concretos?,Fer það fram á ákveðnum dagsetningum eða tímabilum?,Czy odbywa się w określonych terminach lub okresach?,Ocorre em datas ou períodos específicos?,Чи відбувається це в конкретні дати чи періоди?
-export_form,Export form,Exportar formulario,Exportar formulario,útflutningsform,Formularz eksportu,Formulário de exportação,форма експорту
-import_form,Import form,Importar formulario,Importar formulario,Eyðublað fyrir innflutning,Formularz importu,Importar formulário,Форма імпорту
-beginning_date,Beginning date,Fecha de inicio,Data de inicio,Upphafsdagur,Data rozpoczęcia,Data de início,Дата початку
-ending_date,Ending date,Fecha de fin,Data de finalización,Lokadagur,Data końcowa,Data de término,Дата закінчення

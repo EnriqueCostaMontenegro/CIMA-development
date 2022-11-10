@@ -1705,7 +1705,7 @@ const dictionary = {
     "es": "Normal",
     "gl": "Normal",
     "is": "Eðlilegt",
-    "pl": "Normalny",
+    "pl": "Normalna",
     "pt": "Normal",
     "uk": "нормальний"
   },
@@ -1735,50 +1735,5 @@ const dictionary = {
     "pl": "Ukraiński",
     "pt": "Ucraniano",
     "uk": "українська"
-  },
-  "specific_date": {
-    "en": "Does it take place on specific dates or periods?",
-    "es": "¿Tiene lugar en fechas o períodos específicos?",
-    "gl": "Ten lugar en datas ou períodos concretos?",
-    "is": "Fer það fram á ákveðnum dagsetningum eða tímabilum?",
-    "pl": "Czy odbywa się w określonych terminach lub okresach?",
-    "pt": "Ocorre em datas ou períodos específicos?",
-    "uk": "Чи відбувається це в конкретні дати чи періоди?"
-  },
-  "export_form": {
-    "en": "Export form",
-    "es": "Exportar formulario",
-    "gl": "Exportar formulario",
-    "is": "útflutningsform",
-    "pl": "Formularz eksportu",
-    "pt": "Formulário de exportação",
-    "uk": "форма експорту"
-  },
-  "import_form": {
-    "en": "Import form",
-    "es": "Importar formulario",
-    "gl": "Importar formulario",
-    "is": "Eyðublað fyrir innflutning",
-    "pl": "Formularz importu",
-    "pt": "Importar formulário",
-    "uk": "Форма імпорту"
-  },
-  "beginning_date": {
-    "en": "Beginning date",
-    "es": "Fecha de inicio",
-    "gl": "Data de inicio",
-    "is": "Upphafsdagur",
-    "pl": "Data rozpoczęcia",
-    "pt": "Data de início",
-    "uk": "Дата початку"
-  },
-  "ending_date": {
-    "en": "Ending date",
-    "es": "Fecha de fin",
-    "gl": "Data de finalización",
-    "is": "Lokadagur",
-    "pl": "Data końcowa",
-    "pt": "Data de término",
-    "uk": "Дата закінчення"
   }
 }

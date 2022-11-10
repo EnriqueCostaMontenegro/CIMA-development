@@ -105,6 +105,12 @@ Enrique Costa Montenegro
 
 ### Versions
 
+**v1.2.06 (10/11/2022)**
+
+-Added import/export form
+
+-Fixed bug with language 
+
 **v1.2.05 (20/10/2022)**
 
 -Fixed errors saving in database

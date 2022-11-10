@@ -238,6 +238,8 @@ module.exports.loadBanner = (req, res) => {
 //
 //
 module.exports.validateForm = async function (req, res, next) {
+  //console.log(req.body)
+
   // define the default global background
   let global_background_color = "#f9f8ec"
   // obtain the background to use from the body of the request
@@ -377,7 +379,11 @@ module.exports.validateForm = async function (req, res, next) {
 
   const cookie = req.cookies["UUID"];
   const pdf_structure = req.body;
-  const lang = req.headers["accept-language"];
+  //console.log("[DEBUG] req.body: %s", req.body);
+  //const lang = req.headers["accept-language"];
+  //console.log("[DEBUG] req.headers[\"accept-language\"]: %s", req.headers["accept-language"]);
+  const lang = req.body["selected_language"];
+  //console.log("[DEBUG] lang: %s", lang);
 
   //console.log("\n[DEBUG] doc.page.size: %s x %s", doc.page.height, doc.page.width)
 
