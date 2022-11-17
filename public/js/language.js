@@ -61,13 +61,13 @@ const dictionary = {
     "uk": "Мови"
   },
   "reset_form": {
-    "en": "Reset Form",
-    "es": "Reiniciar formulario",
-    "gl": "Restablecer formulario",
-    "is": "Endurstilla eyðublað",
-    "pl": "Wyczyść formularz",
-    "pt": "Limpar formulário",
-    "uk": "форма скидання"
+    "en": "Reset", //  Form",
+    "es": "Reiniciar", // formulario",
+    "gl": "Restablecer", //  formulario",
+    "is": "Endurstilla", //  eyðublað",
+    "pl": "Wyczyść", //  formularz",
+    "pt": "Limpar", //  formulário",
+    "uk": "скидання", // формаr скидання"
   },
   "english": {
     "en": "English",
@@ -124,22 +124,22 @@ const dictionary = {
     "uk": "португальська"
   },
   "reload_pdf": {
-    "en": "Reload PDF",
-    "es": "Recargar PDF",
-    "gl": "Recargar PDF",
-    "is": "Endurhlaða PDF",
-    "pl": "Odśwież PDF",
-    "pt": "Recarregar PDF",
-    "uk": "перезавантажити pdf"
+    "en": "Reload", //  PDF",
+    "es": "Recargar", // PDF",
+    "gl": "Recargar", //  PDF",
+    "is": "Endurhlaða", //  PDF",
+    "pl": "Odśwież", //  PDF",
+    "pt": "Recarregar", //  PDF",
+    "uk": "перезавантажити", //  pdf"
   },
   "download_pdf": {
-    "en": "Download PDF",
-    "es": "Descargar PDF",
-    "gl": "Descargar PDF",
-    "is": "Sækja PDF",
-    "pl": "Pobierz PDF",
-    "pt": "Baixar PDF",
-    "uk": "Завантажити pdf"
+    "en": "Download", //  PDF",
+    "es": "Descargar", // PDF",
+    "gl": "Descargar", //  PDF",
+    "is": "Sækja", //  PDF",
+    "pl": "Pobierz", //  PDF",
+    "pt": "Baixar", //  PDF",
+    "uk": "Завантажити", //  pdf"
   },
   "activity_type": {
     "en": "Type of activity",
@@ -1285,13 +1285,13 @@ const dictionary = {
     "uk": "Інформація про квитки"
   },
   "autoreload": {
-    "en": "Update PDF automatically",
-    "es": "Actualizar PDF automáticamente",
-    "gl": "Actualizar PDF automaticamente",
-    "is": "Uppfærðu PDF sjálfkrafa",
-    "pl": "Aktualizuj PDF automatycznie",
-    "pt": "Atualizar PDF automaticamente",
-    "uk": "Оновлюйте PDF автоматично"
+    "en": "Update automatically", // PDF automatically",
+    "es": "Actualizar automáticamente", // PDF automáticamente",
+    "gl": "Actualizar automaticamente", // PDF automaticamente",
+    "is": "Uppfærðu sjálfkrafa", // PDF sjálfkrafa",
+    "pl": "Aktualizuj automatycznie", // PDF automatycznie",
+    "pt": "Atualizar automaticamente", // PDF automaticamente",
+    "uk": "Оновлюйте автоматично", // PDF автоматично"
   },
   "press": {
     "en": "Press!",
@@ -1771,22 +1771,22 @@ const dictionary = {
     "uk": "Чи відбувається це в конкретні дати чи періоди?"
   },
   "export_form": {
-    "en": "Export form",
-    "es": "Exportar formulario",
-    "gl": "Exportar formulario",
+    "en": "Export", //  form",
+    "es": "Exportar", // formulario",
+    "gl": "Exportar", //  formulario",
     "is": "útflutningsform",
-    "pl": "Formularz eksportu",
-    "pt": "Formulário de exportação",
-    "uk": "форма експорту"
+    "pl": "Eksportu",
+    "pt": "Exportar",
+    "uk": "експорту", // форма експорту"
   },
   "import_form": {
-    "en": "Import form",
-    "es": "Importar formulario",
-    "gl": "Importar formulario",
+    "en": "Import", //   form",
+    "es": "Importar", // formulario",
+    "gl": "Importar", //   formulario",
     "is": "Eyðublað fyrir innflutning",
-    "pl": "Formularz importu",
-    "pt": "Importar formulário",
-    "uk": "Форма імпорту"
+    "pl": "Importu",
+    "pt": "Importar", //   formulário",
+    "uk": "імпорту", //  Форма імпорту"
   },
   "beginning_date": {
     "en": "Beginning date",
@@ -1805,6 +1805,15 @@ const dictionary = {
     "pl": "Data końcowa",
     "pt": "Data de término",
     "uk": "Дата закінчення"
+  },
+  "form": {
+    "en": "Form:",
+    "es": "Formulario:",
+    "gl": "Formulario:",
+    "is": "Form:",
+    "pl": "Formularz:",
+    "pt": "Formulário:",
+    "uk": "форма:"
   }
 }
 
