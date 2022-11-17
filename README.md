@@ -105,6 +105,10 @@ Enrique Costa Montenegro
 
 ### Versions
 
+**v1.2.07 (17/11/2022)**
+
+-Updated PDF and form buttons location
+
 **v1.2.06 (10/11/2022)**
 
 -Added import/export form

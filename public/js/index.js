@@ -20,7 +20,7 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.2.07dev";
+var version = "1.2.07";
 const dictionary = getDictionary();
 
 var formFieldsValue= [ "validationTipoActividadCultural", "validationActivityName", "validationShortDescription", "validationFechaInicioDatePicker", 
