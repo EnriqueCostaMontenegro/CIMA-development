@@ -20,7 +20,7 @@ var pdf = {
 var isFirstLoad = true;
 var PDFJS = null;
 var pdfjsWorker = null;
-var version = "1.2.07";
+var version = "1.2.08";
 const dictionary = getDictionary();
 
 var formFieldsValue= [ "validationTipoActividadCultural", "validationActivityName", "validationShortDescription", "validationFechaInicioDatePicker", 
@@ -412,6 +412,11 @@ window.onload = function () {
     .getElementById("export_form_button")
     .addEventListener("click", function (e) {
       console.log("Export form")
+      console.log("fieldSelector: ", Array.from(
+        $("#fieldSelector").find(":selected")
+      ).map(function (item) {
+        return $(item).val();
+      })) //document.getElementById("fieldSelector").value)
 
       // object to contain all the different elements with their values
       let responses= {} //document.getElementById("mainForm").getAttributeNames(); //{};
@@ -430,15 +435,17 @@ window.onload = function () {
         responses[field] = document.getElementById(field).checked;
       }
 
+      responses["fieldSelector"] = Array.from( $("#fieldSelector").find(":selected") ).map(function (item) { return $(item).val(); })
+
       let data= JSON.stringify(responses)
-      console.log("data: ", data)
+      //console.log("data: ", data)
       let filename= "CIMA-" + document.getElementById("validationTipoActividadCultural").value + "-" + document.getElementById("validationActivityName").value + ".txt"
-      console.log("filename: ", filename)
+      //console.log("filename: ", filename)
       let type= 'text/plain'
-      console.log("type: ", type)
+      //console.log("type: ", type)
 
       let file = new Blob([data], {type: type});
-      console.log("file: ", file)
+      //console.log("file: ", file)
      
       if (window.navigator.msSaveOrOpenBlob) { // IE10+
           window.navigator.msSaveOrOpenBlob(file, filename);
@@ -460,7 +467,7 @@ window.onload = function () {
 
 
 
-  // Event listener to export form button
+  // Event listener to import form button
   document
     .getElementById("import_form_button")
     .addEventListener("click", function (e) {
@@ -486,7 +493,7 @@ window.onload = function () {
             let data = JSON.parse(content);
             //console.log(data)
 
-            // add elemnts with values
+            // add elements with values
             for (let field of formFieldsValue) {
               if ((data[field] !== undefined) && (data[field] !== "")) {
                 //console.log(field, " - ", data[field])
@@ -503,6 +510,19 @@ window.onload = function () {
                 //console.log(document.getElementById(field).value)
               }
             }
+
+            // add elements of fieldSelector
+            let possibleFields= ["banner","activity_type","information_hours","location","information_buy_tickets","information_facilities",
+              "information_guides","information_allowed_actions","covid_19_restrictions","extra_information","logos"]
+            //console.log("fieldSelector: ", data["fieldSelector"])
+            if ((data["fieldSelector"] !== undefined) && (data["fieldSelector"] !== [])) {
+              $("#fieldSelector").val(data["fieldSelector"])
+            } else {
+              $("#fieldSelector").val(possibleFields)
+            }
+
+            //reload page to update according the imported form
+            location.reload();
           }
 
       }
@@ -828,51 +848,63 @@ window.onload = function () {
   const dragText = dragArea.querySelector("h2");
   const button = dragArea.querySelector("button");
   const input = dragArea.querySelector("#input-files");
-  let files;
+  let files = [];
+  //console.log("[DEBUG FILES initialize]: ", files)
 
   button.addEventListener("click", function (e) {
     input.click();
   });
 
   input.addEventListener("change", function (e) {
+    //console.log("[DEBUG FILES change this.files]: ", this.files)
+    //console.log("[DEBUG FILES change]: ", files)
     files = this.files;
+    //if ( (this.files[0] in files) == false ) {
+    //  files.push(this.files[0])
+    //}
     dragArea.classList.add("active");
     showFiles(files, "logo");
     dragArea.classList.remove("active");
+    //console.log("[DEBUG FILES change]: ", files)
   });
 
   dragArea.addEventListener("dragover", function (e) {
+    //console.log("[DEBUG FILES dragover]: ", files)
     e.preventDefault();
     dragArea.classList.add("active");
     dragText.textContent = "Drop to upload files";
+    //console.log("[DEBUG FILES dragover]: ", files)
   });
 
   dragArea.addEventListener("dragleave", function (e) {
+    //console.log("[DEBUG FILES dragleave]: ", files)
     e.preventDefault();
     dragArea.classList.remove("active");
     dragText.textContent = "Drop files here...";
+    //console.log("[DEBUG FILES dragleave]: ", files)
   });
 
   dragArea.addEventListener("drop", function (e) {
+    //console.log("[DEBUG FILES drop]: ", files)
     e.preventDefault();
     dragArea.classList.remove("active");
     dragText.textContent = "Drop files here...";
     files = e.dataTransfer.files;
+    //files.push(e.dataTransfer.files);
     showFiles(files, "logo");
+    //console.log("[DEBUG FILES drop]: ", files)
   });
 
+
   function showFiles(files, type) {
-    console.log("[DEBUG FILES]: ", files)
+    //console.log("[DEBUG FILES showFiles]: ", files)
     if (files.length === undefined) {
       processFile(files, type);
     } else {
       for (const file of files) {
-        console.log("file:",file.name)
+        //console.log("file: ",file.name, " in files: ", files)
 
-          processFile(file, type);
-
-        
-        
+        processFile(file, type);
       }
     }
   }
@@ -881,11 +913,15 @@ window.onload = function () {
     const docType = file.type;
     const validExtensions = ["image/png", "image/jpeg", "image/jpg"];
 
+    //console.log("processFile, file: ", file)
+
     if (validExtensions.includes(docType)) {
       //valid file extension
       
       const fileReader = new FileReader();
       const id = "file" + Math.floor(Math.random() * 10000000).toString();//Date.now().toString();
+
+      //console.log("processFile, id: ", id)
 
       if (type == "logo") {
         fileReader.addEventListener("load", function (e) {
@@ -898,8 +934,10 @@ window.onload = function () {
                       </div>
                   </div>`;
 
-            const html = document.querySelector("#preview").innerHTML;
-            document.querySelector("#preview").innerHTML = image + html;
+          const html = document.querySelector("#preview").innerHTML;
+          document.querySelector("#preview").innerHTML = image + html;
+
+          //console.log("preview en processFile:", document.querySelector("#preview").innerHTML )
           uploadFile(file, id, type);
         });
       }else if (type == "banner") {
@@ -913,8 +951,8 @@ window.onload = function () {
                       </div>
                   </div>`;
 
-            const html = document.querySelector("#preview-banner").innerHTML;
-            document.querySelector("#preview-banner").innerHTML = image;
+          const html = document.querySelector("#preview-banner").innerHTML;
+          document.querySelector("#preview-banner").innerHTML = image;
           uploadFile(file, id, type);
         });
       }
@@ -927,9 +965,11 @@ window.onload = function () {
   }
 
   async function uploadFile(file, id, type) {
+    //console.log("uploadFile, file: ", file, " id: ", id, " type: ", type)
+
     const formData = new FormData();
     formData.append("file", file);
-    const preview = document.querySelector(`#preview`);
+    // const preview = document.querySelector(`#preview`);
 
     try {
       if (type == "logo") {
@@ -937,37 +977,35 @@ window.onload = function () {
         console.log("[DEBUG] uploading:",file.name)
 
         const response = await fetch("/uploadLogoImage", {
-          method: "POST",
+            method: "POST",
           body: formData,
         });
         //console.log("[DEBUG RESPONSE]: ", response);
+
         document.querySelector(`#${id} .status-text`).innerHTML =
           '<span class="success"> File uploaded correctly </span>' +
           `<button type="button" id =button${id} class="btn-close" aria-label="Close"></button>`;
 
         console.log("[DEBUG] uploading2:",file.name)
-
+        //console.log("preview en uploadFile:", document.querySelector("#preview").innerHTML )
 
         document
           .getElementById(`button${id}`)
           .addEventListener("click", function (e) {
+            //console.log("borrando logo", `button${id}`)
             setTimeout(() => {
-              console.log("borrando imagen:", document.getElementById(`${id}`).getElementsByTagName('span')[0].innerHTML)
+              //console.log("borrando imagen:", document.getElementById(`${id}`).getElementsByTagName('span')[0].innerHTML)
               sendRequest('/deleteLogo', 'POST', {"logo_name":document.getElementById(`${id}`).getElementsByTagName('span')[0].innerHTML},document.querySelector("html").lang);
             
-            document.getElementById(`${id}`).outerHTML = "";
+              document.getElementById(`${id}`).outerHTML = "";
             }, 1000)
-            
-            
-            
-
           });
 
       } else if (type == "banner") {
         const preview = document.querySelector(`#preview-banner`);
         console.log("[DEBUG] uploading:",file)
         const response = await fetch("/uploadBannerImage", {
-          method: "POST",
+            method: "POST",
           body: formData,
         });
         //console.log("[DEBUG RESPONSE]: ", response);
@@ -978,6 +1016,7 @@ window.onload = function () {
         document
           .getElementById(`button${id}`)
           .addEventListener("click", function (e) {
+            console.log("borrando banner", `button${id}`)
             document.getElementById(`${id}`).outerHTML = "";
             deleteBanner();
             

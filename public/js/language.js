@@ -1582,13 +1582,13 @@ const dictionary = {
     "uk": "асистент доступний"
   },
   "covid_19_restrictions": {
-    "en": "COVID-19 Restrictions",
-    "es": "Restricciones de COVID-19",
-    "gl": "Restricións COVID-19",
-    "is": "COVID-19 takmarkanir",
-    "pl": "Ograniczenia związane z COVID-19",
-    "pt": "Restrições COVID-19",
-    "uk": "Обмеження щодо COVID-19"
+    "en": "Sanitary Restrictions",
+    "es": "Restricciones sanitarias",
+    "gl": "Restricións sanitarias",
+    "is": "Hreinlætistakmarkanir",
+    "pl": "Obostrzenia sanitarne",
+    "pt": "Restrições sanitárias",
+    "uk": "санітарні обмеження"
   },
   "wear_mask": {
     "en": "The use of a mask is mandatory",

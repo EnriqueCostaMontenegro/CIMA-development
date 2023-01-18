@@ -99,6 +99,8 @@ module.exports.deleteBanner = (req, res) => {
 
   const directory = "user_images/banners/" + cookie + "/";
 
+  // console.log("[INFO] Deleting user banner, directory: ", directory);
+
   rmdir(directory);
   res.status(200).contentType("text/plain").end("File deleted!");
 
@@ -163,6 +165,8 @@ module.exports.loadLogos = (req, res) => {
         return handleError(err, res);
       }
       res.status(200).contentType("text/plain").end("File uploaded!");
+
+      console.log("loadLogos, loaded: ", targetPath);
     });
   } else {
     fs.unlink(tempPath, (err) => {
@@ -180,6 +184,9 @@ module.exports.loadLogos = (req, res) => {
 Manages the storage of banner images uploaded by the user (into the /user_images/logos folder)
 */
 module.exports.loadBanner = (req, res) => {
+  // console.log("loadBanner, req: ", req);
+  // console.log("loadBanner, res: ", res);
+
   const cookie = req.cookies["UUID"];
 
   const handleError = (err, res) => {
@@ -188,13 +195,17 @@ module.exports.loadBanner = (req, res) => {
       .contentType("text/plain")
       .end("Oops! Something went wrong!");
   };
+
   const directory = "./user_images/banners/" + cookie + "/";
   fs.mkdirSync(directory, {
     recursive: true
   });
 
+
   fs.readdir(directory, (err, files) => {
     if (err) throw err;
+
+    // console.log("loadBanner, files: ", files);
 
     for (const file of files) {
       fs.unlink(path.join(directory, file), (err) => {
@@ -206,11 +217,18 @@ module.exports.loadBanner = (req, res) => {
   const tempPath = req.file.path;
   const targetPath = directory + req.file.originalname;
 
+  // console.log("loadBanner, tempPath: ", tempPath);
+  // console.log("loadBanner, targetPath: ", targetPath);
+  // console.log("loadBanner, extension: -", path.extname(req.file.originalname).toLowerCase(), "-");
+
+
   if (
     path.extname(req.file.originalname).toLowerCase() === ".png" ||
     path.extname(req.file.originalname).toLowerCase() === ".jpg" ||
     path.extname(req.file.originalname).toLowerCase() === ".jpeg"
   ) {
+    // console.log("loadBanner, extension: -", path.extname(req.file.originalname).toLowerCase(), "-");
+
     fs.rename(tempPath, targetPath, (err) => {
       if (err) {
         return handleError(err, res);
@@ -3415,7 +3433,8 @@ module.exports.validateForm = async function (req, res, next) {
    */
   function print_logos(x, y, x_fit = "", y_fit = "") {
     let bLogosPrinted= false;
-    const logos = [];
+    logos = [];
+    logosOrdered = [];
 
     // creates directory if it doesn't exist
     if (!fs.existsSync("./user_images/logos/" + cookie + "/")) {
@@ -3428,7 +3447,20 @@ module.exports.validateForm = async function (req, res, next) {
     fs.readdirSync("./user_images/logos/" + cookie + "/").forEach((file) => {
       logos.push(file);
     });
-    //console.log("[DEBUG] readed %i logos", logos.length)
+    //console.log("[DEBUG] readed %i logos: ", logos.length, logos)
+
+    // read the logos ordered by time of creation
+    var dir = "./user_images/logos/" + cookie + "/";
+    logosOrdered = fs.readdirSync(dir);
+    //console.log("[DEBUG] readed %i logosOrdered: ", logosOrdered.length, logosOrdered)
+    logosOrdered.sort(function(a, b) {
+               return fs.statSync(dir + a).mtime.getTime() - 
+                      fs.statSync(dir + b).mtime.getTime();
+           });
+    //console.log("[DEBUG] readed %i logosOrdered: ", logosOrdered.length, logosOrdered)
+
+    logos= logosOrdered;
+    //console.log("[DEBUG] readed %i logos: ", logos.length, logos)
 
     // create a new page if necessary
     if ((global_pos_y + 50 + (Math.ceil(logos.length / 3) * 90)) > (doc.page.height - 20) && (logos.length > 0)) {
@@ -3638,23 +3670,23 @@ module.exports.validateForm = async function (req, res, next) {
     if (iFontSize == heading_font_size) {
       if (selected_text_type === "Arial") {
         fCorrectionFactorW= 1.07;
-        fCorrectionFactorH= 1.25;
+        fCorrectionFactorH= 1.10;
       }
       if (selected_text_type === "Helvetica") {
         fCorrectionFactorW= 1.07;
-        fCorrectionFactorH= 1.2;
+        fCorrectionFactorH= 1.0;
       }
       if (selected_text_type === "Tahoma") {
         fCorrectionFactorW= 1.14;
-        fCorrectionFactorH= 1.3;
+        fCorrectionFactorH= 1.50;
       }
       if (selected_text_type === "Verdana") {
         fCorrectionFactorW= 1.1;
-        fCorrectionFactorH= 1.3;
+        fCorrectionFactorH= 1.1;
       }
       if (selected_text_type === "XuntaSans") {
         fCorrectionFactorW= 1.05;
-        fCorrectionFactorH= 1.2;
+        fCorrectionFactorH= 1.05;
       }
     }
 

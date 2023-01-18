@@ -105,6 +105,14 @@ Enrique Costa Montenegro
 
 ### Versions
 
+**v1.2.08 (18/01/2023)**
+
+-Added image with days of the week in ukranian
+
+-Fixed some texts
+
+-Logos placed in the order they are introduced
+
 **v1.2.07 (17/11/2022)**
 
 -Updated PDF and form buttons location
